@@ -17,6 +17,7 @@ const SplashScreen: React.FC<SplashScreenProps> = (props) => {
       }, 1000);
     }
   }, [isFocused]);
+  //test
 
   return (
     <View style={style.container}>
