@@ -64,7 +64,10 @@ const CdsDrawer: React.FC = () => {
               },
 
               drawerIcon: () => (
-                <MaterialIcons name="dashboard" size={24} color="black" />
+                <Image
+                  source={require("../../assets/dashboard.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -80,7 +83,10 @@ const CdsDrawer: React.FC = () => {
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
               drawerActiveTintColor: "black",
               drawerIcon: () => (
-                <FontAwesome5 name="fire" size={24} color="black" />
+                <Image
+                  source={require("../../assets/leads.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -97,7 +103,10 @@ const CdsDrawer: React.FC = () => {
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <MaterialIcons name="campaign" size={24} color="black" />
+                <Image
+                  source={require("../../assets/campaign.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -114,7 +123,10 @@ const CdsDrawer: React.FC = () => {
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <FontAwesome5 name="users" size={24} color="black" />
+                <Image
+                  source={require("../../assets/users.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -131,7 +143,10 @@ const CdsDrawer: React.FC = () => {
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <Ionicons name="shield-checkmark" size={24} color="black" />
+                <Image
+                  source={require("../../assets/approve.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -148,7 +163,10 @@ const CdsDrawer: React.FC = () => {
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <FontAwesome5 name="gifts" size={24} color="black" />
+                <Image
+                  source={require("../../assets/gift.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -165,7 +183,10 @@ const CdsDrawer: React.FC = () => {
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <FontAwesome5 name="file-contract" size={24} color="black" />
+                <Image
+                  source={require("../../assets/report.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />

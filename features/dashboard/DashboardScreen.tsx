@@ -6,6 +6,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { RootStackParamList } from "../../types";
 import { style } from "./DashboardScreenStyle";
@@ -38,7 +39,10 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               props.navigation.navigate("Leads");
             }}
           >
-            <FontAwesome5 name="fire" size={40} style={style.menuIcon} />
+            <Image
+              source={require("../../assets/leads.png")}
+              style={{ width: 40, height: 40, alignSelf: "center" }}
+            />
             <Text style={style.menuTxt}>Leads</Text>
           </TouchableOpacity>
           {/* Campaign */}
@@ -48,7 +52,10 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               props.navigation.navigate("Campaigns");
             }}
           >
-            <MaterialIcons name="campaign" size={40} style={style.menuIcon} />
+            <Image
+              source={require("../../assets/campaign.png")}
+              style={{ width: 40, height: 40, alignSelf: "center" }}
+            />
             <Text style={style.menuTxt}>Campaign</Text>
           </TouchableOpacity>
           {/* Users */}
@@ -58,7 +65,10 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               props.navigation.navigate("Users");
             }}
           >
-            <FontAwesome5 name="users" size={40} style={style.menuIcon} />
+            <Image
+              source={require("../../assets/users.png")}
+              style={{ width: 40, height: 40, alignSelf: "center" }}
+            />
             <Text style={style.menuTxt}>Users</Text>
           </TouchableOpacity>
           {/* Approvals */}
@@ -68,10 +78,9 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               props.navigation.navigate("Approvals");
             }}
           >
-            <Ionicons
-              name="shield-checkmark"
-              size={40}
-              style={style.menuIcon}
+            <Image
+              source={require("../../assets/approve.png")}
+              style={{ width: 40, height: 40, alignSelf: "center" }}
             />
             <Text style={style.menuTxt}>Approvals</Text>
           </TouchableOpacity>
@@ -82,7 +91,10 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               props.navigation.navigate("Gifts");
             }}
           >
-            <FontAwesome5 name="gifts" size={40} style={style.menuIcon} />
+            <Image
+              source={require("../../assets/gift.png")}
+              style={{ width: 40, height: 40, alignSelf: "center" }}
+            />
             <Text style={style.menuTxt}>Gifts</Text>
           </TouchableOpacity>
           {/* Reports */}
@@ -92,10 +104,9 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               props.navigation.navigate("Reports");
             }}
           >
-            <FontAwesome5
-              name="file-contract"
-              size={40}
-              style={style.menuIcon}
+            <Image
+              source={require("../../assets/report.png")}
+              style={{ width: 40, height: 40, alignSelf: "center" }}
             />
             <Text style={style.menuTxt}>Reports</Text>
           </TouchableOpacity>
