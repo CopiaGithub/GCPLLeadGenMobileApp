@@ -8,6 +8,20 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "../features/splashScreen/SplashScreen";
 import { APP_THEME_COLOR, STATUS_BAR_COLOR } from "../constants/Colors";
 import LoginScreen from "../features/login/LoginScreen";
+import RegisterScreen from "../features/register/RegisterScreen";
+import DashboardScreen from "../features/dashboard/DashboardScreen";
+import DashboardDrawer from "../features/drawer/DashboardDrawer";
+import ForgotPasswordScreen from "../features/forgotPassword/ForgotPasswordScreen";
+import LeadScreen from "../features/leads/LeadScreen";
+import UserScreen from "../features/user/UserScreen";
+import ApprovalScreen from "../features/approvals/ApprovalScreen";
+import CampaignScreen from "../features/campaigns/CampaignScreen";
+import GiftScreen from "../features/gifts/GiftsScreen";
+import ReportScreen from "../features/reports/ReportScreen";
+import CreateUserScreen from "../features/user/CreateUserScreen";
+import CreateCampaignScreen from "../features/campaigns/CreateCamaign";
+import CustomerCreateOptionsScreen from "../features/leads/customerCreateOptions/CustomerCreateOption";
+import AddMachineDetailsScreen from "../features/leads/machineDetails/AddMachineDetails";
 
 export default function Navigation({
   colorScheme,
@@ -49,6 +63,181 @@ function RootNavigator() {
           headerTitle: "Login",
           headerTintColor: "white",
           headerBackVisible: false,
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Register",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{
+          title: "Dashboard",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "white" },
+          headerBackVisible: false,
+          // gestureDirection: "vertical",
+        }}
+      />
+      <Stack.Screen
+        name="DashboardDrawer"
+        component={DashboardDrawer}
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Forgot Password",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Leads"
+        component={LeadScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Leads",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="CustomerCreateOption"
+        component={CustomerCreateOptionsScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Add Customer",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="AddMachineDetails"
+        component={AddMachineDetailsScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Add Machine Details",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Users"
+        component={UserScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "User",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="CreateUser"
+        component={CreateUserScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Create New User",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Approvals"
+        component={ApprovalScreen}
+        options={{
+          title: "Registration Approval",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Campaigns"
+        component={CampaignScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Campaigns",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="CreateCampaign"
+        component={CreateCampaignScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Create New Campaign",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Gifts"
+        component={GiftScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Gifts",
+          headerTintColor: "black",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="Reports"
+        component={ReportScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitleStyle: { color: "black" },
+          headerTitle: "Reports",
+          headerTintColor: "black",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}

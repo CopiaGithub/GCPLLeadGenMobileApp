@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import Foundation from "@expo/vector-icons/Foundation";
 import { APP_THEME_COLOR } from "../../constants/Colors";
@@ -17,6 +18,19 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
+  const icon = () => {
+    return (
+      <View style={style.iconView}>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={style.txtOne}>GCPL</Text>
+          <Text style={style.txtSymbol}>®</Text>
+        </View>
+        <Text style={style.txtTwo}>LEAD</Text>
+        <Text style={style.txtThree}>GEN</Text>
+      </View>
+    );
+  };
+
   const renderHeader = () => {
     return (
       <View>
@@ -39,8 +53,20 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
           <AntDesign name="lock" size={24} style={style.leftIcon} />
           <TextInput placeholder="Password" style={style.txtInput} />
         </View>
-        <Text style={style.forgotPwd}>Forgot Password?</Text>
-        <TouchableOpacity style={style.btn}>
+        <Text
+          onPress={() => {
+            props.navigation.navigate("ForgotPassword");
+          }}
+          style={style.forgotPwd}
+        >
+          Forgot Password?
+        </Text>
+        <TouchableOpacity
+          style={style.btn}
+          onPress={() => {
+            props.navigation.navigate("DashboardDrawer");
+          }}
+        >
           <Text style={style.btnText}>Sign in</Text>
         </TouchableOpacity>
         <View style={style.orView}>
@@ -57,7 +83,10 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   const renderSignUp = () => {
     return (
       <View style={style.registerView}>
-        <Text style={style.dHAText}>
+        <Text
+          style={style.dHAText}
+          onPress={() => props.navigation.navigate("Register")}
+        >
           Don't have an account? <Text style={style.rNText}>Register Now</Text>
         </Text>
       </View>
@@ -70,6 +99,7 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
     >
       <ScrollView>
         <View style={style.container}>
+          {icon()}
           {renderHeader()}
           {renderLoginBox()}
         </View>

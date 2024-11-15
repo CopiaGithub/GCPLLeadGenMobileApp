@@ -6,7 +6,7 @@ export const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "20%",
+    marginTop: "10%",
   },
   headerText: {
     fontSize: 22,
@@ -21,7 +21,7 @@ export const style = StyleSheet.create({
   boxView: {
     backgroundColor: "white",
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "#d7d9d7",
     width: "96%",
     padding: "2%",
     margin: "2%",
@@ -66,7 +66,7 @@ export const style = StyleSheet.create({
     fontSize: 14,
   },
   btn: {
-    backgroundColor: "grey",
+    backgroundColor: "black",
     padding: "2.5%",
     borderRadius: 8,
     marginVertical: "2%",
@@ -109,6 +109,33 @@ export const style = StyleSheet.create({
     borderBottomColor: "#ccc",
     marginVertical: 10,
     flex: 1,
+  },
+  iconView: {
+    borderWidth: 1,
+    borderRightWidth: 4,
+    borderBottomWidth: 4,
+    borderColor: "#fcba03",
+    borderRadius: 10,
+    padding: "2%",
+    marginVertical: "4%",
+  },
+  txtOne: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#fcba03",
+  },
+  txtSymbol: {
+    color: "#fcba03",
+  },
+  txtTwo: {
+    fontSize: 30,
+    fontWeight: "800",
+    marginTop: "-3%",
+  },
+  txtThree: {
+    fontSize: 30,
+    fontWeight: "800",
+    marginTop: "-3%",
   },
 });
 export default style;
