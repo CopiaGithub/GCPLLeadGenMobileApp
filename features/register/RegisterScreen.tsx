@@ -18,6 +18,9 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import CdsPicker from "../../component/CDSPicker";
+import { DisplayToast } from "../../utility/ToastMessage";
+import CDSAlertBox from "../../component/CDSAlertBox";
 
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -59,15 +62,30 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
           <TextInput placeholder="Mobile Number*" style={style.txtInput} />
         </View>
         {/* Organization */}
-        <View style={style.txView}>
+        <View style={[style.txView, { padding: "2%" }]}>
           <SimpleLineIcons
             name="organization"
             size={24}
             style={style.leftIcon}
           />
-
-          <TextInput placeholder="Organization*" style={style.txtInput} />
+          <View style={style.txtInput} />
+          <CdsPicker
+            pickerData={[
+              { label: "One", value: "1" },
+              { label: "Two", value: "2" },
+              { label: "Two", value: "3" },
+            ]}
+            value="1"
+            onChange={(val) => {
+              if (val && val.label) {
+                DisplayToast(val.label);
+              }
+            }}
+            pickerWidth={"80%"}
+            isDisable={false}
+          />
         </View>
+
         {/* Email */}
         <View style={style.txView}>
           <Fontisto name="email" size={22} style={style.leftIcon} />
@@ -98,12 +116,27 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
       </TouchableOpacity>
     );
   };
+
   return (
     <ImageBackground
       source={require("../../assets/background_image.png")}
       style={{ flex: 1 }}
     >
       <ScrollView>
+        <CDSAlertBox
+          alertVisibility={false}
+          alertTitle="Register"
+          alertDesc="User registerd successfully!"
+          showNegativeBtn={true}
+          positiveBtnTxt="Cancel"
+          negativeBtnTxt="Ok"
+          onNegativeClick={() => {
+            DisplayToast("Negative");
+          }}
+          onPositiveClick={() => {
+            DisplayToast("Positive");
+          }}
+        />
         {renderHeader()}
         {renderResgisterBox()}
         {renderSignUpBtn()}
