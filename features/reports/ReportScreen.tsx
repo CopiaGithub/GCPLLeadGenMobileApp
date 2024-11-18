@@ -30,10 +30,18 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
       <View style={style.viewBox}>
         {/* Organization */}
         <Text style={style.labelText}>Campaign Name:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Organization" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Organization"
+          placeholderTextColor={"grey"}
+        />
         {/* State */}
         <Text style={style.labelText}>Select Data:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter State" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter State"
+          placeholderTextColor={"grey"}
+        />
       </View>
     );
   };

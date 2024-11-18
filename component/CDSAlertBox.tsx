@@ -24,11 +24,11 @@ type CDSAlertBoxProps = {
 };
 
 const CDSAlertBox: React.FC<CDSAlertBoxProps> = (props) => {
-  const [overlayVisibility, setOverlayVisibility] = useState(
-    props.alertVisibility
-  );
   return (
-    <Overlay isVisible={overlayVisibility} overlayStyle={styles.overlayStyle}>
+    <Overlay
+      isVisible={props.alertVisibility}
+      overlayStyle={styles.overlayStyle}
+    >
       <View>
         <Text style={styles.alertTitle}>{props.alertTitle}</Text>
         <Text style={styles.alertDesc}>{props.alertDesc}</Text>

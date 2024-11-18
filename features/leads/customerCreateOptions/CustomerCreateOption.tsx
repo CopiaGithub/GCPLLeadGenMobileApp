@@ -78,6 +78,7 @@ const CustomerCreateOptionsScreen: React.FC<
               <TextInput
                 style={style.acvTxtInput}
                 placeholder="Enter Mobile No."
+                placeholderTextColor={"grey"}
               />
             </View>
             <View style={style.acvView}>
@@ -99,34 +100,67 @@ const CustomerCreateOptionsScreen: React.FC<
       <View style={style.cardView}>
         {/* Campaign Name */}
         <Text style={style.labelText}>Campaign Name:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Campaign Name" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Campaign Name"
+          placeholderTextColor={"grey"}
+        />
         {/* Customer Name */}
         <Text style={style.labelText}>Customer Name:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Customer Name" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Customer Name"
+          placeholderTextColor={"grey"}
+        />
         {/* Mobile Number */}
         <Text style={style.labelText}>Mobile Number:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Mobile Number" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Mobile Number"
+          placeholderTextColor={"grey"}
+        />
         {/* Alternative Mobile Number */}
         <Text style={style.labelText}>Alternative Mobile Number:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Alternative Mobile Number"
+          placeholderTextColor={"grey"}
         />
         {/* Email */}
         <Text style={style.labelText}>Email:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Email" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Email"
+          placeholderTextColor={"grey"}
+        />
         {/* Company Name */}
         <Text style={style.labelText}>Company Name:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Company Name" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Company Name"
+          placeholderTextColor={"grey"}
+        />
         {/* Industry Type */}
         <Text style={style.labelText}>Industry Type:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Industry Type" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Industry Type"
+          placeholderTextColor={"grey"}
+        />
         {/* State */}
         <Text style={style.labelText}>State:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter State" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter State"
+          placeholderTextColor={"grey"}
+        />
         {/* District */}
         <Text style={style.labelText}>District:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter District" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter District"
+          placeholderTextColor={"grey"}
+        />
       </View>
     );
   };

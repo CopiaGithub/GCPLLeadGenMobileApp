@@ -40,7 +40,11 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
           color="black"
           style={style.searchIcon}
         />
-        <TextInput style={style.searchTxtInput} placeholder="Search Users" />
+        <TextInput
+          style={style.searchTxtInput}
+          placeholder="Search Users"
+          placeholderTextColor={"grey"}
+        />
       </View>
     );
   };

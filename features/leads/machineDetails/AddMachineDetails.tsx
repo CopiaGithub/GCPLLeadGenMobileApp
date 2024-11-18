@@ -39,36 +39,49 @@ const AddMachineDetailsScreen: React.FC<AddMachineDetailsScreenProps> = (
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Machine Type Interested"
+          placeholderTextColor={"grey"}
         />
         {/* Model Number */}
         <Text style={style.labelText}>Model Number:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter Model Number" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter Model Number"
+          placeholderTextColor={"grey"}
+        />
         {/* No. Of Machines */}
         <Text style={style.labelText}>No. Of Machines:</Text>
-        <TextInput style={style.inputTxt} placeholder="Enter No. Of Machines" />
+        <TextInput
+          style={style.inputTxt}
+          placeholder="Enter No. Of Machines"
+          placeholderTextColor={"grey"}
+        />
         {/* Planning Timeline */}
         <Text style={style.labelText}>Planning Timeline:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Planning Timeline"
+          placeholderTextColor={"grey"}
         />
         {/* Financing Required */}
         <Text style={style.labelText}>Financing Required:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Financing Required"
+          placeholderTextColor={"grey"}
         />
         {/* No. of People Accompained */}
         <Text style={style.labelText}>No. of People Accompained:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of People Accompained"
+          placeholderTextColor={"grey"}
         />
         {/* No of Gifts Needed */}
         <Text style={style.labelText}>No of Gifts Needed:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No of Gifts Needed"
+          placeholderTextColor={"grey"}
         />
       </View>
     );

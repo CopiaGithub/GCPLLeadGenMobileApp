@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RootStackParamList } from "../../types";
 import style from "./RegisterStyle";
 import {
@@ -21,6 +21,12 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import CdsPicker from "../../component/CDSPicker";
 import { DisplayToast } from "../../utility/ToastMessage";
 import CDSAlertBox from "../../component/CDSAlertBox";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useIsFocused } from "@react-navigation/native";
+import { OrganizationRequest } from "../../services/organizationRequest/OrganizationRequest";
+import { GetOrgData } from "./RegisterUtility";
+import { CdsPickerModel } from "../../types/CdsPickerModel";
 
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,6 +34,27 @@ type RegisterScreenProps = NativeStackScreenProps<
 >;
 
 const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const isFocused = useIsFocused();
+  const { orgData } = useSelector((state: RootState) => state.orgnizationData);
+  const [alertState, setAlertState] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(OrganizationRequest());
+    }
+  }, [isFocused]);
+
+  const respData: CdsPickerModel[] = [];
+  if (orgData) {
+    for (let i = 0; i < orgData.length; i++) {
+      respData.push({
+        label: orgData[i].orgName,
+        value: orgData[i].id,
+      });
+    }
+  }
+  console.error(respData);
   const icon = () => {
     return (
       <View style={style.iconView}>
@@ -54,12 +81,20 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
         {/* Name */}
         <View style={style.txView}>
           <FontAwesome5 name="user-alt" size={18} style={style.leftIcon} />
-          <TextInput placeholder="Name*" style={style.txtInput} />
+          <TextInput
+            placeholder="Name*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         {/* Mobile Number */}
         <View style={style.txView}>
           <Foundation name="telephone" size={22} style={style.leftIcon} />
-          <TextInput placeholder="Mobile Number*" style={style.txtInput} />
+          <TextInput
+            placeholder="Mobile Number*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         {/* Organization */}
         <View style={[style.txView, { padding: "2%" }]}>
@@ -70,15 +105,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
           />
           <View style={style.txtInput} />
           <CdsPicker
-            pickerData={[
-              { label: "One", value: "1" },
-              { label: "Two", value: "2" },
-              { label: "Two", value: "3" },
-            ]}
+            pickerData={GetOrgData(orgData)}
             value="1"
             onChange={(val) => {
               if (val && val.label) {
-                DisplayToast(val.label);
               }
             }}
             pickerWidth={"80%"}
@@ -89,29 +119,50 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
         {/* Email */}
         <View style={style.txView}>
           <Fontisto name="email" size={22} style={style.leftIcon} />
-          <TextInput placeholder="Email*" style={style.txtInput} />
+          <TextInput
+            placeholder="Email*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         {/* Location */}
         <View style={style.txView}>
           <MaterialIcons name="my-location" size={24} style={style.leftIcon} />
-          <TextInput placeholder="Location*" style={style.txtInput} />
+          <TextInput
+            placeholder="Location*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         {/* Password */}
         <View style={style.txView}>
           <AntDesign name="lock" size={24} style={style.leftIcon} />
-          <TextInput placeholder="Password*" style={style.txtInput} />
+          <TextInput
+            placeholder="Password*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         {/* Confirm Password */}
         <View style={style.txView}>
           <AntDesign name="lock" size={24} style={style.leftIcon} />
-          <TextInput placeholder="Confirm Password*" style={style.txtInput} />
+          <TextInput
+            placeholder="Confirm Password*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
       </View>
     );
   };
   const renderSignUpBtn = () => {
     return (
-      <TouchableOpacity style={style.signUpBtnView}>
+      <TouchableOpacity
+        style={style.signUpBtnView}
+        onPress={() => {
+          setAlertState(true);
+        }}
+      >
         <Text style={style.signUpBtnTxt}>Signup</Text>
       </TouchableOpacity>
     );
@@ -124,17 +175,17 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
     >
       <ScrollView>
         <CDSAlertBox
-          alertVisibility={false}
+          alertVisibility={alertState}
           alertTitle="Register"
           alertDesc="User registerd successfully!"
-          showNegativeBtn={true}
+          showNegativeBtn={false}
           positiveBtnTxt="Cancel"
           negativeBtnTxt="Ok"
           onNegativeClick={() => {
-            DisplayToast("Negative");
+            setAlertState(false);
           }}
           onPositiveClick={() => {
-            DisplayToast("Positive");
+            setAlertState(false);
           }}
         />
         {renderHeader()}

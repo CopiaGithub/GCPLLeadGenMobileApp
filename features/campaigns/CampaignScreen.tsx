@@ -46,6 +46,7 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
         <TextInput
           style={style.searchTxtInput}
           placeholder="Search Campaigns"
+          placeholderTextColor={"grey"}
         />
       </View>
     );

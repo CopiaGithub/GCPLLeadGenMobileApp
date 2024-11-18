@@ -48,11 +48,16 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
           <TextInput
             placeholder="10 digit Mobile number"
             style={style.txtInput}
+            placeholderTextColor={"grey"}
           />
         </View>
         <View style={style.txView}>
           <AntDesign name="lock" size={24} style={style.leftIcon} />
-          <TextInput placeholder="Password" style={style.txtInput} />
+          <TextInput
+            placeholder="Password"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         <Text
           onPress={() => {

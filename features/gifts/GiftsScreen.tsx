@@ -24,7 +24,11 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
           color="black"
           style={style.searchIcon}
         />
-        <TextInput style={style.searchTxtInput} placeholder="Search Gifts" />
+        <TextInput
+          style={style.searchTxtInput}
+          placeholder="Search Gifts"
+          placeholderTextColor={"grey"}
+        />
       </View>
     );
   };
@@ -78,12 +82,17 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
             <TextInput
               style={style.txtInput}
               placeholder="Enter No. of Gifts"
+              placeholderTextColor={"grey"}
             />
             <View style={style.extra}></View>
           </View>
           <View style={style.txtView}>
             <Text style={style.keyText}>Code:</Text>
-            <TextInput style={style.txtInput} placeholder="Enter Code" />
+            <TextInput
+              style={style.txtInput}
+              placeholder="Enter Code"
+              placeholderTextColor={"grey"}
+            />
             <View style={style.extra}></View>
           </View>
           <View style={style.txtView}>
@@ -91,6 +100,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
             <TextInput
               style={style.txtInput}
               placeholder="Enter Gift Details"
+              placeholderTextColor={"grey"}
             />
             <View style={style.extra}></View>
           </View>

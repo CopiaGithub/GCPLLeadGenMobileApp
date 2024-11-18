@@ -39,7 +39,11 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
           color="black"
           style={style.searchIcon}
         />
-        <TextInput style={style.searchTxtInput} placeholder="Search Leads" />
+        <TextInput
+          style={style.searchTxtInput}
+          placeholder="Search Leads"
+          placeholderTextColor={"grey"}
+        />
       </View>
     );
   };

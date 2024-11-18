@@ -47,13 +47,18 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
           <TextInput
             placeholder="10 digit Mobile number"
             style={style.txtInput}
+            placeholderTextColor={"grey"}
           />
         </View>
         <TouchableOpacity style={style.sendOTPView}>
           <Text style={style.sendOTPText}>Send OTP</Text>
         </TouchableOpacity>
         <View style={style.txView}>
-          <TextInput placeholder="Enter OTP" style={style.txtInput} />
+          <TextInput
+            placeholder="Enter OTP"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         <Text style={style.resendOTP}>Resent OTP</Text>
       </>
@@ -65,12 +70,20 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
         {/* Password */}
         <View style={style.txView}>
           <AntDesign name="lock" size={24} style={style.leftIcon} />
-          <TextInput placeholder="Password*" style={style.txtInput} />
+          <TextInput
+            placeholder="Password*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
         {/* Confirm Password */}
         <View style={style.txView}>
           <AntDesign name="lock" size={24} style={style.leftIcon} />
-          <TextInput placeholder="Confirm Password*" style={style.txtInput} />
+          <TextInput
+            placeholder="Confirm Password*"
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+          />
         </View>
       </>
     );

@@ -32,6 +32,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
         <TextInput
           style={style.searchTxtInput}
           placeholder="Search Approvals"
+          placeholderTextColor={"grey"}
         />
       </View>
     );
