@@ -10,7 +10,7 @@ const API = {
     DROPDOWN: `${apiUrl}organization-master`,
   },
   LOGIN: {
-    WITH_PASSWORD: `${apiUrl}LoginReactCtrl`,
+    WITH_PASSWORD: `${apiUrl}user-master/login`,
     GENERATE_OTP: `${apiUrl}user-master/send-otp`,
     VALIDATE: `${apiUrl}user-master/validate-otp`,
   },

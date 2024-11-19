@@ -51,6 +51,7 @@ function RootNavigator() {
         headerTitleStyle: {
           color: "white",
         },
+        headerTintColor: "white",
       }}
     >
       <Stack.Screen
@@ -80,7 +81,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Register",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -112,7 +113,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Forgot Password",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -124,8 +125,6 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Leads",
-
-          headerTintColor: "black",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -137,7 +136,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Add Customer",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -149,7 +148,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Add Machine Details",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -161,7 +160,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "User",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -173,7 +172,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Create New User",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -184,7 +183,7 @@ function RootNavigator() {
         options={{
           title: "Registration Approval",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -196,7 +195,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Campaigns",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -208,7 +207,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Create New Campaign",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -220,7 +219,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Gifts",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -232,7 +231,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Reports",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}

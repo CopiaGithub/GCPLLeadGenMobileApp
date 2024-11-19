@@ -6,12 +6,17 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
+  View,
+  Image,
 } from "react-native";
 import { RootStackParamList } from "../../types";
-import { View } from "react-native";
 import { style } from "./ForgotPasswordScreenStyle";
 import Foundation from "@expo/vector-icons/Foundation";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useState } from "react";
+import { LoginSendOTPRequest } from "../../services/loginRequest/LoginSendOTPRequest";
+import { DisplayToast } from "../../utility/ToastMessage";
+import { LoginValidateOTPRequest } from "../../services/loginRequest/LoginValidateOTPRequest";
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -19,16 +24,25 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 >;
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
+  const [mail, setMail] = useState("siddhesh.chaure@copiacs.com");
+  const [otp, setOTP] = useState("");
+  const [password, setPassword] = useState("");
+  const [cPassword, setCPassword] = useState("");
+
+  const [sendOTPState, setSendOTPState] = useState(false);
+  const [validateOTPState, setValidateOTPState] = useState(false);
+
   const icon = () => {
     return (
-      <View style={style.iconView}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={style.txtOne}>GCPL</Text>
-          <Text style={style.txtSymbol}>®</Text>
-        </View>
-        <Text style={style.txtTwo}>LEAD</Text>
-        <Text style={style.txtThree}>GEN</Text>
-      </View>
+      <Image
+        source={require("../../assets/mainLogo.png")}
+        style={{
+          height: "20%",
+          width: "80%",
+          margin: "4%",
+          alignSelf: "center",
+        }}
+      />
     );
   };
   const renderHeader = () => {
@@ -39,28 +53,99 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
       </>
     );
   };
+  const isValid = () => {
+    if (!password) {
+      DisplayToast("Please enter password");
+      return false;
+    } else if (!cPassword) {
+      DisplayToast("Please enter confirm password");
+      return false;
+    } else if (password === cPassword) {
+      DisplayToast("Password and confirm password doesn't match");
+      return false;
+    } else {
+      return true;
+    }
+  };
   const renderHeaderOne = () => {
     return (
       <>
         <View style={style.txView}>
-          <Foundation name="telephone" size={24} style={style.leftIcon} />
+          <Foundation name="mail" size={24} style={style.leftIcon} />
           <TextInput
-            placeholder="10 digit Mobile number"
+            placeholder="Enter Email"
             style={style.txtInput}
             placeholderTextColor={"grey"}
+            editable={sendOTPState ? false : true}
+            value={mail}
+            onChangeText={(val) => {
+              setMail(val);
+            }}
           />
         </View>
-        <TouchableOpacity style={style.sendOTPView}>
-          <Text style={style.sendOTPText}>Send OTP</Text>
-        </TouchableOpacity>
+        {!sendOTPState ? (
+          <TouchableOpacity
+            style={style.sendOTPView}
+            onPress={async () => {
+              const resp = await LoginSendOTPRequest({
+                email: mail,
+              });
+              if (resp && resp.statusCode != 0) {
+                DisplayToast(resp.message);
+                setSendOTPState(true);
+              }
+            }}
+          >
+            <Text style={style.sendOTPText}>Send OTP</Text>
+          </TouchableOpacity>
+        ) : null}
+
         <View style={style.txView}>
           <TextInput
             placeholder="Enter OTP"
             style={style.txtInput}
+            value={otp}
+            editable={validateOTPState ? false : true}
+            onChangeText={(val) => {
+              setOTP(val);
+            }}
             placeholderTextColor={"grey"}
           />
         </View>
-        <Text style={style.resendOTP}>Resent OTP</Text>
+        {!validateOTPState ? (
+          <>
+            <Text
+              style={style.resendOTP}
+              onPress={async () => {
+                const resp = await LoginSendOTPRequest({
+                  email: mail,
+                });
+
+                if (resp && resp.statusCode != 0) {
+                  DisplayToast(resp.message);
+                  setSendOTPState(true);
+                }
+              }}
+            >
+              Resent OTP
+            </Text>
+            <TouchableOpacity
+              style={style.sendOTPView}
+              onPress={async () => {
+                const resp = await LoginValidateOTPRequest({
+                  email: mail,
+                  otp: otp,
+                });
+                if (resp && resp.message) {
+                  DisplayToast("Success");
+                  setValidateOTPState(true);
+                }
+              }}
+            >
+              <Text style={style.sendOTPText}>Validate OTP</Text>
+            </TouchableOpacity>
+          </>
+        ) : null}
       </>
     );
   };
@@ -90,7 +175,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
   };
   const renderButton = () => {
     return (
-      <TouchableOpacity style={style.sendOTPView}>
+      <TouchableOpacity
+        style={style.sendOTPView}
+        onPress={async () => {
+          if (isValid()) {
+          }
+        }}
+      >
         <Text style={style.sendOTPText}>Submit</Text>
       </TouchableOpacity>
     );

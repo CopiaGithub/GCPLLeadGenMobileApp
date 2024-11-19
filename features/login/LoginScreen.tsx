@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useState } from "react";
 import { RootStackParamList } from "../../types";
 import style from "./LoginStyle";
 import {
@@ -14,24 +14,47 @@ import {
 import Foundation from "@expo/vector-icons/Foundation";
 import { APP_THEME_COLOR } from "../../constants/Colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { DisplayToast } from "../../utility/ToastMessage";
+import { LoginWPassRequest } from "../../services/loginRequest/LoginWPassRequest";
+import CDSAlertBox from "../../component/CDSAlertBox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
-  //hhh
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOTP] = useState("");
+  const [alertState, setAlertState] = useState(false);
+
   const icon = () => {
     return (
-      <View style={style.iconView}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={style.txtOne}>GCPL</Text>
-          <Text style={style.txtSymbol}>®</Text>
-        </View>
-        <Text style={style.txtTwo}>LEAD</Text>
-        <Text style={style.txtThree}>GEN</Text>
-      </View>
+      <Image
+        source={require("../../assets/mainLogo.png")}
+        style={{
+          height: "14%",
+          width: "100%",
+          marginVertical: "4%",
+          alignSelf: "center",
+        }}
+      />
     );
   };
-
+  const isValidWPass = () => {
+    let emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
+    if (!email) {
+      DisplayToast("Please enter mobile number");
+      return false;
+    } else if (email && !emailRegex.test(email)) {
+      DisplayToast("Please enter valid mail");
+      return false;
+    } else if (!password) {
+      DisplayToast("Please enter password");
+      return false;
+    } else {
+      return true;
+    }
+  };
   const renderHeader = () => {
     return (
       <View>
@@ -44,19 +67,27 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
     return (
       <View style={style.boxView}>
         <View style={style.txView}>
-          <Foundation name="telephone" size={24} style={style.leftIcon} />
+          <Foundation name="mail" size={24} style={style.leftIcon} />
           <TextInput
-            placeholder="10 digit Mobile number"
+            placeholder="Enter Mail ID"
             style={style.txtInput}
+            value={email}
             placeholderTextColor={"grey"}
+            onChangeText={(val) => {
+              setEmail(val);
+            }}
           />
         </View>
         <View style={style.txView}>
           <AntDesign name="lock" size={24} style={style.leftIcon} />
           <TextInput
-            placeholder="Password"
+            placeholder="Enter Password"
+            value={password}
             style={style.txtInput}
             placeholderTextColor={"grey"}
+            onChangeText={(value) => {
+              setPassword(value);
+            }}
           />
         </View>
         <Text
@@ -69,8 +100,22 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
         </Text>
         <TouchableOpacity
           style={style.btn}
-          onPress={() => {
-            props.navigation.navigate("DashboardDrawer");
+          onPress={async () => {
+            if (isValidWPass()) {
+              const resp = await LoginWPassRequest({
+                email: email,
+                password: password,
+              });
+              if (resp && resp.email) {
+                const userDataJSON = JSON.stringify(resp);
+                await AsyncStorage.setItem("@userData", userDataJSON);
+                props.navigation.navigate("DashboardDrawer");
+              } else if (resp && resp.statusCode == 401) {
+                DisplayToast(resp.message);
+              } else {
+                DisplayToast("Something went wrong!");
+              }
+            }
           }}
         >
           <Text style={style.btnText}>Sign in</Text>
@@ -80,7 +125,7 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
           <Text style={style.orText}>OR</Text>
           <View style={style.horizontalBorderRight}></View>
         </View>
-        <TouchableOpacity style={style.btn}>
+        <TouchableOpacity style={[style.btn]}>
           <Text style={style.btnText}>Sign in with OTP</Text>
         </TouchableOpacity>
       </View>
@@ -103,12 +148,30 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
       source={require("../../assets/background_image.png")}
       style={{ flex: 1 }}
     >
-      <ScrollView>
-        <View style={style.container}>
-          {icon()}
-          {renderHeader()}
-          {renderLoginBox()}
-        </View>
+      <ScrollView
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <CDSAlertBox
+          alertVisibility={alertState}
+          alertTitle="Register"
+          alertDesc="User registerd successfully!"
+          showNegativeBtn={false}
+          positiveBtnTxt="Cancel"
+          negativeBtnTxt="Ok"
+          onNegativeClick={() => {
+            setAlertState(false);
+          }}
+          onPositiveClick={() => {
+            setAlertState(false);
+          }}
+        />
+        {icon()}
+        {renderHeader()}
+        {renderLoginBox()}
       </ScrollView>
       {renderSignUp()}
     </ImageBackground>

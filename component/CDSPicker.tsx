@@ -15,6 +15,7 @@ type CdsPickerProps = {
   isDisable?: boolean;
   value: string;
   pickerWidth?: DimensionValue | undefined;
+  placeHolder: string;
 };
 
 const CdsPicker: React.FC<CdsPickerProps> = (props) => {
@@ -28,6 +29,7 @@ const CdsPicker: React.FC<CdsPickerProps> = (props) => {
       disable={props.isDisable}
       mode="default"
       value={props.value}
+      placeholder={props.placeHolder}
       activeColor="#dee3e0"
       itemContainerStyle={styles.itemContainer}
       containerStyle={styles.container}

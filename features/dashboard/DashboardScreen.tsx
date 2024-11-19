@@ -13,6 +13,9 @@ import { style } from "./DashboardScreenStyle";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useIsFocused } from "@react-navigation/native";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -20,6 +23,15 @@ type DashboardScreenProps = NativeStackScreenProps<
 >;
 
 const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        console.warn(res);
+      }
+    });
+  }, [isFocused]);
   const renderCampaignName = () => {
     return (
       <View style={style.headerNameView}>

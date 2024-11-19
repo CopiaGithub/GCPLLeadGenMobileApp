@@ -1,4 +1,17 @@
 export interface RegisterUser {
+  orgId: number;
+  orgName: string;
+  sbuId: number;
+  username: string;
+  password: string;
+  email: string;
+  mobile: string;
+  address: string;
+  pincode: number;
+  roleId: number;
+  status: boolean;
+}
+export interface RegisterUserResponse {
   orgId: string;
   orgName: string;
   sbuId: string;
@@ -14,4 +27,7 @@ export interface RegisterUser {
   modifiedBy: string;
   modifiedOn: string;
   status: string;
+  message: string;
+  error: string;
+  statusCode: number;
 }

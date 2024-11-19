@@ -12,6 +12,7 @@ export const style = StyleSheet.create({
     fontSize: 22,
     fontWeight: "500",
     color: "#333",
+    textAlign: "center",
   },
   childText: {
     textAlign: "center",

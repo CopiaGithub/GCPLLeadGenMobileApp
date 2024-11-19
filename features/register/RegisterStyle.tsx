@@ -3,14 +3,10 @@ import { APP_THEME_COLOR } from "../../constants/Colors";
 
 export const style = StyleSheet.create({
   iconView: {
-    borderWidth: 1,
-    borderRightWidth: 4,
-    borderBottomWidth: 4,
-    borderColor: "#fcba03",
-    borderRadius: 10,
-    padding: "2%",
-    marginTop: "4%",
-    alignSelf: "center",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
   },
   txtOne: {
     fontSize: 24,

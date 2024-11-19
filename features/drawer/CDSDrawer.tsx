@@ -55,9 +55,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Dashboard",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Dashboard",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: {
                 backgroundColor: `${APP_THEME_COLOR}`,
@@ -77,9 +77,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Leads",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Leads",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
               drawerActiveTintColor: "black",
               drawerIcon: () => (
@@ -96,9 +96,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Campaigns",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Campaigns",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
@@ -116,9 +116,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Users",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Users",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
@@ -136,9 +136,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Approvals",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Approvals",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
@@ -156,9 +156,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Gifts",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Gifts",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
@@ -176,9 +176,9 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Reports",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Reports",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 

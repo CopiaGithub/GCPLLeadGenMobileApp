@@ -33,9 +33,11 @@ export const style = StyleSheet.create({
   headerTxtValue: {
     flex: 0.7,
     fontWeight: "500",
+    color: "white",
   },
   headerTxtKey: {
     flex: 1.3,
+    color: "white",
   },
   countBox: {
     marginVertical: "4%",

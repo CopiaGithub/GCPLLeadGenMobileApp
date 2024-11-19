@@ -59,6 +59,7 @@ export const style = StyleSheet.create({
   approveBtnTxt: {
     fontWeight: "500",
     textAlign: "center",
+    color: "white",
   },
   rejectBtnTxt: {
     fontWeight: "500",
