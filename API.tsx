@@ -14,6 +14,9 @@ const API = {
     GENERATE_OTP: `${apiUrl}user-master/send-otp`,
     VALIDATE: `${apiUrl}user-master/validate-otp`,
   },
+  PASSWORD: {
+    UPDATE: `${apiUrl}user-master`,
+  },
 };
 
 export default API;

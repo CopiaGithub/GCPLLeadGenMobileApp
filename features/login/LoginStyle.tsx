@@ -59,7 +59,13 @@ export const style = StyleSheet.create({
     color: APP_THEME_COLOR,
     alignSelf: "center",
   },
-  txtInput: {},
+  rightIcon: {
+    color: "black",
+    alignSelf: "center",
+  },
+  txtInput: {
+    width: "84%",
+  },
   forgotPwd: {
     margin: "2%",
     textAlign: "right",

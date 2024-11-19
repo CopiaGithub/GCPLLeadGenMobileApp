@@ -39,11 +39,22 @@ const CustomDrawer = (props: any) => {
       <Image
         source={require("../../assets/mainLogo.png")}
         style={{
-          height: "26%",
-          width: "60%",
+          height: "10%",
+          width: "80%",
           alignSelf: "center",
         }}
       />
+    );
+  };
+  const renderHorizontalBorder = () => {
+    return <View style={{ borderTopWidth: 0.8, borderTopColor: "grey" }} />;
+  };
+  const userDetails = () => {
+    return (
+      <View style={{ marginTop: "1%", marginBottom: "4%" }}>
+        <Text style={styles.headerTxt}>Exibhition Admin</Text>
+        <Text style={styles.childTxt}>Super Admin</Text>
+      </View>
     );
   };
   return (
@@ -52,13 +63,10 @@ const CustomDrawer = (props: any) => {
         {...props}
         contentContainerStyle={styles.drawerStyle}
       >
-        <View style={styles.headerView}>
-          {icon()}
-          <View style={{ flex: 1, marginVertical: "4%" }}>
-            <Text style={styles.headerTxt}>Exibhition Admin</Text>
-            <Text style={styles.childTxt}>Super Admin</Text>
-          </View>
-        </View>
+        {icon()}
+        {renderHorizontalBorder()}
+        {userDetails()}
+        <View style={styles.headerView}></View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <TouchableOpacity
@@ -141,14 +149,12 @@ const styles = StyleSheet.create({
   headerTxt: {
     fontWeight: "500",
     fontSize: 20,
-    color: "grey",
     textAlign: "center",
     textAlignVertical: "center",
   },
   childTxt: {
     fontWeight: "500",
     fontSize: 16,
-    color: "grey",
     textAlign: "center",
     textAlignVertical: "center",
   },

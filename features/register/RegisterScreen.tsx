@@ -87,17 +87,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
 
   const headerIcon = () => {
     return (
-      <View style={style.iconView}>
-        <Image
-          source={require("../../assets/mainLogo.png")}
-          style={{
-            margin: "2%",
-            borderRadius: 10,
-            width: width * 0.9,
-            height: width * 0.9 * 0.2,
-          }}
-        />
-      </View>
+      <Image
+        source={require("../../assets/mainLogo.png")}
+        style={{
+          height: "10%",
+          width: "80%",
+          alignSelf: "center",
+        }}
+      />
     );
   };
   const renderHeader = () => {
@@ -242,7 +239,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
       source={require("../../assets/background_image.png")}
       style={{ flex: 1 }}
     >
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
         <CDSAlertBox
           alertVisibility={alertState}
           alertTitle="Register"

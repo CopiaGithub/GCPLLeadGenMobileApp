@@ -13,10 +13,12 @@ import { RootStackParamList } from "../../types";
 import { style } from "./ForgotPasswordScreenStyle";
 import Foundation from "@expo/vector-icons/Foundation";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginSendOTPRequest } from "../../services/loginRequest/LoginSendOTPRequest";
 import { DisplayToast } from "../../utility/ToastMessage";
 import { LoginValidateOTPRequest } from "../../services/loginRequest/LoginValidateOTPRequest";
+import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,18 +30,28 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
   const [otp, setOTP] = useState("");
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
+  const [id, setId] = useState("");
 
   const [sendOTPState, setSendOTPState] = useState(false);
   const [validateOTPState, setValidateOTPState] = useState(false);
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setId(user.id);
+      }
+    });
+  }, [isFocused]);
 
   const icon = () => {
     return (
       <Image
         source={require("../../assets/mainLogo.png")}
         style={{
-          height: "20%",
+          height: "10%",
           width: "80%",
-          margin: "4%",
           alignSelf: "center",
         }}
       />
@@ -192,7 +204,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
       source={require("../../assets/background_image.png")}
       style={{ flex: 1 }}
     >
-      <ScrollView contentContainerStyle={{}}>
+      <ScrollView
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
         {renderHeader()}
         <View style={style.boxView}>
           {renderHeaderOne()}

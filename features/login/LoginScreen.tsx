@@ -18,24 +18,26 @@ import { DisplayToast } from "../../utility/ToastMessage";
 import { LoginWPassRequest } from "../../services/loginRequest/LoginWPassRequest";
 import CDSAlertBox from "../../component/CDSAlertBox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Feather from "@expo/vector-icons/Feather";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
+  const [password, setPassword] = useState("123");
   const [otp, setOTP] = useState("");
   const [alertState, setAlertState] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const icon = () => {
     return (
       <Image
         source={require("../../assets/mainLogo.png")}
         style={{
-          height: "14%",
-          width: "100%",
-          marginVertical: "4%",
+          height: "10%",
+          width: "80%",
           alignSelf: "center",
+          marginVertical: "6%",
         }}
       />
     );
@@ -43,7 +45,7 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   const isValidWPass = () => {
     let emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
     if (!email) {
-      DisplayToast("Please enter mobile number");
+      DisplayToast("Please enter email");
       return false;
     } else if (email && !emailRegex.test(email)) {
       DisplayToast("Please enter valid mail");
@@ -83,10 +85,19 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
           <TextInput
             placeholder="Enter Password"
             value={password}
+            secureTextEntry={passwordVisibility}
             style={style.txtInput}
             placeholderTextColor={"grey"}
             onChangeText={(value) => {
               setPassword(value);
+            }}
+          />
+          <Feather
+            name={passwordVisibility ? "eye" : "eye-off"}
+            size={24}
+            style={style.leftIcon}
+            onPress={() => {
+              setPasswordVisibility(!passwordVisibility);
             }}
           />
         </View>
