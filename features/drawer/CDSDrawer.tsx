@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import "react-native-gesture-handler";
-
 import {
   StyleSheet,
   Image,
@@ -9,11 +6,9 @@ import {
   Linking,
   ActivityIndicator,
 } from "react-native";
-import { EventArg } from "@react-navigation/native";
-
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import DashboardScreen from "../dashboard/DashboardScreen";
 import CustomDrawer from "./CustomDrawer";
 import { APP_THEME_COLOR } from "../../constants/Colors";

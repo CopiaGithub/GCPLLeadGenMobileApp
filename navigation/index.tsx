@@ -22,6 +22,7 @@ import CreateUserScreen from "../features/user/CreateUserScreen";
 import CreateCampaignScreen from "../features/campaigns/CreateCamaign";
 import CustomerCreateOptionsScreen from "../features/leads/customerCreateOptions/CustomerCreateOption";
 import AddMachineDetailsScreen from "../features/leads/machineDetails/AddMachineDetails";
+import "react-native-gesture-handler";
 
 export default function Navigation({
   colorScheme,

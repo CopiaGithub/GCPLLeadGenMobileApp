@@ -14,7 +14,6 @@ import { style } from "./CreateCamaignStyle";
 import moment from "moment";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CDSDatePicker from "../../component/CDSDatePicker";
-import { Picker } from "@react-native-picker/picker";
 
 type CreateCampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -130,20 +129,6 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
         {renderCreateCampaignView()}
 
         {renderBtn()}
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-          style={{
-            height: 50,
-            width: "100%",
-            backgroundColor: "#f0f0f0",
-            borderRadius: 8,
-          }}
-        >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="javascript" />
-          <Picker.Item label="Python" value="python" />
-        </Picker>
       </ScrollView>
     </ImageBackground>
   );
