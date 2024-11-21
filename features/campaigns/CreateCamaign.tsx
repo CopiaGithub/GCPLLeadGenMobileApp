@@ -9,8 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { RootStackParamList } from "../../types";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { style } from "./CreateCamaignStyle";
+import moment from "moment";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import CDSDatePicker from "../../component/CDSDatePicker";
+import { Picker } from "@react-native-picker/picker";
 
 type CreateCampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,6 +22,9 @@ type CreateCampaignScreenProps = NativeStackScreenProps<
 >;
 
 const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
   const renderCreateCampaignView = () => {
     return (
       <View style={style.createView}>
@@ -40,19 +47,25 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
           {/* From Date */}
           <View style={{ flex: 1 }}>
             <Text style={style.labelText}>From Date:</Text>
-            <TextInput
-              style={style.inputTxt}
-              placeholder="Enter From Date"
-              placeholderTextColor={"grey"}
+            <CDSDatePicker
+              dateFormat="YYYY-MM-DD"
+              date={date}
+              onDateTap={(val) => {
+                console.error(new Date(val));
+                setDate(new Date(val));
+              }}
             />
           </View>
           {/* To Date */}
           <View style={{ flex: 1, marginLeft: "2%" }}>
             <Text style={style.labelText}>To Date:</Text>
-            <TextInput
-              style={style.inputTxt}
-              placeholder="Enter To Date"
-              placeholderTextColor={"grey"}
+            <CDSDatePicker
+              dateFormat="YYYY-MM-DD"
+              date={date}
+              onDateTap={(val) => {
+                console.error(new Date(val));
+                setDate(new Date(val));
+              }}
             />
           </View>
         </View>
@@ -106,6 +119,8 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
       </TouchableOpacity>
     );
   };
+  const [selectedValue, setSelectedValue] = useState("java");
+
   return (
     <ImageBackground
       source={require("../../assets/background_image.png")}
@@ -113,7 +128,22 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
     >
       <ScrollView contentContainerStyle={{ paddingBottom: "50%" }}>
         {renderCreateCampaignView()}
+
         {renderBtn()}
+        <Picker
+          selectedValue={selectedValue}
+          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+          style={{
+            height: 50,
+            width: "100%",
+            backgroundColor: "#f0f0f0",
+            borderRadius: 8,
+          }}
+        >
+          <Picker.Item label="Java" value="java" />
+          <Picker.Item label="JavaScript" value="javascript" />
+          <Picker.Item label="Python" value="python" />
+        </Picker>
       </ScrollView>
     </ImageBackground>
   );

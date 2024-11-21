@@ -34,4 +34,25 @@ export const style = StyleSheet.create({
     color: "white",
     fontWeight: "500",
   },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+  },
+  label: {
+    marginBottom: 10,
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+  },
+  selected: {
+    marginTop: 20,
+    fontSize: 16,
+    color: "gray",
+  },
 });

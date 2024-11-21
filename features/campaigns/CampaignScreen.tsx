@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { RootStackParamList } from "../../types";
 import { useEffect } from "react";
@@ -12,6 +13,11 @@ import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { style } from "./CampaignScreenStyle";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useIsFocused } from "@react-navigation/native";
+import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
+import CDSLoader from "../../component/CDSLoader";
 
 type CampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -19,6 +25,18 @@ type CampaignScreenProps = NativeStackScreenProps<
 >;
 
 const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const isFocused = useIsFocused();
+  const { getCampaignData } = useSelector(
+    (state: RootState) => state.getCampaignData
+  );
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(GetCampaignDataRequest({}));
+    }
+  }, []);
+
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
@@ -54,52 +72,51 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
   const renderItems = () => {
     return (
       <>
-        <View style={style.itemView}>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>Campaign:</Text>
-            <Text style={style.valueText}>Exibhition Admin</Text>
-            {/* <FontAwesome5
-              name="pencil-alt"
-              size={16}
-              color="black"
-              style={style.extra}
-              onPress={() => {
-                props.navigation.navigate("CreateUser", { operation: "1" });
-              }}
-            /> */}
-            <View style={style.extra}></View>
-          </View>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>From Date:</Text>
-            <Text style={style.valueText}>01 Nov 2024</Text>
-            <View style={style.extra}></View>
-          </View>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>To Date:</Text>
-            <Text style={style.valueText}>25 Nov 2024</Text>
-            <View style={style.extra}></View>
-          </View>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>Location:</Text>
-            <Text style={style.valueText}>Mumbai</Text>
-            <View style={style.extra}></View>
-          </View>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>State:</Text>
-            <Text style={style.valueText}>Maharashtra</Text>
-            <View style={style.extra}></View>
-          </View>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>District:</Text>
-            <Text style={style.valueText}>Thane</Text>
-            <View style={style.extra}></View>
-          </View>
-          <View style={style.txtView}>
-            <Text style={style.keyText}>Status:</Text>
-            <Text style={style.valueText}>Active</Text>
-            <View style={style.extra}></View>
-          </View>
-        </View>
+        {getCampaignData && getCampaignData.length ? (
+          <>
+            {getCampaignData.map((item, i) => (
+              <View style={style.itemView} key={i}>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>Campaign:</Text>
+                  <Text style={style.valueText}>{item.campaignName}</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>From Date:</Text>
+                  <Text style={style.valueText}>{item.fromDate}</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>To Date:</Text>
+                  <Text style={style.valueText}>{item.toDate}</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>Location:</Text>
+                  <Text style={style.valueText}>Mumbai</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>State:</Text>
+                  <Text style={style.valueText}>Maharashtra</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>District:</Text>
+                  <Text style={style.valueText}>Thane</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
+                  <Text style={style.keyText}>Status:</Text>
+                  <Text style={style.valueText}>{item.status}</Text>
+                  <View style={style.extra}></View>
+                </View>
+              </View>
+            ))}
+          </>
+        ) : getCampaignData && !getCampaignData.length ? null : (
+          <CDSLoader marginTop={"-50%"} />
+        )}
       </>
     );
   };

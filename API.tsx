@@ -17,6 +17,9 @@ const API = {
   PASSWORD: {
     UPDATE: `${apiUrl}user-master`,
   },
+  CAMPAIGN: {
+    DATA: `${apiUrl}campaign-master`,
+  },
 };
 
 export default API;
