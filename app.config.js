@@ -14,12 +14,14 @@ export default ({ config }) => {
   const appConfig = {
     ...config,
     version: process.env.VERSION,
-
     expo: {
       extra: {
         eas: {
           projectId: "9f671b24-b7fc-4ece-a108-30e6a03d73c1",
         },
+      },
+      android: {
+        package: "com.gcpl.catLeadGen",
       },
     },
   };
