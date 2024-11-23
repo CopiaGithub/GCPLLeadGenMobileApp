@@ -42,6 +42,7 @@ export const style = StyleSheet.create({
     marginHorizontal: "2%",
     color: APP_THEME_COLOR,
     marginBottom: "2%",
+    textAlign: "right",
   },
   iconView: {
     borderWidth: 1,

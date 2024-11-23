@@ -4,11 +4,29 @@ export interface LoginWPasswordReq {
 }
 
 export interface LoginWPasswordResp {
-  id: number;
-  email: string;
-  mobileNo: string;
-  roleId: number;
-  message: string;
+  message: LoginWPasswordRespMessage;
   error: string;
   statusCode: number;
+}
+export enum LoginMethod {
+  Password = "Password",
+  OTP = "OTP",
+}
+export interface LoginWPasswordRespMessage {
+  id: number;
+  orgId: number;
+  orgName: string;
+  sbuId: number;
+  username: string;
+  password: string;
+  email: string;
+  mobile: string;
+  address: string;
+  pincode: number;
+  roleId: number;
+  createdBy: string;
+  createdOn: string;
+  modifiedBy: string;
+  modifiedOn: string;
+  status: boolean;
 }

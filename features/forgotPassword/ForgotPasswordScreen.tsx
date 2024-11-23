@@ -19,6 +19,9 @@ import { DisplayToast } from "../../utility/ToastMessage";
 import { LoginValidateOTPRequest } from "../../services/loginRequest/LoginValidateOTPRequest";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CDSLoader from "../../component/CDSLoader";
+import { OTPFormState } from "../../types/loginTypes/loginWOTPTypes/LoginSentOTPTypes";
+import { UpdatePasswordRequest } from "../../services/updatePasswordRequest/UpdatePasswordRequest";
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -26,16 +29,18 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 >;
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
+  const isFocused = useIsFocused();
   const [mail, setMail] = useState("siddhesh.chaure@copiacs.com");
   const [otp, setOTP] = useState("");
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
-  const [id, setId] = useState("");
-
-  const [sendOTPState, setSendOTPState] = useState(false);
+  const [id, setId] = useState(0);
   const [validateOTPState, setValidateOTPState] = useState(false);
+  const [loaderState, setLoaderState] = useState(false);
+  const [formState, setFormState] = useState<OTPFormState>(
+    OTPFormState.SEND_OTP
+  );
 
-  const isFocused = useIsFocused();
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
@@ -72,13 +77,64 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
     } else if (!cPassword) {
       DisplayToast("Please enter confirm password");
       return false;
-    } else if (password === cPassword) {
+    } else if (password != cPassword) {
       DisplayToast("Password and confirm password doesn't match");
       return false;
     } else {
       return true;
     }
   };
+
+  const handleFormState = (state: OTPFormState) => setFormState(state);
+
+  const handleSendOTP = async () => {
+    setLoaderState(true);
+    const resp = await LoginSendOTPRequest({
+      email: mail,
+    });
+    setLoaderState(resp ? false : true);
+    if (resp && resp.statusCode == 200) {
+      DisplayToast(resp.message);
+      handleFormState(OTPFormState.VALIDATE_OTP);
+    } else {
+      DisplayToast(`${resp.message}`);
+    }
+  };
+  const handleValidateOTP = async () => {
+    if (otp) {
+      setLoaderState(true);
+      const resp = await LoginValidateOTPRequest({
+        email: mail,
+        otp: otp,
+      });
+      setLoaderState(resp ? false : true);
+      if (resp && resp.statusCode == 200) {
+        handleFormState(OTPFormState.SUBMIT_PASS);
+        setId(resp.message.id);
+      } else {
+        DisplayToast(`${resp.message}`);
+      }
+    } else {
+      DisplayToast("Please enter OTP");
+    }
+  };
+  const handleUpdatePassword = async () => {
+    if (isValid()) {
+      setLoaderState(true);
+      const resp = await UpdatePasswordRequest({
+        id: id,
+        password: password,
+      });
+      setLoaderState(resp ? false : true);
+      if (resp && resp.statusCode == 200) {
+        DisplayToast("Password updated succesfully!");
+        props.navigation.navigate("Login")
+      } else {
+        DisplayToast(`${resp.message}`);
+      }
+    }
+  };
+
   const renderHeaderOne = () => {
     return (
       <>
@@ -88,26 +144,15 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
             placeholder="Enter Email"
             style={style.txtInput}
             placeholderTextColor={"grey"}
-            editable={sendOTPState ? false : true}
+            editable={formState == OTPFormState.SEND_OTP ? true : false}
             value={mail}
             onChangeText={(val) => {
               setMail(val);
             }}
           />
         </View>
-        {!sendOTPState ? (
-          <TouchableOpacity
-            style={style.sendOTPView}
-            onPress={async () => {
-              const resp = await LoginSendOTPRequest({
-                email: mail,
-              });
-              if (resp && resp.statusCode != 0) {
-                DisplayToast(resp.message);
-                setSendOTPState(true);
-              }
-            }}
-          >
+        {formState == OTPFormState.SEND_OTP ? (
+          <TouchableOpacity style={style.sendOTPView} onPress={handleSendOTP}>
             <Text style={style.sendOTPText}>Send OTP</Text>
           </TouchableOpacity>
         ) : null}
@@ -117,42 +162,21 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
             placeholder="Enter OTP"
             style={style.txtInput}
             value={otp}
-            editable={validateOTPState ? false : true}
-            onChangeText={(val) => {
-              setOTP(val);
-            }}
+            editable={formState == OTPFormState.VALIDATE_OTP ? true : false}
+            onChangeText={(val) => setOTP(val)}
+            maxLength={6}
+            keyboardType="numeric"
             placeholderTextColor={"grey"}
           />
         </View>
-        {!validateOTPState ? (
+        {formState == OTPFormState.VALIDATE_OTP ? (
           <>
-            <Text
-              style={style.resendOTP}
-              onPress={async () => {
-                const resp = await LoginSendOTPRequest({
-                  email: mail,
-                });
-
-                if (resp && resp.statusCode != 0) {
-                  DisplayToast(resp.message);
-                  setSendOTPState(true);
-                }
-              }}
-            >
+            <Text style={style.resendOTP} onPress={handleSendOTP}>
               Resent OTP
             </Text>
             <TouchableOpacity
               style={style.sendOTPView}
-              onPress={async () => {
-                const resp = await LoginValidateOTPRequest({
-                  email: mail,
-                  otp: otp,
-                });
-                if (resp && resp.message) {
-                  DisplayToast("Success");
-                  setValidateOTPState(true);
-                }
-              }}
+              onPress={handleValidateOTP}
             >
               <Text style={style.sendOTPText}>Validate OTP</Text>
             </TouchableOpacity>
@@ -170,7 +194,9 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
           <TextInput
             placeholder="Password*"
             style={style.txtInput}
+            value={password}
             placeholderTextColor={"grey"}
+            onChangeText={(val) => setPassword(val)}
           />
         </View>
         {/* Confirm Password */}
@@ -179,6 +205,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
           <TextInput
             placeholder="Confirm Password*"
             style={style.txtInput}
+            value={cPassword}
+            onChangeText={(val) => setCPassword(val)}
             placeholderTextColor={"grey"}
           />
         </View>
@@ -189,10 +217,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
     return (
       <TouchableOpacity
         style={style.sendOTPView}
-        onPress={async () => {
-          if (isValid()) {
-          }
-        }}
+        onPress={handleUpdatePassword}
       >
         <Text style={style.sendOTPText}>Submit</Text>
       </TouchableOpacity>
@@ -204,20 +229,26 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
       source={require("../../assets/background_image.png")}
       style={{ flex: 1 }}
     >
-      <ScrollView
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: "center",
-          alignContent: "center",
-        }}
-      >
-        {renderHeader()}
-        <View style={style.boxView}>
-          {renderHeaderOne()}
-          {renderPasswordFields()}
-        </View>
-        {renderButton()}
-      </ScrollView>
+      {loaderState ? (
+        <CDSLoader />
+      ) : (
+        <ScrollView
+          contentContainerStyle={{
+            flex: 1,
+            justifyContent: "center",
+            alignContent: "center",
+          }}
+        >
+          {renderHeader()}
+          <View style={style.boxView}>
+            {renderHeaderOne()}
+            {formState == OTPFormState.SUBMIT_PASS
+              ? renderPasswordFields()
+              : null}
+          </View>
+          {formState == OTPFormState.SUBMIT_PASS ? renderButton() : null}
+        </ScrollView>
+      )}
     </ImageBackground>
   );
 };

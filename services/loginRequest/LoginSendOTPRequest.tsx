@@ -16,6 +16,7 @@ export const LoginSendOTPRequest = async (
     return {
       message: "Something went wrong",
       statusCode: 0,
+      error: "",
     };
   }
 };

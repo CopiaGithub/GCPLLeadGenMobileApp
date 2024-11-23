@@ -27,7 +27,6 @@ export const style = StyleSheet.create({
     padding: "2%",
     margin: "2%",
     borderRadius: 8,
-    marginVertical: "4%",
   },
   registerView: {
     backgroundColor: "white",
@@ -71,6 +70,7 @@ export const style = StyleSheet.create({
     textAlign: "right",
     fontWeight: "500",
     fontSize: 14,
+    color: APP_THEME_COLOR,
   },
   btn: {
     backgroundColor: "black",
@@ -143,6 +143,36 @@ export const style = StyleSheet.create({
     fontSize: 30,
     fontWeight: "800",
     marginTop: "-3%",
+  },
+  toggleView: {
+    flexDirection: "row",
+    backgroundColor: "#d7d9d7",
+    padding: "1%",
+    borderWidth: 1,
+    borderStartEndRadius: 8,
+    borderEndEndRadius: 8,
+    borderColor: "#bfbdbd",
+  },
+  activeToggle: {
+    flex: 1,
+    padding: "2%",
+    backgroundColor: "white",
+    textAlign: "center",
+    borderWidth: 1,
+    borderRadius: 6,
+    fontWeight: "500",
+    borderColor: "#b0aeae",
+    color: "black",
+  },
+  disableToggle: {
+    flex: 1,
+    padding: "2%",
+    backgroundColor: "#d7d9d7",
+    textAlign: "center",
+    borderWidth: 0.8,
+    borderColor: "#d7d9d7",
+    color: "black",
+    fontWeight: "500",
   },
 });
 export default style;

@@ -14,14 +14,17 @@ export const UpdatePasswordRequest = async (
   data: UpdatePasswordReq
 ): Promise<UpdatePasswordResp> => {
   try {
+    const req = {
+      password: data.password,
+    };
     const response = await axios.patch(
       `${API.PASSWORD.UPDATE}/${data.id}`,
-      data
+      req
     );
     return response.data;
   } catch (err) {
     return {
-      message: "Something went wrong!",
+      message: {} as any,
       status: false,
       statusCode: 0,
     };

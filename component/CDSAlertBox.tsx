@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import type { CdsPickerModel } from "../types/CdsPickerModel";
-import { Dropdown } from "react-native-element-dropdown";
 import { Overlay } from "react-native-elements";
 import { useState } from "react";
 
