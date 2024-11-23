@@ -11,7 +11,12 @@ export interface RegisterUser {
   roleId: number;
   status: boolean;
 }
-export interface RegisterUserResponse {
+export interface RegisterUserRep {
+  message: RegisterUserMessage;
+  statusCode: number;
+  error: string;
+}
+export interface RegisterUserMessage {
   orgId: string;
   orgName: string;
   sbuId: string;

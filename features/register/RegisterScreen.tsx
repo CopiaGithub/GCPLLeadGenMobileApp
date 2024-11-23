@@ -33,6 +33,7 @@ import RegisterHelper, { IRegisterForm } from "./RegisterFormik";
 import { useFormik } from "formik";
 import { RegisterUserRequest } from "../../services/registerUserRequest/RegisterUserRequest";
 import { RegisterUser } from "../../types/registerType/RegisterType";
+import CDSDropDown from "../login/CDSDropDown";
 
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -46,16 +47,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
   const { orgData } = useSelector((state: RootState) => state.orgnizationData);
   const [alertState, setAlertState] = useState(false);
 
-  const [cPass, setCPass] = useState("1234");
+  const [cPass, setCPass] = useState("");
   const formHelper = new RegisterHelper();
   const handleAPI = async (data: RegisterUser) => {
     const resp = await RegisterUserRequest(data);
-    console.error("Register Response", resp);
+    console.warn("Submit Request", data);
 
-    if (resp && resp.address) {
+    if (resp && resp.statusCode == 201) {
       setAlertState(true);
     } else {
-      DisplayToast("Something went wrong");
+      DisplayToast(`${resp.message}`);
     }
   };
   const submitRegData = useFormik({
@@ -71,19 +72,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-      dispatch(OrganizationRequest());
+      dispatch(OrganizationRequest({}));
     }
   }, [isFocused]);
-
-  const respData: CdsPickerModel[] = [];
-  if (orgData) {
-    for (let i = 0; i < orgData.length; i++) {
-      respData.push({
-        label: orgData[i].orgName,
-        value: orgData[i].id,
-      });
-    }
-  }
 
   const headerIcon = () => {
     return (
@@ -105,6 +96,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
       </>
     );
   };
+  console.warn("Org Data Dropdown", orgData);
 
   const [value, setValue] = useState("");
   const renderResgisterBox = () => {
@@ -140,31 +132,25 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
           />
         </View>
         {/* Organization */}
-        <View style={[style.txView, { padding: "2%" }]}>
-          <SimpleLineIcons
-            name="organization"
-            size={24}
-            style={style.leftIcon}
-          />
-          <View style={style.txtInput} />
-          <CdsPicker
-            pickerData={GetOrgData(orgData)}
-            value={value}
-            onChange={(val) => {
-              if (val && val.label) {
-                submitRegData.setFieldValue("formData.orgId", val.value);
-                submitRegData.setFieldValue("formData.orgName", val.label);
-              }
-            }}
-            placeHolder={
-              submitRegData.values && submitRegData.values.formData.orgName
-                ? submitRegData.values.formData.orgName
-                : "Select Organization"
-            }
-            pickerWidth={"80%"}
-            isDisable={false}
-          />
-        </View>
+
+        <CDSDropDown
+          data={GetOrgData(orgData)}
+          hasSearchOperation={true}
+          searchPlaceholder="Search orgnization"
+          leftIcon={() => (
+            <SimpleLineIcons
+              name="organization"
+              size={24}
+              style={style.leftIcon}
+            />
+          )}
+          onSelect={(val) => {
+            submitRegData.setFieldValue("formData.orgId", Number(val.value));
+            submitRegData.setFieldValue("formData.orgName", val.label);
+          }}
+          hasLeftIcon={true}
+          placeholder="Please select Organization"
+        />
 
         {/* Email */}
         <View style={style.txView}>

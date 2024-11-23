@@ -24,13 +24,15 @@ import { LoginMethod } from "../../types/loginTypes/loginWPasswordTypes/LoginWPa
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { LoginSendOTPRequest } from "../../services/loginRequest/LoginSendOTPRequest";
 import { LoginValidateOTPRequest } from "../../services/loginRequest/LoginValidateOTPRequest";
-import CDSTest from "./DropDownTest";
+import CDSTest from "./CDSDropDown";
+import Dropdown from "./CDSDropDown";
+import CDSDropDown from "./CDSDropDown";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
-  const [password, setPassword] = useState("123");
+  const [password, setPassword] = useState("1235");
   const [otp, setOTP] = useState("");
   const [alertState, setAlertState] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
@@ -255,6 +257,7 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
       </View>
     );
   };
+  const [first, setfirst] = useState("");
   return (
     <ImageBackground
       source={require("../../assets/background_image.png")}
@@ -289,7 +292,6 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
 
               {icon()}
               {renderHeader()}
-              <CDSTest />
               {renderLoginBox()}
             </ScrollView>
             {renderSignUp()}

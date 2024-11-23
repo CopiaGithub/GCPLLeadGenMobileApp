@@ -19,7 +19,10 @@ const API = {
   },
   CAMPAIGN: {
     DATA: `${apiUrl}campaign-master`,
+    TYPE: `${apiUrl}campaign-type-master`,
   },
+  GET_STATES: `${apiUrl}state-master`,
+  GET_DISTRICTS: `${apiUrl}district-master`,
 };
 
 export default API;

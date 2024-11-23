@@ -1,24 +1,14 @@
-export interface OrgnizationData {
-  id: string;
-  orgName: string;
-  orgDescription: string;
-  address: string;
-  pincode: string;
-  contactPerson: string;
-  contactMobile: string;
-  contactEmail: string;
-  createdBy: string;
-  createdOn: string;
-  modifiedBy: string;
-  modifiedOn: string;
-  status: string;
-}
 export interface OrganizationDataResponse {
-  id: string;
+  message: Array<OrgnizationDataItems>;
+  statusCode: number;
+  error: string;
+}
+export interface OrgnizationDataItems {
+  id: number;
   orgName: string;
   orgDescription: string;
   address: string;
-  pincode: string;
+  pincode: number;
   contactPerson: string;
   contactMobile: string;
   contactEmail: string;
@@ -26,10 +16,10 @@ export interface OrganizationDataResponse {
   createdOn: string;
   modifiedBy: string;
   modifiedOn: string;
-  status: string;
+  status: boolean;
 }
 export interface OrganizationDataState {
-  orgData: Array<OrganizationDataResponse> | null;
+  orgData: OrganizationDataResponse | null;
   error: string | null | undefined;
   isOrgDataFetched: boolean;
 }

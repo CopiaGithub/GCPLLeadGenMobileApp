@@ -14,6 +14,14 @@ import { style } from "./CreateCamaignStyle";
 import moment from "moment";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CDSDatePicker from "../../component/CDSDatePicker";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useIsFocused } from "@react-navigation/native";
+import { StateRequest } from "../../services/stateRequest/StateRequest";
+import CDSDropDown from "../login/CDSDropDown";
+import { GetCampaignType, GetDistrict, GetStates } from "./CampaignUtility";
+import { DistrictRequest } from "../../services/districtRequest/DistrictRequest";
+import { CampaignTypeRequest } from "../../services/campaignTypeRequest/CampaignTypeRequest";
 
 type CreateCampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,8 +29,23 @@ type CreateCampaignScreenProps = NativeStackScreenProps<
 >;
 
 const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const isFocused = useIsFocused();
+  const { states } = useSelector((state: RootState) => state.stateData);
+  const { districts } = useSelector((state: RootState) => state.districtData);
+  const { capmpaignTypes } = useSelector(
+    (state: RootState) => state.campaignTypeData
+  );
+
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(CampaignTypeRequest(""));
+      dispatch(StateRequest(null));
+    }
+  }, [isFocused]);
 
   const renderCreateCampaignView = () => {
     return (
@@ -36,10 +59,11 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
         />
         {/* Campaign Type */}
         <Text style={style.labelText}>Campaign Type:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter Campaign Type"
-          placeholderTextColor={"grey"}
+        <CDSDropDown
+          data={GetCampaignType(capmpaignTypes)}
+          onSelect={() => {}}
+          placeholder="Select campaign type"
+          hasSearchOperation={false}
         />
         {/* Dates */}
         <View style={{ flexDirection: "row", marginVertical: "2%" }}>
@@ -77,17 +101,23 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
         />
         {/* State */}
         <Text style={style.labelText}>State:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter State"
-          placeholderTextColor={"grey"}
+        <CDSDropDown
+          data={GetStates(states)}
+          onSelect={(val) => {
+            dispatch(DistrictRequest(Number(val.value)));
+          }}
+          hasSearchOperation
+          placeholder="Select State"
+          searchPlaceholder="Search State"
         />
         {/* District */}
         <Text style={style.labelText}>District:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter District"
-          placeholderTextColor={"grey"}
+        <CDSDropDown
+          data={GetDistrict(districts)}
+          onSelect={(val) => {}}
+          hasSearchOperation
+          placeholder="Select State"
+          searchPlaceholder="Search State"
         />
         {/* Location */}
         <Text style={style.labelText}>Location:</Text>

@@ -30,7 +30,7 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
   const isFocused = useIsFocused();
-  const [mail, setMail] = useState("siddhesh.chaure@copiacs.com");
+  const [mail, setMail] = useState("");
   const [otp, setOTP] = useState("");
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
@@ -128,7 +128,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
       setLoaderState(resp ? false : true);
       if (resp && resp.statusCode == 200) {
         DisplayToast("Password updated succesfully!");
-        props.navigation.navigate("Login")
+        props.navigation.navigate("Login");
       } else {
         DisplayToast(`${resp.message}`);
       }

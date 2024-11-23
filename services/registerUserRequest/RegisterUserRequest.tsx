@@ -2,13 +2,13 @@ import axios from "axios";
 import API from "../../API";
 import {
   RegisterUser,
-  RegisterUserResponse,
+  RegisterUserRep,
 } from "../../types/registerType/RegisterType";
 
 export async function RegisterUserRequest(
   reqData: RegisterUser
-): Promise<RegisterUserResponse> {
-  let data = {} as RegisterUserResponse;
+): Promise<RegisterUserRep> {
+  let data = {} as RegisterUserRep;
 
   return await axios({
     method: "post",

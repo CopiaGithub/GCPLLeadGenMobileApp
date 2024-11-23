@@ -2,11 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import API from "../../API";
 
-export const OrganizationRequest = createAsyncThunk(
-  "getOrgData/fetchOrgData",
-  async (data: {}, { rejectWithValue }) => {
+export const StateRequest = createAsyncThunk(
+  "stateData/fetchStateData",
+  async (data: null, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API.ORGANIZATION.DROPDOWN}`);
+      const response = await axios.get(`${API.GET_STATES}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

@@ -2,15 +2,16 @@ import { CdsPickerModel } from "../../types/CdsPickerModel";
 import { OrganizationDataResponse } from "../../types/organizationTypes/OrganizationTypes";
 import { RegisterUser } from "../../types/registerType/RegisterType";
 import { DisplayToast } from "../../utility/ToastMessage";
+import { DropDownType } from "../login/CDSDropDown";
 import { IRegisterForm } from "./RegisterFormik";
 
-export const GetOrgData = (data: OrganizationDataResponse[] | null) => {
-  const respData: CdsPickerModel[] = [];
-  if (data) {
-    for (let i = 0; i < data.length; i++) {
+export const GetOrgData = (data: OrganizationDataResponse | null) => {
+  const respData: DropDownType[] = [];
+  if (data && data.statusCode == 200 && data.message.length) {
+    for (let i = 0; i < data.message.length; i++) {
       respData.push({
-        label: data[i].orgName,
-        value: data[i].id,
+        label: data.message[i].orgName,
+        value: data.message[i].id.toString(),
       });
     }
   }

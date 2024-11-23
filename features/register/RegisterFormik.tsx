@@ -18,17 +18,17 @@ class RegisterHelper implements IRegisterHelper {
   public get formikInitialValue(): IRegisterForm {
     return {
       formData: {
-        address: "Airoli",
+        address: "",
         email: "",
-        mobile: "8778489464",
-        orgId: 1,
-        orgName: "Copia",
-        password: "1234",
-        pincode: 400708,
+        mobile: "",
+        orgId: 0,
+        orgName: "",
+        password: "",
+        pincode: 0,
         roleId: 1,
         sbuId: 1,
         status: true,
-        username: "Siddhesh",
+        username: "",
       },
     };
   }
