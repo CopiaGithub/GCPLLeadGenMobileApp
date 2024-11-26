@@ -23,6 +23,8 @@ const API = {
   },
   GET_STATES: `${apiUrl}state-master`,
   GET_DISTRICTS: `${apiUrl}district-master`,
+  COMPANY_TYPE_MASTER: `${apiUrl}company-type-master`,
+  INDUSTRY_TYPE_MASTER: `${apiUrl}industry-type-master`,
 };
 
 export default API;

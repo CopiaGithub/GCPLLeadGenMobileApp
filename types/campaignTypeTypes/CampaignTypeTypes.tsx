@@ -1,14 +1,10 @@
 export interface CapmpaignType {
+  id: number;
   camapignType: string;
   campaignTypeDescription: string;
-  createdBy: string;
-  createdOn: string;
-  modifiedBy: string;
-  modifiedOn: string;
-  status: boolean;
 }
 export interface CapmpaignTypeResponse {
-  message: CapmpaignType;
+  message: Array<CapmpaignType>;
   statusCode: number;
   error: string;
 }

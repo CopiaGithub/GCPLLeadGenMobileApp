@@ -11,8 +11,7 @@ export type RootStackParamList = {
   DashboardDrawer: undefined;
   ForgotPassword: undefined;
   Leads: undefined;
-  CustomerCreateOption: undefined;
-  AddMachineDetails: undefined;
+  CreateLead: undefined;
   Approvals: undefined;
   Campaigns: undefined;
   CreateCampaign: undefined;

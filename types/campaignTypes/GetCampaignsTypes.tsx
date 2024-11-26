@@ -1,19 +1,20 @@
-export interface GetCampaignDataState {
-  getCampaignData: Array<GetCampaignDataResp> | null;
-  error: string | null | undefined;
-  isFetched: boolean;
-}
-
-export interface GetCampaignDataResp {
+export interface GetCampaignMessage {
   id: number;
   orgId: number;
   campaignName: string;
+  campaignTypeId: number;
   description: string;
   fromDate: string;
   toDate: string;
-  createdBy: string;
-  createdOn: string;
-  modifiedBy: string;
-  modifiedOn: string;
   status: boolean;
+}
+export interface GetCampaignDataResp {
+  message: Array<GetCampaignMessage>;
+  statusCode: number;
+}
+
+export interface GetCampaignDataState {
+  getCampaignData: GetCampaignDataResp | null;
+  error: string | null | undefined;
+  isFetched: boolean;
 }

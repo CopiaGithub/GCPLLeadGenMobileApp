@@ -6,9 +6,10 @@ import {
   View,
   Text,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { RootStackParamList } from "../../types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -18,6 +19,11 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { useIsFocused } from "@react-navigation/native";
 import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
 import CDSLoader from "../../component/CDSLoader";
+import { ScrollView } from "react-native-gesture-handler";
+import React from "react";
+import { DisplayToast } from "../../utility/ToastMessage";
+import { HandleSearchList } from "./CampaignUtility";
+import { GetCampaignMessage } from "../../types/campaignTypes/GetCampaignsTypes";
 
 type CampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -30,6 +36,34 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
   const { getCampaignData } = useSelector(
     (state: RootState) => state.getCampaignData
   );
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [searchTxt, setSearchTxt] = useState("");
+  const [itemData, setItemData] = useState<Array<GetCampaignMessage>>(
+    new Array<GetCampaignMessage>()
+  );
+
+  useEffect(() => {
+    if (
+      isFocused &&
+      getCampaignData &&
+      getCampaignData.statusCode == 200 &&
+      getCampaignData.message &&
+      getCampaignData.message.length
+    ) {
+      setItemData(getCampaignData.message);
+    } else {
+      setItemData([]);
+    }
+  }, [isFocused, getCampaignData?.statusCode]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    dispatch(GetCampaignDataRequest({}));
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -40,14 +74,26 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <Feather
-          name="plus"
-          size={24}
-          style={style.headerIcon}
-          onPress={() => {
-            props.navigation.navigate("CreateCampaign");
-          }}
-        />
+        <View style={{ flexDirection: "row" }}>
+          <Feather
+            name="refresh-ccw"
+            size={24}
+            style={style.headerIcon}
+            onPress={() => {
+              dispatch(GetCampaignDataRequest({}));
+              DisplayToast("Updating campaign list");
+              setSearchTxt("");
+            }}
+          />
+          <Feather
+            name="plus"
+            size={24}
+            style={style.headerIcon}
+            onPress={() => {
+              props.navigation.navigate("CreateCampaign");
+            }}
+          />
+        </View>
       ),
     });
   }, []);
@@ -65,6 +111,16 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
           style={style.searchTxtInput}
           placeholder="Search Campaigns"
           placeholderTextColor={"grey"}
+          value={searchTxt}
+          onChangeText={(val) =>
+            HandleSearchList(
+              val,
+              getCampaignData,
+              setSearchTxt,
+              itemData,
+              setItemData
+            )
+          }
         />
       </View>
     );
@@ -72,9 +128,12 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
   const renderItems = () => {
     return (
       <>
-        {getCampaignData && getCampaignData.length ? (
+        {getCampaignData &&
+        getCampaignData.statusCode == 200 &&
+        getCampaignData.message.length &&
+        itemData.length ? (
           <>
-            {getCampaignData.map((item, i) => (
+            {itemData.map((item, i) => (
               <View style={style.itemView} key={i}>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Campaign:</Text>
@@ -114,7 +173,7 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
               </View>
             ))}
           </>
-        ) : getCampaignData && !getCampaignData.length ? null : (
+        ) : getCampaignData && !getCampaignData.message.length ? null : (
           <CDSLoader marginTop={"-50%"} />
         )}
       </>
@@ -126,7 +185,13 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
       style={{ flex: 1 }}
     >
       {renderSearchBar()}
-      {renderItems()}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {renderItems()}
+      </ScrollView>
     </ImageBackground>
   );
 };

@@ -1,5 +1,5 @@
-import { Platform, StyleSheet } from "react-native";
-import { APP_THEME_COLOR } from "../../constants/Colors";
+import { StyleSheet } from "react-native";
+import { APP_THEME_COLOR } from "../../../constants/Colors";
 
 export const style = StyleSheet.create({
   createView: {
@@ -15,6 +15,7 @@ export const style = StyleSheet.create({
   labelText: {
     fontSize: 15,
     fontWeight: "500",
+    marginTop: "2%",
   },
   inputTxt: {
     borderWidth: 1,
@@ -29,35 +30,42 @@ export const style = StyleSheet.create({
     borderRadius: 8,
     marginVertical: "2%",
     marginHorizontal: "4%",
+    flex: 1,
   },
   btnText: {
     textAlign: "center",
     color: "white",
     fontWeight: "500",
   },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 16,
-  },
-  label: {
-    marginBottom: 10,
-    fontSize: 16,
+  steeperTextInActive: {
+    textAlign: "center",
+    textAlignVertical: "center",
+    fontSize: 14,
+    borderRadius: 10,
+    backgroundColor: APP_THEME_COLOR,
+    padding: "2%",
+    color: "white",
     fontWeight: "500",
   },
-  picker: {
-    height: 50,
-    width: "100%",
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
+  stepperView: {
+    flexDirection: "row",
+    margin: "2%",
+    justifyContent: "space-evenly",
   },
-  selected: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "gray",
+  steeperTextActive: {
+    textAlign: "center",
+    textAlignVertical: "center",
+    fontSize: 14,
+    borderRadius: 10,
+    backgroundColor: "black",
+    padding: "2%",
+    color: "white",
+    fontWeight: "500",
   },
-  leftIcon: {
-    color: APP_THEME_COLOR,
+  stepperLine: {
+    borderBottomWidth: 2,
+    borderBottomColor: APP_THEME_COLOR,
+    flex: 1,
     alignSelf: "center",
   },
 });

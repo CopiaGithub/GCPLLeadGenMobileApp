@@ -20,9 +20,8 @@ import GiftScreen from "../features/gifts/GiftsScreen";
 import ReportScreen from "../features/reports/ReportScreen";
 import CreateUserScreen from "../features/user/CreateUserScreen";
 import CreateCampaignScreen from "../features/campaigns/CreateCamaign";
-import CustomerCreateOptionsScreen from "../features/leads/customerCreateOptions/CustomerCreateOption";
-import AddMachineDetailsScreen from "../features/leads/machineDetails/AddMachineDetails";
 import "react-native-gesture-handler";
+import CreateLeadScreen from "../features/leads/createLead/CreateLeadScreen";
 
 export default function Navigation({
   colorScheme,
@@ -130,25 +129,14 @@ function RootNavigator() {
           gestureDirection: "horizontal",
         }}
       />
-      <Stack.Screen
-        name="CustomerCreateOption"
-        component={CustomerCreateOptionsScreen}
-        options={{
-          title: "",
-          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitle: "Add Customer",
 
-          gestureEnabled: false,
-          gestureDirection: "horizontal",
-        }}
-      />
       <Stack.Screen
-        name="AddMachineDetails"
-        component={AddMachineDetailsScreen}
+        name="CreateLead"
+        component={CreateLeadScreen}
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitle: "Add Machine Details",
+          headerTitle: "Create Lead",
 
           gestureEnabled: false,
           gestureDirection: "horizontal",
@@ -208,7 +196,6 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Create New Campaign",
-
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -220,7 +207,6 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Gifts",
-
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -232,7 +218,6 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Reports",
-
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}

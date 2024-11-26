@@ -24,7 +24,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
           size={24}
           style={style.headerIcon}
           onPress={() => {
-            props.navigation.navigate("CustomerCreateOption");
+            props.navigation.navigate("CreateLead");
           }}
         />
       ),
