@@ -16,6 +16,7 @@ import LeadDetails from "../stepperScreens/leadDetails/LeadDetails";
 import MachineDetails from "../stepperScreens/machineDetails/MachineDetails";
 import OtherDetails from "../stepperScreens/otherDetails/OtherDetails";
 import UserConsent from "../stepperScreens/userConsent/UserConsent";
+import { AddCustomerData } from "../stepperScreens/leadDetails/LeadDetailsHelper";
 
 type CreateLeadScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -23,6 +24,15 @@ type CreateLeadScreenProps = NativeStackScreenProps<
 >;
 
 const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
+  const [formData, setFormData] = useState<AddCustomerData>({
+    campaignID: 0,
+    companyName: "",
+    companyTypeID: 0,
+    customerArray: [],
+    industryTypeId: 0,
+    location: "",
+    pinCode: "",
+  });
   const renderBtn = () => {
     return (
       <TouchableOpacity
@@ -201,7 +211,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         keyboardShouldPersistTaps="handled"
       >
         {stepperScreen == CurrentSteeperScreen.LEAD_DETAILS ? (
-          <LeadDetails />
+          <LeadDetails setFormData={setFormData} formData={formData} />
         ) : stepperScreen == CurrentSteeperScreen.SELECT_MACHINE ? (
           <MachineDetails />
         ) : stepperScreen == CurrentSteeperScreen.OTHER_DETAILS ? (
@@ -224,7 +234,9 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
           <TouchableOpacity
             style={style.btn}
             onPress={() => {
-              handleContinueBtn(stepperScreen);
+              //handleContinueBtn(stepperScreen);
+
+              console.warn(formData);
             }}
           >
             <Text style={style.btnText}>Continue</Text>

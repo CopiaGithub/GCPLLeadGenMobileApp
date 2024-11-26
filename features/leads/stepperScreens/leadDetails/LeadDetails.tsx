@@ -18,7 +18,10 @@ import {
   getCustomerDetails,
   resetCustomerDetailsTable,
 } from "./leadDetailsDao/LeadDetailsDao";
-import AddCustomerDataHelper, { CustomerDetails } from "./LeadDetailsHelper";
+import AddCustomerDataHelper, {
+  AddCustomerData,
+  CustomerDetails,
+} from "./LeadDetailsHelper";
 import { useFormik } from "formik";
 import { DisplayToast } from "../../../../utility/ToastMessage";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,11 +35,23 @@ import {
 import { CompanyTypeRequest } from "../../../../services/companyTypeRequest/CompanyTypeRequest";
 import { IndustryTypeRequest } from "../../../../services/industryTypeRequest/IndustryTypeRequest";
 
-type LeadDetailsProps = {};
+type LeadDetailsProps = {
+  setFormData: React.Dispatch<React.SetStateAction<AddCustomerData>>;
+  formData: AddCustomerData;
+};
 
 const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
+  const [formData, setFormData] = useState<AddCustomerData>({
+    campaignID: 0,
+    companyName: "",
+    companyTypeID: 0,
+    customerArray: [],
+    industryTypeId: 0,
+    location: "",
+    pinCode: "",
+  });
   const { getCampaignData } = useSelector(
     (state: RootState) => state.getCampaignData
   );
@@ -360,6 +375,16 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           ? renderScanQR()
           : renderAttachVC()}
       </ScrollView>
+      <TouchableOpacity
+        style={style.btn}
+        onPress={() => {
+          //handleContinueBtn(stepperScreen);
+
+          console.warn(formData);
+        }}
+      >
+        <Text style={style.btnText}>Save Data</Text>
+      </TouchableOpacity>
     </View>
   );
 };
