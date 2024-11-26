@@ -47,6 +47,7 @@ export const style = StyleSheet.create({
     borderRadius: 8,
     margin: "2%",
   },
+
   txView: {
     flexDirection: "row",
     borderWidth: 1,

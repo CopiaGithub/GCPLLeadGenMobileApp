@@ -25,6 +25,7 @@ const API = {
   GET_DISTRICTS: `${apiUrl}district-master`,
   COMPANY_TYPE_MASTER: `${apiUrl}company-type-master`,
   INDUSTRY_TYPE_MASTER: `${apiUrl}industry-type-master`,
+  PRODUCT_FAMILY_MODEL: `${apiUrl}Product-Master`,
 };
 
 export default API;

@@ -1,11 +1,21 @@
 import * as Yup from "yup";
 
 export interface CustomerDetails {
-  id: number;
+  ID: number;
   customerName: string;
   mobileNumber: string;
   alternativeMobileNumber: string;
   email: string;
+}
+
+export interface AddCustomerData {
+  campaignID: number;
+  companyName: string;
+  companyTypeID: number;
+  industryTypeId: number;
+  location: string;
+  pinCode: string;
+  customerArray: Array<CustomerDetails>;
 }
 
 export interface IAddCustomerData {
@@ -18,6 +28,7 @@ export interface IAddCustomerData {
   mobileNumber: string;
   alternativeMobileNumber: string;
   email: string;
+  pinCode: string;
 }
 
 interface IAddCustomerDataHelper {
@@ -41,6 +52,7 @@ class AddCustomerDataHelper implements IAddCustomerDataHelper {
       customerName: "",
       email: "",
       mobileNumber: "",
+      pinCode: "",
     };
   }
   public set formikInitialValue(value: IAddCustomerData) {
@@ -54,6 +66,7 @@ class AddCustomerDataHelper implements IAddCustomerDataHelper {
     this.formikInitialValue.companyTypeID = value.companyTypeID;
     this.formikInitialValue.industryTypeId = value.industryTypeId;
     this.formikInitialValue.location = value.location;
+    this.formikInitialValue.pinCode = value.pinCode;
   }
 
   public get dsrValidationSchema(): any {

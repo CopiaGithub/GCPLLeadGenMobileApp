@@ -1,31 +1,56 @@
+import { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import CDSDropDown from "../../../login/CDSDropDown";
+import {
+  GetFinancingRequired,
+  GetPurchaseTimeline,
+} from "./OtherMachinesUtility";
 
 type OtherDetailsProps = {};
 
 const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
+  const [purchase, setPurchase] = useState("");
+  const [financing, setFinancing] = useState(false);
+  const [noOfMachines, setNoOfMachines] = useState(0);
+  const [noOfPeople, setNoOfPeople] = useState(0);
+  const [noOfGifts, setNoOfGifts] = useState(0);
   return (
     <View style={{ margin: "2%" }}>
       <View style={style.cardView}>
         {/* Purchase Timeline */}
         <Text style={style.labelText}>Purchase Timeline:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter Purchase Timeline"
-          placeholderTextColor={"grey"}
-        />
+        <View style={{ marginVertical: "2%" }}>
+          <CDSDropDown
+            data={GetPurchaseTimeline()}
+            onSelect={(val) => {
+              setPurchase(val.value);
+            }}
+            placeholder="Select timeline"
+          />
+        </View>
         {/* Financing Required? */}
         <Text style={style.labelText}>Financing Required?:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter Financing Required?"
-          placeholderTextColor={"grey"}
-        />
+        <View style={{ marginVertical: "2%" }}>
+          <CDSDropDown
+            data={GetFinancingRequired()}
+            onSelect={(val) => {
+              setFinancing(val.value == "true" ? true : false);
+            }}
+            placeholder="Select one option"
+          />
+        </View>
         {/* No. of machines */}
         <Text style={style.labelText}>No. of machines:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of machines"
           placeholderTextColor={"grey"}
+          keyboardType="numeric"
+          value={noOfMachines.toString()}
+          maxLength={2}
+          onChangeText={(val) => {
+            setNoOfMachines(Number(val));
+          }}
         />
         {/* No. of people accompanied */}
         <Text style={style.labelText}>No. of people accompanied:</Text>
@@ -33,6 +58,12 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           style={style.inputTxt}
           placeholder="Enter No. of people accompanied"
           placeholderTextColor={"grey"}
+          keyboardType="numeric"
+          value={noOfPeople.toString()}
+          maxLength={2}
+          onChangeText={(val) => {
+            setNoOfPeople(Number(val));
+          }}
         />
         {/* No. of gifts needed */}
         <Text style={style.labelText}>No. of gifts needed:</Text>
@@ -40,6 +71,12 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           style={style.inputTxt}
           placeholder="Enter No. of gifts needed"
           placeholderTextColor={"grey"}
+          keyboardType="numeric"
+          value={noOfGifts.toString()}
+          maxLength={1}
+          onChangeText={(val) => {
+            setNoOfGifts(Number(val));
+          }}
         />
       </View>
     </View>

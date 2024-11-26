@@ -14,14 +14,39 @@ import { useIsFocused } from "@react-navigation/native";
 import {
   addCustomerDetails,
   createCustomerDetailsTable,
+  deleteCustomer,
+  getCustomerDetails,
+  resetCustomerDetailsTable,
 } from "./leadDetailsDao/LeadDetailsDao";
 import AddCustomerDataHelper, { CustomerDetails } from "./LeadDetailsHelper";
 import { useFormik } from "formik";
+import { DisplayToast } from "../../../../utility/ToastMessage";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/store";
+import { GetCampaignDataRequest } from "../../../../services/campaignRequest/GetCampaignDataRequest";
+import {
+  GetCampaignData,
+  GetCompanyType,
+  GetIndustry,
+} from "./LeadDetailsUtility";
+import { CompanyTypeRequest } from "../../../../services/companyTypeRequest/CompanyTypeRequest";
+import { IndustryTypeRequest } from "../../../../services/industryTypeRequest/IndustryTypeRequest";
 
 type LeadDetailsProps = {};
 
 const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   const isFocused = useIsFocused();
+  const dispatch = useDispatch<AppDispatch>();
+  const { getCampaignData } = useSelector(
+    (state: RootState) => state.getCampaignData
+  );
+  const { CompanyType } = useSelector(
+    (state: RootState) => state.companyTypeData
+  );
+  const { IndustryType } = useSelector(
+    (state: RootState) => state.industryTypeData
+  );
+
   const formHelper = new AddCustomerDataHelper();
   const [companyDetails, setCompanyDetails] = useState(true);
   const [custDetails, setCustDetails] = useState(false);
@@ -30,6 +55,10 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   );
   useEffect(() => {
     createCustomerDetailsTable();
+    getCustomerDetails(setCustCardData);
+    dispatch(GetCampaignDataRequest({}));
+    dispatch(CompanyTypeRequest(""));
+    dispatch(IndustryTypeRequest(""));
   }, [isFocused]);
 
   const submitLeadDetails = useFormik({
@@ -44,11 +73,10 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       customerName: data.customerName,
       email: data.email,
       mobileNumber: data.mobileNumber,
-      id: 0,
+      ID: 0,
     };
     addCustomerDetails(cartData, setCustCardData);
   };
-  console.warn("Cart Data", custCartData);
 
   const renderDetailsHeaderOne = (headerName: string) => {
     return (
@@ -78,31 +106,32 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   };
   const renderCustCartList = () => {
     return (
-      <ScrollView>
+      <ScrollView
+        horizontal
+        contentContainerStyle={{ paddingRight: "30%" }}
+        keyboardShouldPersistTaps="always"
+      >
         {custCartData && custCartData.length ? (
           <>
             {custCartData.map((item, i) => (
-              <View key={i}>
-                <View style={style.cartCard}>
-                  <View style={style.cartView}>
-                    <Text style={style.cartLeftTxt}>Customer:</Text>
-                    <Text style={style.cartRightTxt}>{item.customerName}</Text>
-                  </View>
-                  <View style={style.cartView}>
-                    <Text style={style.cartLeftTxt}>Customer:</Text>
-                    <Text style={style.cartRightTxt}>{item.email}</Text>
-                  </View>
-                  <View style={style.cartView}>
-                    <Text style={style.cartLeftTxt}>Customer:</Text>
-                    <Text style={style.cartRightTxt}>{item.mobileNumber}</Text>
-                  </View>
-                  <View style={style.cartView}>
-                    <Text style={style.cartLeftTxt}>Customer:</Text>
-                    <Text style={style.cartRightTxt}>
-                      {item.alternativeMobileNumber}
-                    </Text>
-                  </View>
+              <View style={style.cartCard} key={i}>
+                <View style={style.cartView}>
+                  <Text style={style.cartTxt}>{item.customerName}</Text>
                 </View>
+                <View style={style.cartView}>
+                  <Text style={style.cartTxt}>{item.email}</Text>
+                </View>
+                <View style={style.cartView}>
+                  <Text style={style.cartTxt}>{item.mobileNumber}</Text>
+                </View>
+                <TouchableOpacity
+                  style={style.cartBtnView}
+                  onPress={() => {
+                    deleteCustomer(item.ID, setCustCardData);
+                  }}
+                >
+                  <Text style={style.cartBtnTxt}>Remove</Text>
+                </TouchableOpacity>
               </View>
             ))}
           </>
@@ -122,8 +151,10 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
                   placeholder="Select campaign type"
-                  data={[{ label: "Select", value: "0" }]}
-                  onSelect={() => {}}
+                  data={GetCampaignData(getCampaignData)}
+                  onSelect={(val) => {
+                    submitLeadDetails.setFieldValue("campaignID", val.value);
+                  }}
                 />
               </View>
 
@@ -133,14 +164,20 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 style={style.inputTxt}
                 placeholder="Enter Company Name"
                 placeholderTextColor={"grey"}
+                value={submitLeadDetails.values.companyName}
+                onChangeText={(val) => {
+                  submitLeadDetails.setFieldValue("companyName", val);
+                }}
               />
               {/* Company Type */}
               <Text style={style.labelText}>Company Type:</Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
                   placeholder="Select company type"
-                  data={[{ label: "Select", value: "0" }]}
-                  onSelect={() => {}}
+                  data={GetCompanyType(CompanyType)}
+                  onSelect={(val) => {
+                    submitLeadDetails.setFieldValue("companyTypeID", val.value);
+                  }}
                 />
               </View>
               {/* Industry Type */}
@@ -148,8 +185,13 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
                   placeholder="Select industry type"
-                  data={[{ label: "Select", value: "0" }]}
-                  onSelect={() => {}}
+                  data={GetIndustry(IndustryType)}
+                  onSelect={(val) => {
+                    submitLeadDetails.setFieldValue(
+                      "industryTypeId",
+                      val.value
+                    );
+                  }}
                 />
               </View>
               {/* Location */}
@@ -158,6 +200,10 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 style={style.inputTxt}
                 placeholder="Enter Location"
                 placeholderTextColor={"grey"}
+                value={submitLeadDetails.values.location}
+                onChangeText={(val) => {
+                  submitLeadDetails.setFieldValue("location", val);
+                }}
               />
               {/* Pincode */}
               <Text style={style.labelText}>Pincode:</Text>
@@ -165,6 +211,10 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 style={style.inputTxt}
                 placeholder="Enter Pincode"
                 placeholderTextColor={"grey"}
+                value={submitLeadDetails.values.pinCode}
+                onChangeText={(val) => {
+                  submitLeadDetails.setFieldValue("pinCode", val);
+                }}
               />
             </>
           ) : null}
@@ -303,7 +353,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           {"Attach\n Visiting Card"}
         </Text>
       </View>
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="always">
         {detailsOpt == leadDetailOption.ADD_CUSTOMER
           ? renderAddCust()
           : detailsOpt == leadDetailOption.SCAN
@@ -322,15 +372,28 @@ const style = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "white",
     marginVertical: "2%",
+    padding: "1.5%",
+    marginRight: "2%",
   },
   cartView: {
     flexDirection: "row",
   },
-  cartLeftTxt: {
-    flex: 0.6,
+
+  cartTxt: {
+    flex: 1,
+    fontWeight: "400",
   },
-  cartRightTxt: {
-    flex: 1.4,
+  cartIcon: { flex: 1 },
+  cartBtnView: {
+    backgroundColor: "#d90404",
+    padding: "2%",
+    borderRadius: 8,
+    margin: "2%",
+  },
+  cartBtnTxt: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "500",
   },
   headerDetailsView: {
     flexDirection: "row",

@@ -4,13 +4,108 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import CDSDropDown from "../../../login/CDSDropDown";
+import CDSDropDown, { DropDownType } from "../../../login/CDSDropDown";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { AddCustomerData } from "../leadDetails/LeadDetailsHelper";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../redux/store";
+import { useEffect, useState } from "react";
+import { ProductFamilyRequest } from "../../../../services/productFamilyModelRequest/ProductFamilyRequest";
+import { ProductModelRequest } from "../../../../services/productFamilyModelRequest/ProductModelRequest";
+import { GetProductFamily, GetProductModel } from "./MachineDetailsUtility";
+import { MachineDetailsData } from "./machineDetailsDao/MachineDetails";
+import {
+  addMachineDetails,
+  createMachineDetailsTable,
+  deleteMachine,
+  getMachineDetails,
+} from "./machineDetailsDao/MachineDetailsDao";
 
-type MachineDetailsProps = {};
+type MachineDetailsProps = {
+  // customerData: AddCustomerData;
+};
 
 const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch<AppDispatch>();
+  const { ProductFamily } = useSelector(
+    (state: RootState) => state.productFamily
+  );
+  const { ProductModel } = useSelector(
+    (state: RootState) => state.productModel
+  );
+  const [productFamilyID, setProductFamilyID] = useState<{
+    id: string;
+    name: string;
+  }>({ id: "0", name: "" });
+  const [productModelID, setProductModelID] = useState<{
+    id: string;
+    name: string;
+  }>({ id: "0", name: "" });
+  const [noOfMachines, setNoOfMachines] = useState("");
+  const [machineCartData, setMachineCartData] = useState<
+    Array<MachineDetailsData>
+  >(new Array<MachineDetailsData>());
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(ProductFamilyRequest(""));
+      createMachineDetailsTable();
+      getMachineDetails(setMachineCartData);
+    }
+  }, [isFocused]);
+
+  const handleProductFamily = (val: DropDownType) => {
+    if (val) {
+      dispatch(ProductModelRequest(Number(val.value)));
+      setProductFamilyID({ id: val.value, name: val.label });
+    }
+  };
+  const renderCustCartList = () => {
+    return (
+      <ScrollView
+        horizontal
+        contentContainerStyle={{ paddingRight: "30%" }}
+        keyboardShouldPersistTaps="always"
+      >
+        {machineCartData && machineCartData.length ? (
+          <>
+            {machineCartData.map((item, i) => (
+              <View style={style.cartCard} key={i}>
+                <View style={style.cartView}>
+                  <Text style={style.cartLeftTxt}>Product Family: </Text>
+                  <Text style={style.cartRightTxt}>
+                    {item.productFamilyName}
+                  </Text>
+                </View>
+                <View style={style.cartView}>
+                  <Text style={style.cartLeftTxt}>Product Model:</Text>
+                  <Text style={style.cartRightTxt}>
+                    {item.productModelName}
+                  </Text>
+                </View>
+                <View style={style.cartView}>
+                  <Text style={style.cartLeftTxt}>No. of Machines: </Text>
+                  <Text style={style.cartRightTxt}>{item.noOfMachines}</Text>
+                </View>
+                <TouchableOpacity
+                  style={style.cartBtnView}
+                  onPress={() => {
+                    deleteMachine(item.ID, setMachineCartData);
+                  }}
+                >
+                  <Text style={style.cartBtnTxt}>Remove</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </>
+        ) : null}
+      </ScrollView>
+    );
+  };
   return (
     <View style={{ margin: "2%" }}>
       <Text style={style.headerText}>
@@ -24,8 +119,10 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select product family"
-            data={[{ label: "Select", value: "0" }]}
-            onSelect={() => {}}
+            data={GetProductFamily(ProductFamily)}
+            onSelect={(val) => {
+              handleProductFamily(val);
+            }}
           />
         </View>
         {/* Product Model */}
@@ -33,8 +130,10 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select product model"
-            data={[{ label: "Select", value: "0" }]}
-            onSelect={() => {}}
+            data={GetProductModel(ProductModel)}
+            onSelect={(val) => {
+              setProductModelID({ id: val.value, name: val.label });
+            }}
           />
         </View>
         {/* No. of machines */}
@@ -42,12 +141,32 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of machines"
+          keyboardType="numeric"
+          maxLength={2}
+          value={noOfMachines}
+          onChangeText={(val) => {
+            setNoOfMachines(val);
+          }}
           placeholderTextColor={"grey"}
         />
-        <TouchableOpacity style={style.addBtnView}>
+        <TouchableOpacity
+          style={style.addBtnView}
+          onPress={() => {
+            const cartData: MachineDetailsData = {
+              ID: 0,
+              noOfMachines: noOfMachines,
+              productFamilyID: productFamilyID?.id,
+              productFamilyName: productFamilyID?.name,
+              productModelID: productModelID?.id,
+              productModelName: productModelID?.name,
+            };
+            addMachineDetails(cartData, setMachineCartData);
+          }}
+        >
           <FontAwesome6 name="add" size={24} style={style.addBtnIcon} />
           <Text style={style.addBtnTxt}>Add to list</Text>
         </TouchableOpacity>
+        {renderCustCartList()}
       </View>
     </View>
   );
@@ -164,6 +283,40 @@ const style = StyleSheet.create({
   btnText: {
     textAlign: "center",
     color: "white",
+    fontWeight: "500",
+  },
+  cartCard: {
+    borderWidth: 1,
+    borderColor: "#d6d4d4",
+    borderRadius: 8,
+    backgroundColor: "white",
+    marginVertical: "2%",
+    padding: "1.5%",
+    marginRight: "2%",
+  },
+  cartView: {
+    flexDirection: "row",
+    margin: "1%",
+  },
+
+  cartLeftTxt: {
+    flex: 1,
+    fontWeight: "500",
+  },
+  cartRightTxt: {
+    flex: 1,
+    fontWeight: "400",
+  },
+  cartIcon: { flex: 1 },
+  cartBtnView: {
+    backgroundColor: "#d90404",
+    padding: "2%",
+    borderRadius: 8,
+    margin: "2%",
+  },
+  cartBtnTxt: {
+    color: "white",
+    textAlign: "center",
     fontWeight: "500",
   },
 });
