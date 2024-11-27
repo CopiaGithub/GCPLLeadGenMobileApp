@@ -20,25 +20,49 @@ import { useIsFocused } from "@react-navigation/native";
 import { GetLeadDataRequest } from "../../services/leadsServices/GetLeadDataRequest";
 import moment from "moment";
 import {
+  GetLeadRespMessage,
   GetProductsIntersted,
   GetVisitorDetails,
 } from "../../types/leadTypes/GetLeadsTypes";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { HandleSearchList } from "./LeadScreenUtility";
+import CDSLoader from "../../component/CDSLoader";
 
 type LeadScreenProps = NativeStackScreenProps<RootStackParamList, "Leads">;
 
 const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
   const isFocused = useIsFocused();
-  const { leadDetails } = useSelector((state: RootState) => state.leadData);
 
+  const [searchTxt, setSearchTxt] = useState("");
   const [showCustState, setShowCustState] = useState(false);
   const [showProdState, setShowProdState] = useState(false);
+  const [showCustIndex, setShowCustIndex] = useState(0);
+  const [showProdIndex, setShowProdIndex] = useState(0);
+  const [itemData, setItemData] = useState<Array<GetLeadRespMessage>>(
+    new Array<GetLeadRespMessage>()
+  );
+
+  const { leadDetails } = useSelector((state: RootState) => state.leadData);
   useEffect(() => {
     if (isFocused) {
       dispatch(GetLeadDataRequest(""));
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (
+      isFocused &&
+      leadDetails &&
+      leadDetails.statusCode == 200 &&
+      leadDetails.message &&
+      leadDetails.message.length
+    ) {
+      setItemData(leadDetails.message);
+    } else {
+      setItemData([]);
+    }
+  }, []);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -50,6 +74,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
             style={style.headerIcon}
             onPress={() => {
               dispatch(GetLeadDataRequest(""));
+              setSearchTxt("");
             }}
           />
           <Feather
@@ -77,6 +102,15 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
           style={style.searchTxtInput}
           placeholder="Search Leads"
           placeholderTextColor={"grey"}
+          onChangeText={(val) =>
+            HandleSearchList(
+              val,
+              leadDetails,
+              setSearchTxt,
+              itemData,
+              setItemData
+            )
+          }
         />
       </View>
     );
@@ -131,9 +165,10 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
         {leadDetails &&
         leadDetails.statusCode == 200 &&
         leadDetails.message &&
-        leadDetails.message.length ? (
+        leadDetails.message.length &&
+        itemData.length ? (
           <>
-            {leadDetails.message.map((item, i) => (
+            {itemData.map((item, i) => (
               <View style={style.itemView}>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Lead ID:</Text>
@@ -170,33 +205,66 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
                 </View>
                 <TouchableOpacity
                   style={style.showCustBtnView}
-                  onPress={() => setShowCustState(!showCustState)}
+                  onPress={() => {
+                    setShowCustIndex(0);
+                    setShowCustState(!showCustState);
+                    setShowCustIndex(i);
+                  }}
                 >
                   <Text style={style.showCustTxt}>Show Customers</Text>
                   <FontAwesome
-                    name={!showCustState ? "angle-up" : "angle-down"}
+                    name={
+                      showCustState && showCustIndex == i
+                        ? "angle-down"
+                        : "angle-up"
+                    }
                     size={24}
                     style={style.searchIcon}
                   />
                 </TouchableOpacity>
-                {showCustState ? renderCustomers(item.visitorDetails) : null}
+                {showCustState && showProdIndex == i
+                  ? renderCustomers(item.visitorDetails)
+                  : null}
                 <TouchableOpacity
                   style={style.showCustBtnView}
-                  onPress={() => setShowProdState(!showProdState)}
+                  onPress={() => {
+                    setShowProdIndex(0);
+                    setShowProdState(!showProdState);
+                    setShowProdIndex(i);
+                  }}
                 >
                   <Text style={style.showCustTxt}>Show Products</Text>
                   <FontAwesome
-                    name={!showProdState ? "angle-up" : "angle-down"}
+                    name={
+                      showProdState && showProdIndex == i
+                        ? "angle-down"
+                        : "angle-up"
+                    }
                     size={24}
                     style={style.searchIcon}
                   />
                 </TouchableOpacity>
 
-                {showProdState ? renderProducts(item.productsInterested) : null}
+                {showProdState && showProdIndex == i
+                  ? renderProducts(item.productsInterested)
+                  : null}
               </View>
             ))}
           </>
-        ) : null}
+        ) : leadDetails &&
+          leadDetails.statusCode == 200 &&
+          leadDetails.message &&
+          !leadDetails.message ? (
+          <View>
+            <Text>No data found!</Text>
+          </View>
+        ) : leadDetails && leadDetails.statusCode != 200 ? (
+          <View>
+            <Text>{`${leadDetails.message}`}</Text>
+          </View>
+        ) : (
+          <CDSLoader />
+        )}
       </>
     );
   };

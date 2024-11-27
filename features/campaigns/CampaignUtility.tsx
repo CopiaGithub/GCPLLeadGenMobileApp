@@ -61,6 +61,20 @@ export const GetCampaignType = (campaignType: CapmpaignTypeResponse | null) => {
   return pickerData;
 };
 
+export const GetStateNameByID = (data: StateResponse | null, id: number) => {
+  if (data && data.statusCode == 200 && data.message && data.message.length) {
+    return data.message.find((item) => item.id == id)?.name;
+  } else {
+    return "";
+  }
+};
+export const GetDistrictNameByID = (data: StateResponse | null, id: number) => {
+  if (data && data.statusCode == 200 && data.message && data.message.length) {
+    return data.message.find((item) => item.id == id)?.name;
+  } else {
+    return "";
+  }
+};
 export const HandleSearchList = (
   searchText: string,
   campaignList: GetCampaignDataResp | null,

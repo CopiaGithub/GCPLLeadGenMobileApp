@@ -6,7 +6,11 @@ export interface GetCampaignMessage {
   description: string;
   fromDate: string;
   toDate: string;
-  status: boolean;
+  stateId: number;
+  districtId: number;
+  location: string;
+  campaignObjective: string;
+  status: true;
 }
 export interface GetCampaignDataResp {
   message: Array<GetCampaignMessage>;

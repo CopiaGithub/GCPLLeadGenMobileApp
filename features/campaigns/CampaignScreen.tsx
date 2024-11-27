@@ -22,8 +22,10 @@ import CDSLoader from "../../component/CDSLoader";
 import { ScrollView } from "react-native-gesture-handler";
 import React from "react";
 import { DisplayToast } from "../../utility/ToastMessage";
-import { HandleSearchList } from "./CampaignUtility";
+import { GetStateNameByID, HandleSearchList } from "./CampaignUtility";
 import { GetCampaignMessage } from "../../types/campaignTypes/GetCampaignsTypes";
+import { StateRequest } from "../../services/stateRequest/StateRequest";
+import moment from "moment";
 
 type CampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -41,7 +43,7 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
   const [itemData, setItemData] = useState<Array<GetCampaignMessage>>(
     new Array<GetCampaignMessage>()
   );
-
+  const { states } = useSelector((state: RootState) => state.stateData);
   useEffect(() => {
     if (
       isFocused &&
@@ -55,6 +57,11 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
       setItemData([]);
     }
   }, [isFocused, getCampaignData?.statusCode]);
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(StateRequest(null));
+    }
+  }, [isFocused]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -142,32 +149,41 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
                 </View>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>From Date:</Text>
-                  <Text style={style.valueText}>{item.fromDate}</Text>
+                  <Text style={style.valueText}>
+                    {" "}
+                    {moment(item.fromDate, "YYYY-MM-DD").format("DD MMM YYYY")}
+                  </Text>
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>To Date:</Text>
-                  <Text style={style.valueText}>{item.toDate}</Text>
+                  <Text style={style.valueText}>
+                    {moment(item.toDate, "YYYY-MM-DD").format("DD MMM YYYY")}
+                  </Text>
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Location:</Text>
-                  <Text style={style.valueText}>Mumbai</Text>
+                  <Text style={style.valueText}>{item.location}</Text>
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>State:</Text>
-                  <Text style={style.valueText}>Maharashtra</Text>
+                  <Text style={style.valueText}>
+                    {GetStateNameByID(states, item.stateId)}
+                  </Text>
                   <View style={style.extra}></View>
                 </View>
-                <View style={style.txtView}>
+                {/* <View style={style.txtView}>
                   <Text style={style.keyText}>District:</Text>
                   <Text style={style.valueText}>Thane</Text>
                   <View style={style.extra}></View>
-                </View>
+                </View> */}
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Status:</Text>
-                  <Text style={style.valueText}>{item.status}</Text>
+                  <Text style={style.valueText}>
+                    {item.status == true ? "Active" : "InActive"}
+                  </Text>
                   <View style={style.extra}></View>
                 </View>
               </View>

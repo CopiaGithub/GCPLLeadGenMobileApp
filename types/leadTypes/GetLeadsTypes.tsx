@@ -39,6 +39,8 @@ export interface GetLeadRespMessage {
   status: boolean;
   productsInterested: Array<GetProductsIntersted>;
   visitorDetails: Array<GetVisitorDetails>;
+  productCollapseState: boolean;
+  visitorCollapseState: boolean;
 }
 
 export interface GetLeadResp {

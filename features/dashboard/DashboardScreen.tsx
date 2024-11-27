@@ -7,18 +7,21 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  BackHandler,
+  Alert,
 } from "react-native";
 import { RootStackParamList } from "../../types";
 import { style } from "./DashboardScreenStyle";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GetLeadDataRequest } from "../../services/leadsServices/GetLeadDataRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
+import React from "react";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -34,6 +37,33 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     }
   }, [isFocused]);
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert("Hold on!", "Are you sure you want to logout?", [
+          {
+            text: "Cancel",
+            onPress: () => null,
+            style: "cancel",
+          },
+          {
+            text: "YES",
+            onPress: () => {
+              AsyncStorage.removeItem("@userData").then(() => {});
+              props.navigation.navigate("Login");
+            },
+          },
+        ]);
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [])
+  );
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {

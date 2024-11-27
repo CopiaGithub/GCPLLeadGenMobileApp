@@ -85,7 +85,7 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
     },
   });
   useEffect(() => {
-    if (isFocused && item.username) {
+    if (isFocused && item && item.username) {
       createUser.setValues({
         formData: {
           address: item.address,
@@ -224,6 +224,8 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Pincode"
+          maxLength={6}
+          keyboardType="numeric"
           placeholderTextColor={"grey"}
           value={createUser.values.formData.pincode.toString()}
           onChangeText={(val) => {

@@ -71,7 +71,22 @@ const CustomDrawer = (props: any) => {
       </DrawerContentScrollView>
       <TouchableOpacity
         style={{ backgroundColor: "black" }}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() =>
+          Alert.alert("Hold on!", "Are you sure you want to logout?", [
+            {
+              text: "Cancel",
+              onPress: () => null,
+              style: "cancel",
+            },
+            {
+              text: "YES",
+              onPress: () => {
+                AsyncStorage.removeItem("@userData").then(() => {});
+                props.navigation.navigate("Login");
+              },
+            },
+          ])
+        }
       >
         <View style={styles.logoutView}>
           <AntDesign name="logout" size={24} color="white" />
