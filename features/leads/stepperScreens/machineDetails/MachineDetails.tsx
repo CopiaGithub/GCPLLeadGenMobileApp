@@ -15,17 +15,26 @@ import { AppDispatch, RootState } from "../../../../redux/store";
 import { useEffect, useState } from "react";
 import { ProductFamilyRequest } from "../../../../services/productFamilyModelRequest/ProductFamilyRequest";
 import { ProductModelRequest } from "../../../../services/productFamilyModelRequest/ProductModelRequest";
-import { GetProductFamily, GetProductModel } from "./MachineDetailsUtility";
+import {
+  GetModelFromProductModel,
+  GetProductFamily,
+  GetProductModel,
+} from "./MachineDetailsUtility";
 import { MachineDetailsData } from "./machineDetailsDao/MachineDetails";
 import {
   addMachineDetails,
   createMachineDetailsTable,
   deleteMachine,
   getMachineDetails,
+  resetMachineDetailsTable,
 } from "./machineDetailsDao/MachineDetailsDao";
+import { DisplayToast } from "../../../../utility/ToastMessage";
+import { FormState } from "../../createLead/CreateLeadScreen";
 
 type MachineDetailsProps = {
-  // customerData: AddCustomerData;
+  setFormData: React.Dispatch<React.SetStateAction<MachineDetailsData[]>>;
+  setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  allFormState: FormState;
 };
 
 const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
@@ -44,16 +53,34 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
   const [productModelID, setProductModelID] = useState<{
     id: string;
     name: string;
-  }>({ id: "0", name: "" });
-  const [noOfMachines, setNoOfMachines] = useState("");
+    product: string;
+  }>({ id: "0", name: "", product: "" });
+  const [noOfMachines, setNoOfMachines] = useState("0");
   const [machineCartData, setMachineCartData] = useState<
     Array<MachineDetailsData>
   >(new Array<MachineDetailsData>());
 
+  console.warn("Product Model---", productModelID);
+
+  const isValid = () => {
+    if (productFamilyID.id == "0") {
+      DisplayToast("Please select product family");
+      return false;
+    } else if (productModelID.id == "0") {
+      DisplayToast("Please select product model");
+      return false;
+    } else if (noOfMachines == "0") {
+      DisplayToast("Please enter no of machines");
+      return false;
+    } else {
+      return true;
+    }
+  };
   useEffect(() => {
     if (isFocused) {
       dispatch(ProductFamilyRequest(""));
       createMachineDetailsTable();
+      resetMachineDetailsTable(setMachineCartData);
       getMachineDetails(setMachineCartData);
     }
   }, [isFocused]);
@@ -106,6 +133,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
       </ScrollView>
     );
   };
+  console.warn("Product Details----", machineCartData);
   return (
     <View style={{ margin: "2%" }}>
       <Text style={style.headerText}>
@@ -132,7 +160,15 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
             placeholder="Select product model"
             data={GetProductModel(ProductModel)}
             onSelect={(val) => {
-              setProductModelID({ id: val.value, name: val.label });
+              const id = GetModelFromProductModel(
+                ProductModel?.message.model,
+                Number(val.value)
+              );
+              setProductModelID({
+                id: val.value,
+                name: val.label,
+                product: id ? id.productMasterId.toString() : "",
+              });
             }}
           />
         </View>
@@ -152,15 +188,19 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <TouchableOpacity
           style={style.addBtnView}
           onPress={() => {
-            const cartData: MachineDetailsData = {
-              ID: 0,
-              noOfMachines: noOfMachines,
-              productFamilyID: productFamilyID?.id,
-              productFamilyName: productFamilyID?.name,
-              productModelID: productModelID?.id,
-              productModelName: productModelID?.name,
-            };
-            addMachineDetails(cartData, setMachineCartData);
+            if (isValid()) {
+              const cartData: MachineDetailsData = {
+                ID: 0,
+                noOfMachines: noOfMachines,
+                productFamilyID: productFamilyID?.id,
+                productFamilyName: productFamilyID?.name,
+                productModelID: productModelID?.id,
+                productModelName: productModelID?.name,
+                productID: productModelID.product,
+              };
+
+              addMachineDetails(cartData, setMachineCartData);
+            }
           }}
         >
           <FontAwesome6 name="add" size={24} style={style.addBtnIcon} />
@@ -168,6 +208,22 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         </TouchableOpacity>
         {renderCustCartList()}
       </View>
+      {!props.allFormState.formTwo ? (
+        <TouchableOpacity
+          style={style.btn}
+          onPress={() => {
+            if (isValid()) {
+              props.setFormData(machineCartData);
+              props.setAllFormState((val) => ({
+                ...val,
+                formTwo: true,
+              }));
+            }
+          }}
+        >
+          <Text style={style.btnText}>Save Machine Details</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

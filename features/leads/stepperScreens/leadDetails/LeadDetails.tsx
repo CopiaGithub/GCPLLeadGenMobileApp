@@ -21,6 +21,7 @@ import {
 import AddCustomerDataHelper, {
   AddCustomerData,
   CustomerDetails,
+  IAddCustomerData,
 } from "./LeadDetailsHelper";
 import { useFormik } from "formik";
 import { DisplayToast } from "../../../../utility/ToastMessage";
@@ -34,15 +35,20 @@ import {
 } from "./LeadDetailsUtility";
 import { CompanyTypeRequest } from "../../../../services/companyTypeRequest/CompanyTypeRequest";
 import { IndustryTypeRequest } from "../../../../services/industryTypeRequest/IndustryTypeRequest";
+import { FormState } from "../../createLead/CreateLeadScreen";
 
 type LeadDetailsProps = {
-  setFormData: React.Dispatch<React.SetStateAction<AddCustomerData>>;
-  formData: AddCustomerData;
+  setFormData: (value: React.SetStateAction<AddCustomerData>) => void;
+  setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  allFormState: FormState;
 };
 
 const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
+
+  const [isDataFilled, setIsDataFilled] = useState(false);
+
   const [formData, setFormData] = useState<AddCustomerData>({
     campaignID: 0,
     companyName: "",
@@ -52,6 +58,14 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
     location: "",
     pinCode: "",
   });
+  enum leadDetailOption {
+    ADD_CUSTOMER = "ADD_CUSTOMER",
+    SCAN = "SCAN",
+    ATTACH = "ATTACH",
+  }
+  const [detailsOpt, setDetailsOpt] = useState<leadDetailOption>(
+    leadDetailOption.ADD_CUSTOMER
+  );
   const { getCampaignData } = useSelector(
     (state: RootState) => state.getCampaignData
   );
@@ -68,17 +82,61 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   const [custCartData, setCustCardData] = useState<Array<CustomerDetails>>(
     new Array<CustomerDetails>()
   );
+
   useEffect(() => {
     createCustomerDetailsTable();
+    resetCustomerDetailsTable(setCustCardData);
     getCustomerDetails(setCustCardData);
     dispatch(GetCampaignDataRequest({}));
     dispatch(CompanyTypeRequest(""));
     dispatch(IndustryTypeRequest(""));
   }, [isFocused]);
 
+  const isValid = (values: IAddCustomerData) => {
+    if (values.campaignID == 0) {
+      DisplayToast("Please select campaign type");
+      return false;
+    } else if (!values.companyName) {
+      DisplayToast("Please enter company name");
+      return false;
+    } else if (values.companyTypeID == 0) {
+      DisplayToast("Please select company type");
+      return false;
+    } else if (values.industryTypeId == 0) {
+      DisplayToast("Please select industry type");
+      return false;
+    } else if (!values.location) {
+      DisplayToast("Please enter location");
+      return false;
+    } else if (!values.pinCode) {
+      DisplayToast("Please enter pincode");
+      return false;
+    } else if (custCartData.length == 0) {
+      DisplayToast("Please add at least one customer to list");
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const addToListValid = (values: IAddCustomerData) => {
+    if (!values.customerName) {
+      DisplayToast("Please enter customer name");
+      return false;
+    } else if (!values.mobileNumber) {
+      DisplayToast("Please enter mobile number");
+      return false;
+    } else if (!values.email) {
+      DisplayToast("Please enter email");
+      return false;
+    } else {
+      return true;
+    }
+  };
   const submitLeadDetails = useFormik({
     initialValues: formHelper.formikInitialValue,
-    onSubmit: async (values) => {},
+    onSubmit: async (values) => {
+      isValid(values);
+    },
   });
 
   const addToCart = () => {
@@ -225,6 +283,8 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <TextInput
                 style={style.inputTxt}
                 placeholder="Enter Pincode"
+                maxLength={6}
+                keyboardType="numeric"
                 placeholderTextColor={"grey"}
                 value={submitLeadDetails.values.pinCode}
                 onChangeText={(val) => {
@@ -233,11 +293,11 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               />
             </>
           ) : null}
-          {renderDetailsHeaderTwo("Customer Details")}
+          {renderDetailsHeaderTwo("Contact Details")}
           {custDetails ? (
             <>
-              {/* Customer Name */}
-              <Text style={style.labelText}>Customer Name:</Text>
+              {/* Contact Name */}
+              <Text style={style.labelText}>Contact Name:</Text>
               <TextInput
                 value={submitLeadDetails.values.customerName}
                 onChangeText={(val) => {
@@ -251,6 +311,8 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <Text style={style.labelText}>Mobile Number:</Text>
               <TextInput
                 value={submitLeadDetails.values.mobileNumber}
+                maxLength={10}
+                keyboardType="numeric"
                 onChangeText={(val) => {
                   submitLeadDetails.setFieldValue("mobileNumber", val);
                 }}
@@ -259,7 +321,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 placeholderTextColor={"grey"}
               />
               {/* Alternative Mobile Number */}
-              <Text style={style.labelText}>Alternative Mobile Number:</Text>
+              {/* <Text style={style.labelText}>Alternative Mobile Number:</Text>
               <TextInput
                 value={submitLeadDetails.values.alternativeMobileNumber}
                 onChangeText={(val) => {
@@ -271,7 +333,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 style={style.inputTxt}
                 placeholder="Enter Alternative Mobile Number"
                 placeholderTextColor={"grey"}
-              />
+              /> */}
               {/* Email */}
               <Text style={style.labelText}>Email:</Text>
               <TextInput
@@ -286,10 +348,14 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
 
               <TouchableOpacity
                 style={style.addBtnView}
-                onPress={() => addToCart()}
+                onPress={() => {
+                  if (addToListValid(submitLeadDetails.values)) {
+                    addToCart();
+                  }
+                }}
               >
                 <FontAwesome6 name="add" size={24} style={style.addBtnIcon} />
-                <Text style={style.addBtnTxt}>Add to customer</Text>
+                <Text style={style.addBtnTxt}>Add to List</Text>
               </TouchableOpacity>
               {renderCustCartList()}
             </>
@@ -326,14 +392,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       </View>
     );
   };
-  enum leadDetailOption {
-    ADD_CUSTOMER = "ADD_CUSTOMER",
-    SCAN = "SCAN",
-    ATTACH = "ATTACH",
-  }
-  const [detailsOpt, setDetailsOpt] = useState<leadDetailOption>(
-    leadDetailOption.ADD_CUSTOMER
-  );
+
   return (
     <View>
       <View style={style.optionView}>
@@ -375,16 +434,34 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           ? renderScanQR()
           : renderAttachVC()}
       </ScrollView>
-      <TouchableOpacity
-        style={style.btn}
-        onPress={() => {
-          //handleContinueBtn(stepperScreen);
+      <>
+        {!props.allFormState.formOne ? (
+          <TouchableOpacity
+            style={style.btn}
+            onPress={() => {
+              const val = submitLeadDetails.values;
+              if (isValid(val)) {
+                props.setFormData({
+                  campaignID: val.campaignID,
+                  companyName: val.companyName,
+                  companyTypeID: val.companyTypeID,
+                  customerArray: custCartData,
+                  industryTypeId: val.industryTypeId,
+                  location: val.location,
+                  pinCode: val.pinCode,
+                });
 
-          console.warn(formData);
-        }}
-      >
-        <Text style={style.btnText}>Save Data</Text>
-      </TouchableOpacity>
+                props.setAllFormState((val) => ({
+                  ...val,
+                  formOne: true,
+                }));
+              }
+            }}
+          >
+            <Text style={style.btnText}>Save Leave Details</Text>
+          </TouchableOpacity>
+        ) : null}
+      </>
     </View>
   );
 };

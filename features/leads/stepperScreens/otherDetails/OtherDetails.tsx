@@ -1,19 +1,49 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import CDSDropDown from "../../../login/CDSDropDown";
 import {
   GetFinancingRequired,
   GetPurchaseTimeline,
 } from "./OtherMachinesUtility";
+import { FormState, OtherDetailsData } from "../../createLead/CreateLeadScreen";
+import { DisplayToast } from "../../../../utility/ToastMessage";
 
-type OtherDetailsProps = {};
+type OtherDetailsProps = {
+  setOtherDetails: React.Dispatch<React.SetStateAction<OtherDetailsData>>;
+  setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  allFormState: FormState;
+};
 
 const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
   const [purchase, setPurchase] = useState("");
-  const [financing, setFinancing] = useState(false);
+  const [financing, setFinancing] = useState("");
   const [noOfMachines, setNoOfMachines] = useState(0);
   const [noOfPeople, setNoOfPeople] = useState(0);
-  const [noOfGifts, setNoOfGifts] = useState(0);
+  const [noOfGifts, setNoOfGifts] = useState(1);
+
+  const isValid = () => {
+    if (!purchase) {
+      DisplayToast("Please select purchase timeline");
+      return false;
+    } else if (!financing) {
+      DisplayToast("Please select financing required");
+      return false;
+    } else if (noOfMachines == 0) {
+      DisplayToast("Please enter no Of machines");
+      return false;
+    } else if (noOfPeople == 0) {
+      DisplayToast("Please enter no Of people");
+      return false;
+    } else {
+      return true;
+    }
+  };
   return (
     <View style={{ margin: "2%" }}>
       <View style={style.cardView}>
@@ -34,7 +64,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           <CDSDropDown
             data={GetFinancingRequired()}
             onSelect={(val) => {
-              setFinancing(val.value == "true" ? true : false);
+              setFinancing(val.value);
             }}
             placeholder="Select one option"
           />
@@ -79,6 +109,28 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           }}
         />
       </View>
+      {!props.allFormState.formThree ? (
+        <TouchableOpacity
+          style={style.btn}
+          onPress={() => {
+            if (isValid()) {
+              props.setOtherDetails({
+                financingRequired: financing == "Yes" ? true : false,
+                noOfGifts: noOfGifts,
+                noOfMachines: noOfMachines,
+                noOfPeople: noOfPeople,
+                purchaseTimeline: purchase,
+              });
+              props.setAllFormState((val) => ({
+                ...val,
+                formThree: true,
+              }));
+            }
+          }}
+        >
+          <Text style={style.btnText}>Save Other Details</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

@@ -8,6 +8,9 @@ import { CompanyTypeSlice } from "./companyTypeSlice/CompanyTypeSlice";
 import { IndustryTypeSlice } from "./industryTypeSlice/IndustryTypeSlice";
 import { ProductFamilySlice } from "./productFamilyModelSlice/ProductFamiliySlice";
 import { ProductModelSlice } from "./productFamilyModelSlice/ProductModelSlice";
+import { GetLeadDataSlice } from "./leadSlice/GetLeadDataSlice";
+import { RoleMasterSlice } from "./roleMasterSlice/RoleMasterSlice";
+import { GetUserSlice } from "./userSlice/GetUserSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +23,9 @@ export const store = configureStore({
     industryTypeData: IndustryTypeSlice.reducer,
     productFamily: ProductFamilySlice.reducer,
     productModel: ProductModelSlice.reducer,
+    leadData: GetLeadDataSlice.reducer,
+    roleMaster: RoleMasterSlice.reducer,
+    userArray: GetUserSlice.reducer,
   },
 });
 export default store;

@@ -17,14 +17,36 @@ import MachineDetails from "../stepperScreens/machineDetails/MachineDetails";
 import OtherDetails from "../stepperScreens/otherDetails/OtherDetails";
 import UserConsent from "../stepperScreens/userConsent/UserConsent";
 import { AddCustomerData } from "../stepperScreens/leadDetails/LeadDetailsHelper";
+import { MachineDetailsData } from "../stepperScreens/machineDetails/machineDetailsDao/MachineDetails";
+import { SaveLeadReq } from "../../../types/leadTypes/CreateLeadTypes";
+import { SaveLeadRequest } from "../../../services/leadsServices/SaveLeadDataRequest";
+import CDSAlertBox from "../../../component/CDSAlertBox";
+import CDSLoader from "../../../component/CDSLoader";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
+import { GetLeadDataRequest } from "../../../services/leadsServices/GetLeadDataRequest";
 
 type CreateLeadScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "CreateLead"
 >;
 
+export interface OtherDetailsData {
+  purchaseTimeline: string;
+  financingRequired: boolean;
+  noOfMachines: number;
+  noOfPeople: number;
+  noOfGifts: number;
+}
+export interface FormState {
+  formOne: boolean;
+  formTwo: boolean;
+  formThree: boolean;
+  formFour: boolean;
+}
 const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
-  const [formData, setFormData] = useState<AddCustomerData>({
+  const dispatch = useDispatch<AppDispatch>();
+  const [addCustomerData, setAddCustomerData] = useState<AddCustomerData>({
     campaignID: 0,
     companyName: "",
     companyTypeID: 0,
@@ -32,6 +54,24 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     industryTypeId: 0,
     location: "",
     pinCode: "",
+  });
+  const [machineDetails, setMachineDetails] = useState<
+    Array<MachineDetailsData>
+  >(new Array<MachineDetailsData>());
+  const [alertState, setAlertState] = useState(false);
+  const [loaderState, setLoaderState] = useState(false);
+  const [otherDetails, setOtherDetails] = useState<OtherDetailsData>({
+    financingRequired: false,
+    noOfGifts: 0,
+    noOfMachines: 0,
+    noOfPeople: 0,
+    purchaseTimeline: "",
+  });
+  const [allFormState, setAllFormState] = useState<FormState>({
+    formOne: false,
+    formTwo: false,
+    formThree: false,
+    formFour: false,
   });
   const renderBtn = () => {
     return (
@@ -200,49 +240,171 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       </View>
     );
   };
+  const [isLeadDetailsFilled, setIsLeadDetailsFilled] = useState(false);
+  const checkFormState = () => {
+    if (
+      !allFormState.formOne &&
+      stepperScreen == CurrentSteeperScreen.LEAD_DETAILS
+    ) {
+      DisplayToast("Please save lead details");
+      return false;
+    } else if (
+      !allFormState.formTwo &&
+      stepperScreen == CurrentSteeperScreen.SELECT_MACHINE
+    ) {
+      DisplayToast("Please save machine details");
+      return false;
+    } else if (
+      !allFormState.formThree &&
+      stepperScreen == CurrentSteeperScreen.OTHER_DETAILS
+    ) {
+      DisplayToast("Please save other details details");
+      return false;
+    }
+    //  else if (
+    //   !allFormState.formFour &&
+    //   stepperScreen == CurrentSteeperScreen.USER_CONSENT
+    // ) {
+    //   DisplayToast("Please save user consent");
+    //   return false;
+    // }
+    else {
+      // SaveLeadData();
+      return true;
+    }
+  };
+  const SaveLeadData = async () => {
+    setLoaderState(true);
+    const payload: SaveLeadReq = {
+      orgId: 1,
+      sbuId: 1,
+      campaignId: Number(addCustomerData.campaignID),
+      industryTypeId: Number(addCustomerData.industryTypeId),
+      companyType: Number(addCustomerData.companyTypeID),
+      companyName: addCustomerData.companyName,
+      address: addCustomerData.location,
+      pincode: Number(addCustomerData.pinCode),
+      stateId: 2,
+      districtId: 13,
+      productsInterested: machineDetails.map((item) => ({
+        modelId: Number(item.productModelID),
+        productFamilyId: Number(item.productFamilyID),
+        productId: Number(item.productID),
+      })),
+      attachmentId: 0,
+      giftVoucher: "",
+      gvDisbursement: "",
+      createdBy: "",
+      visitorDetails: addCustomerData.customerArray.map((item) => ({
+        email: item.email,
+        mobileNo: item.mobileNumber,
+        visitorName: item.customerName,
+      })),
+      status: true,
+      noOfMachines: otherDetails.noOfMachines,
+      planningTimeline: otherDetails.purchaseTimeline,
+      financingReuired: otherDetails.financingRequired,
+      noOfPeopleAccompanied: otherDetails.noOfPeople,
+      noOfGiftsNeeded: otherDetails.noOfGifts,
+    };
+    const resp = await SaveLeadRequest(payload);
+    setLoaderState(resp ? false : true);
+    if (resp && resp.statusCode == 201) {
+      setAlertState(true);
+    } else {
+      DisplayToast(`${resp.message}`);
+    }
+  };
+  const renderLeadForm = () => {
+    return (
+      <>
+        <CDSAlertBox
+          alertVisibility={alertState}
+          alertTitle="Create Lead"
+          alertDesc="Lead created successfully!"
+          showNegativeBtn={false}
+          positiveBtnTxt="Cancel"
+          negativeBtnTxt="Ok"
+          onNegativeClick={() => {
+            setAlertState(false);
+            props.navigation.navigate("Leads");
+            dispatch(GetLeadDataRequest(""));
+          }}
+          onPositiveClick={() => {
+            setAlertState(false);
+          }}
+        />
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: "50%" }}
+          keyboardShouldPersistTaps="handled"
+        >
+          {stepperScreen == CurrentSteeperScreen.LEAD_DETAILS ? (
+            <LeadDetails
+              setFormData={setAddCustomerData}
+              setAllFormState={setAllFormState}
+              allFormState={allFormState}
+            />
+          ) : stepperScreen == CurrentSteeperScreen.SELECT_MACHINE ? (
+            <MachineDetails
+              setFormData={setMachineDetails}
+              setAllFormState={setAllFormState}
+              allFormState={allFormState}
+            />
+          ) : stepperScreen == CurrentSteeperScreen.OTHER_DETAILS ? (
+            <OtherDetails
+              setOtherDetails={setOtherDetails}
+              setAllFormState={setAllFormState}
+              allFormState={allFormState}
+            />
+          ) : stepperScreen == CurrentSteeperScreen.USER_CONSENT ? (
+            <UserConsent
+              setAllFormState={setAllFormState}
+              allFormState={allFormState}
+            />
+          ) : null}
+          <View style={{ flexDirection: "row" }}>
+            {stepperScreen != CurrentSteeperScreen.LEAD_DETAILS ? (
+              <TouchableOpacity
+                style={style.btn}
+                onPress={() => {
+                  handleBackBtn(stepperScreen);
+                }}
+              >
+                <Text style={style.btnText}>Back</Text>
+              </TouchableOpacity>
+            ) : null}
+
+            <TouchableOpacity
+              style={style.btn}
+              onPress={() => {
+                if (checkFormState()) {
+                  handleContinueBtn(stepperScreen);
+                  if (stepperScreen == CurrentSteeperScreen.USER_CONSENT) {
+                    SaveLeadData();
+                  }
+                }
+              }}
+            >
+              <Text style={style.btnText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </>
+    );
+  };
   return (
     <ImageBackground
       source={require("../../../assets/background_image.png")}
       style={{ flex: 1 }}
     >
-      {renderSteppers()}
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: "50%" }}
-        keyboardShouldPersistTaps="handled"
-      >
-        {stepperScreen == CurrentSteeperScreen.LEAD_DETAILS ? (
-          <LeadDetails setFormData={setFormData} formData={formData} />
-        ) : stepperScreen == CurrentSteeperScreen.SELECT_MACHINE ? (
-          <MachineDetails />
-        ) : stepperScreen == CurrentSteeperScreen.OTHER_DETAILS ? (
-          <OtherDetails />
-        ) : stepperScreen == CurrentSteeperScreen.USER_CONSENT ? (
-          <UserConsent />
-        ) : null}
-        <View style={{ flexDirection: "row" }}>
-          {stepperScreen != CurrentSteeperScreen.LEAD_DETAILS ? (
-            <TouchableOpacity
-              style={style.btn}
-              onPress={() => {
-                handleBackBtn(stepperScreen);
-              }}
-            >
-              <Text style={style.btnText}>Back</Text>
-            </TouchableOpacity>
-          ) : null}
-
-          <TouchableOpacity
-            style={style.btn}
-            onPress={() => {
-              //handleContinueBtn(stepperScreen);
-
-              console.warn(formData);
-            }}
-          >
-            <Text style={style.btnText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      {loaderState ? (
+        <CDSLoader />
+      ) : (
+        <>
+          {renderSteppers()}
+          {renderLeadForm()}
+        </>
+      )}
     </ImageBackground>
   );
 };

@@ -5,4 +5,5 @@ export interface MachineDetailsData {
   productModelID: string;
   productModelName: string;
   noOfMachines: string;
+  productID: string;
 }

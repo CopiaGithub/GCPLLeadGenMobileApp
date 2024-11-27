@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import RadioButtonsGroup, {
   RadioButtonProps,
 } from "react-native-radio-buttons-group";
+import { FormState } from "../../createLead/CreateLeadScreen";
 
-type UserConsentProps = {};
+type UserConsentProps = {
+  setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  allFormState: FormState;
+};
 
 const UserConsent: React.FC<UserConsentProps> = (props) => {
   const [selectedValue, setSelectedValue] = useState("1");
@@ -28,6 +32,19 @@ const UserConsent: React.FC<UserConsentProps> = (props) => {
         selectedId={selectedValue}
         containerStyle={styles.rbContainer}
       />
+      {/* {!props.allFormState.formFour ? (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            props.setAllFormState((val) => ({
+              ...val,
+              formFour: true,
+            }));
+          }}
+        >
+          <Text style={styles.btnText}>Save User Consent</Text>
+        </TouchableOpacity>
+      ) : null} */}
     </View>
   );
 };
@@ -41,5 +58,18 @@ const styles = StyleSheet.create({
   },
   rbContainer: {
     margin: "4%",
+  },
+  btn: {
+    backgroundColor: "black",
+    padding: "2%",
+    borderRadius: 8,
+    marginVertical: "2%",
+    marginHorizontal: "4%",
+    width: "90%",
+  },
+  btnText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "500",
   },
 });

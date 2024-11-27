@@ -16,6 +16,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GetLeadDataRequest } from "../../services/leadsServices/GetLeadDataRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -24,6 +27,13 @@ type DashboardScreenProps = NativeStackScreenProps<
 
 const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   const isFocused = useIsFocused();
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(GetLeadDataRequest(""));
+    }
+  }, [isFocused]);
+  const { leadDetails } = useSelector((state: RootState) => state.leadData);
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
@@ -133,7 +143,13 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
         <View style={{ flexDirection: "row" }}>
           <View style={style.subCBBox}>
             <Text style={style.countLabel}>No. of Leads</Text>
-            <Text style={style.countTxt}>30</Text>
+            <Text style={style.countTxt}>
+              {leadDetails &&
+              leadDetails.statusCode == 200 &&
+              leadDetails.message.length
+                ? leadDetails.message.length
+                : 0}
+            </Text>
           </View>
           <View style={style.subCBBox}>
             <Text style={style.countLabel}>Footfall</Text>

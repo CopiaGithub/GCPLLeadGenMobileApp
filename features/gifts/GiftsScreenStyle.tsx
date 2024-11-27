@@ -67,9 +67,8 @@ export const style = StyleSheet.create({
   txtInput: {
     borderWidth: 1,
     borderColor: "#d6d4d4",
-    padding: "2%",
     borderRadius: 8,
     flex: 1.1,
-    paddingVertical: "-6%",
+    padding: "1%",
   },
 });

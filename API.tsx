@@ -26,6 +26,9 @@ const API = {
   COMPANY_TYPE_MASTER: `${apiUrl}company-type-master`,
   INDUSTRY_TYPE_MASTER: `${apiUrl}industry-type-master`,
   PRODUCT_FAMILY_MODEL: `${apiUrl}Product-Master`,
+  LEAD_MASTER: `${apiUrl}visitor-master`,
+  ROLE_MASTER: `${apiUrl}role-master`,
+  USER_MASTER: `${apiUrl}user-master`,
 };
 
 export default API;

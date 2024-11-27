@@ -3,7 +3,7 @@ import { MachineDetailsData } from "./MachineDetails";
 
 export const createMachineDetailsTable = async () => {
   const result = await db.execAsync(
-    "create table if not exists machineDetails (ID integer primary key not null, productFamilyID text, productFamilyName text, productModelID text, productModelName text, noOfMachines text);"
+    "create table if not exists machineDetails (ID integer primary key not null, productFamilyID text, productFamilyName text, productModelID text, productModelName text, noOfMachines text, productID);"
   );
 };
 
@@ -28,13 +28,14 @@ export const addMachineDetails = async (
   setMachineDetails: React.Dispatch<React.SetStateAction<MachineDetailsData[]>>
 ) => {
   const result = db.runAsync(
-    "insert into machineDetails(productFamilyID, productFamilyName, productModelID, productModelName, noOfMachines)values(?,?,?,?,?)",
+    "insert into machineDetails(productFamilyID, productFamilyName, productModelID, productModelName, noOfMachines, productID)values(?,?,?,?,?,?)",
     [
       data.productFamilyID,
       data.productFamilyName,
       data.productModelID,
       data.productModelName,
       data.noOfMachines,
+      data.productID,
     ]
   );
   result

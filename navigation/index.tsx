@@ -18,7 +18,7 @@ import ApprovalScreen from "../features/approvals/ApprovalScreen";
 import CampaignScreen from "../features/campaigns/CampaignScreen";
 import GiftScreen from "../features/gifts/GiftsScreen";
 import ReportScreen from "../features/reports/ReportScreen";
-import CreateUserScreen from "../features/user/CreateUserScreen";
+import CreateUserScreen from "../features/user/createUser/CreateUserScreen";
 import CreateCampaignScreen from "../features/campaigns/CreateCamaign";
 import "react-native-gesture-handler";
 import CreateLeadScreen from "../features/leads/createLead/CreateLeadScreen";
