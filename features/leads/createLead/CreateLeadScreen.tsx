@@ -328,7 +328,6 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
           onNegativeClick={() => {
             setAlertState(false);
             props.navigation.navigate("Leads");
-            dispatch(GetLeadDataRequest(""));
           }}
           onPositiveClick={() => {
             setAlertState(false);

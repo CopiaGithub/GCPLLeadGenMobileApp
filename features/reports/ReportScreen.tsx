@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { RootStackParamList } from "../../types";
 import { style } from "./ReportScreenStyle";
+import CDSDropDown from "../login/CDSDropDown";
 
 type ReportScreenProps = NativeStackScreenProps<RootStackParamList, "Reports">;
 
@@ -30,17 +31,17 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
       <View style={style.viewBox}>
         {/* Organization */}
         <Text style={style.labelText}>Campaign Name:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter Organization"
-          placeholderTextColor={"grey"}
+        <CDSDropDown
+          data={[{ label: "", value: "" }]}
+          onSelect={() => {}}
+          placeholder="Select campaign"
         />
         {/* State */}
         <Text style={style.labelText}>Select Data:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter State"
-          placeholderTextColor={"grey"}
+        <CDSDropDown
+          data={[{ label: "", value: "" }]}
+          onSelect={() => {}}
+          placeholder="Select data"
         />
       </View>
     );

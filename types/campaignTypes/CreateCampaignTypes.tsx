@@ -5,11 +5,11 @@ export interface CreateCampaignReq {
   description: string;
   fromDate: string;
   toDate: string;
-  //
-  // stateID: number;
-  // districtID: number;
-  // location: string;
-  // campaignObjective: string;
+
+  stateId: number;
+  districtId: number;
+  location: string;
+  campaignObjective: string;
 }
 export interface CreateCampaignResp {
   message: Array<CreateCampaignMessage>;

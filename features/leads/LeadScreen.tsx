@@ -27,6 +27,8 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { HandleSearchList } from "./LeadScreenUtility";
 import CDSLoader from "../../component/CDSLoader";
+import { GetProductFamNameById } from "./stepperScreens/machineDetails/MachineDetailsUtility";
+import { ProductFamilyRequest } from "../../services/productFamilyModelRequest/ProductFamilyRequest";
 
 type LeadScreenProps = NativeStackScreenProps<RootStackParamList, "Leads">;
 
@@ -51,6 +53,17 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   }, [isFocused]);
 
   useEffect(() => {
+    if (isFocused) {
+      dispatch(ProductFamilyRequest(""));
+    }
+  }, [isFocused]);
+  const { ProductFamily } = useSelector(
+    (state: RootState) => state.productFamily
+  );
+  const { ProductModel } = useSelector(
+    (state: RootState) => state.productModel
+  );
+  useEffect(() => {
     if (
       isFocused &&
       leadDetails &&
@@ -62,7 +75,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
     } else {
       setItemData([]);
     }
-  }, []);
+  }, [leadDetails?.statusCode]);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -122,11 +135,13 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
           <View style={style.showMoreParentView} key={i}>
             <View style={style.showMoreView}>
               <Text style={style.showMoreLTxt}>Product Family:</Text>
-              <Text style={style.showMoreRTxt}>{item.productFamilyId}</Text>
+              <Text style={style.showMoreRTxt}>
+                {GetProductFamNameById(ProductFamily, +item.modelId)}
+              </Text>
             </View>
             <View style={style.showMoreView}>
               <Text style={style.showMoreLTxt}>Model:</Text>
-              <Text style={style.showMoreRTxt}>{item.modelId}</Text>
+              <Text style={style.showMoreRTxt}>{item.productFamilyId}</Text>
             </View>
             <View style={style.showMoreView}>
               <Text style={style.showMoreLTxt}>No of Machines:</Text>
@@ -143,7 +158,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
         {visitorDetails.map((item, i) => (
           <View style={style.showMoreParentView} key={i}>
             <View style={style.showMoreView}>
-              <Text style={style.showMoreLTxt}>Customer Name:</Text>
+              <Text style={style.showMoreLTxt}>Contact Name:</Text>
               <Text style={style.showMoreRTxt}>{item.visitorName}</Text>
             </View>
             <View style={style.showMoreView}>
@@ -166,6 +181,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
         leadDetails.statusCode == 200 &&
         leadDetails.message &&
         leadDetails.message.length &&
+        itemData &&
         itemData.length ? (
           <>
             {itemData.map((item, i) => (
@@ -211,7 +227,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
                     setShowCustIndex(i);
                   }}
                 >
-                  <Text style={style.showCustTxt}>Show Customers</Text>
+                  <Text style={style.showCustTxt}>Show Contacts</Text>
                   <FontAwesome
                     name={
                       showCustState && showCustIndex == i
@@ -274,7 +290,9 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
       style={{ flex: 1 }}
     >
       {renderSearchBar()}
-      <ScrollView>{renderItems()}</ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: "40%" }}>
+        {renderItems()}
+      </ScrollView>
     </ImageBackground>
   );
 };

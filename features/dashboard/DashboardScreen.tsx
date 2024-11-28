@@ -22,6 +22,8 @@ import { GetLeadDataRequest } from "../../services/leadsServices/GetLeadDataRequ
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import React from "react";
+import CDSDatePicker from "../../component/CDSDatePicker";
+import CDSDropDown from "../login/CDSDropDown";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -244,6 +246,18 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     >
       {renderHorizontalMenus()}
       {renderCampaignName()}
+      <View
+        style={{
+          marginTop: "4%",
+          marginHorizontal: "2%",
+        }}
+      >
+        <CDSDropDown
+          data={[{ label: "", value: "" }]}
+          onSelect={() => {}}
+          placeholder="Select SBU"
+        />
+      </View>
       {renderCountBox()}
       {renderModelDetails()}
     </ImageBackground>

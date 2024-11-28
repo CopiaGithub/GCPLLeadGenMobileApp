@@ -142,6 +142,17 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         }
       </Text>
       <View style={style.cardView}>
+        {/* Select SBU */}
+        <Text style={style.labelText}>SBU:</Text>
+        <View style={{ marginVertical: "2%" }}>
+          <CDSDropDown
+            placeholder="Select SBU"
+            data={GetProductFamily(ProductFamily)}
+            onSelect={(val) => {
+              handleProductFamily(val);
+            }}
+          />
+        </View>
         {/* Product Family */}
         <Text style={style.labelText}>Product Family:</Text>
         <View style={{ marginVertical: "2%" }}>

@@ -26,7 +26,5 @@ export const GetRoleNameById = (
   if (data && data.statusCode == 200 && data.message.length) {
     const val = data.message.find((item) => item.id == id);
     return val?.roleName;
-  } else {
-    return "";
   }
 };

@@ -25,7 +25,7 @@ class CreateUserHelper implements ICreateUserrHelper {
         orgName: "",
         password: "",
         pincode: 0,
-        roleId: 1,
+        roleId: 0,
         sbuId: 1,
         username: "",
       },

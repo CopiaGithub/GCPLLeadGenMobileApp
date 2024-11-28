@@ -119,7 +119,7 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Role:</Text>
                   <Text style={style.valueText}>
-                    {GetRoleNameById(roleMaster, item.id)}
+                    {item.roleId ? GetRoleNameById(roleMaster, item.id) : null}
                   </Text>
                   <View style={style.extra}></View>
                 </View>
@@ -146,7 +146,9 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
       style={{ flex: 1 }}
     >
       {renderSearchBar()}
-      <ScrollView>{renderItems()}</ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: "50%" }}>
+        {renderItems()}
+      </ScrollView>
     </ImageBackground>
   );
 };

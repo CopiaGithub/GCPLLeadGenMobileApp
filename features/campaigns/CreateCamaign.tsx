@@ -77,19 +77,21 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
         setLoaderState(true);
         const reqPayload: CreateCampaignReq = {
           campaignName: values.campaignName,
-          // campaignObjective: values.campaignObjective,
+          campaignObjective: values.campaignObjective,
           campaignTypeId: values.campaignTypeID,
           description: values.campaignObjective,
-          // districtID: values.districtID,
+          districtId: values.districtID,
           fromDate: moment(values.fromDate, "DD, MMM YYYY").format(
             "YYYY-MM-DD"
           ),
-          // location: values.location,
+          location: values.location,
           orgId: values.organizationID,
-          // stateID: values.stateID,
+          stateId: values.stateID,
           toDate: moment(values.toDate, "DD, MMM YYYY").format("YYYY-MM-DD"),
         };
         const resp = await CreateCampaignRequest(reqPayload);
+        console.warn("Request payload", reqPayload);
+
         setLoaderState(resp ? false : true);
         if (resp && resp.statusCode == 201) {
           setAlertState(true);

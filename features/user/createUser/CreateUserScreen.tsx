@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { style } from "./CreateUserStyle";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GetRoleMaster, UserData } from "./CreateUserUtility";
+import { GetRoleMaster, GetRoleNameById, UserData } from "./CreateUserUtility";
 import CreateUserHelper from "./CreateUserHelper";
 import { useFormik } from "formik";
 import CDSDropDown from "../../login/CDSDropDown";
@@ -147,6 +147,21 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
   const renderCreateUserView = () => {
     return (
       <View style={style.createView}>
+        {/* Role */}
+        <Text style={style.labelText}>SBU:</Text>
+        <View style={{ marginVertical: "2%" }}>
+          <CDSDropDown
+            data={GetRoleMaster(roleMaster)}
+            onSelect={(val) => {
+              createUser.setFieldValue("formData.roleId", val.value);
+            }}
+            placeholder={
+              createUser.values.formData.roleId
+                ? GetRoleNameById(roleMaster, createUser.values.formData.roleId)
+                : "Select SBU"
+            }
+          />
+        </View>
         {/* User Name */}
         <Text style={style.labelText}>User Name:</Text>
         <TextInput
@@ -251,7 +266,11 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
             onSelect={(val) => {
               createUser.setFieldValue("formData.roleId", val.value);
             }}
-            placeholder="Select role"
+            placeholder={
+              createUser.values.formData.roleId
+                ? GetRoleNameById(roleMaster, createUser.values.formData.roleId)
+                : "Select role"
+            }
           />
         </View>
       </View>

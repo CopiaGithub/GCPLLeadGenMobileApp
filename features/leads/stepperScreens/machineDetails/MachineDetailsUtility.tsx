@@ -32,6 +32,14 @@ export const GetProductModel = (data: ProductModelResponse | null) => {
   }
   return respData;
 };
+export const GetProductFamNameById = (
+  data: ProductFamilyResponse | null,
+  id: number
+) => {
+  if (data && data.statusCode == 200 && data.message && data.message.length) {
+    return data.message.find((item) => item.id == id)?.productName;
+  }
+};
 
 export const GetModelFromProductModel = (
   model: Models[] | undefined,
