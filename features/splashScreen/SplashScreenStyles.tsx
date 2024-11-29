@@ -6,8 +6,8 @@ export const style = StyleSheet.create({
     flex: 1,
   },
   imageIcon: {
-    height: "10%",
-    width: "80%",
+    height: 90,
+    width: 360,
     alignSelf: "center",
     marginVertical: "6%",
   },

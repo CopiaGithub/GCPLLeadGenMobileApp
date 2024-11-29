@@ -39,8 +39,8 @@ const CustomDrawer = (props: any) => {
       <Image
         source={require("../../assets/mainLogo.png")}
         style={{
-          height: "10%",
-          width: "80%",
+          height: 60,
+          width: 220,
           alignSelf: "center",
         }}
       />

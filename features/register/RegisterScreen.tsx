@@ -51,8 +51,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
   const formHelper = new RegisterHelper();
   const handleAPI = async (data: RegisterUser) => {
     const resp = await RegisterUserRequest(data);
-    console.warn("Submit Request", data);
-
     if (resp && resp.statusCode == 201) {
       setAlertState(true);
     } else {
@@ -81,8 +79,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
       <Image
         source={require("../../assets/mainLogo.png")}
         style={{
-          height: "10%",
-          width: "80%",
+          height: 90,
+          width: 300,
           alignSelf: "center",
         }}
       />

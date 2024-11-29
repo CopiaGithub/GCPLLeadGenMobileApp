@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "catLeadGen",
+    "name": "GCPL Lead Gen",
     "slug": "catLeadGen",
     "scheme": "myapp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -32,8 +32,6 @@
         "projectId": "a1be7ca8-e7d1-463e-b0ee-0b1dc84a4269"
       }
     },
-    "plugins": [
-      "expo-sqlite"
-    ]
+    "plugins": ["expo-sqlite"]
   }
 }

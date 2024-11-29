@@ -55,8 +55,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
       <Image
         source={require("../../assets/mainLogo.png")}
         style={{
-          height: "10%",
-          width: "80%",
+          height: 90,
+          width: 300,
           alignSelf: "center",
         }}
       />
