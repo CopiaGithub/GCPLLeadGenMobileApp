@@ -230,7 +230,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
                 : style.steeperTextInActive
             }
             onPress={() => {
-              setStepperScreen(CurrentSteeperScreen.USER_CONSENT);
+              //setStepperScreen(CurrentSteeperScreen.USER_CONSENT);
             }}
           >
             {"User\n Consent"}
@@ -260,16 +260,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     ) {
       DisplayToast("Please save other details details");
       return false;
-    }
-    //  else if (
-    //   !allFormState.formFour &&
-    //   stepperScreen == CurrentSteeperScreen.USER_CONSENT
-    // ) {
-    //   DisplayToast("Please save user consent");
-    //   return false;
-    // }
-    else {
-      // SaveLeadData();
+    } else {
       return true;
     }
   };
@@ -290,6 +281,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         modelId: Number(item.productModelID),
         productFamilyId: Number(item.productFamilyID),
         productId: Number(item.productID),
+        sbuId: 0,
       })),
       attachmentId: 0,
       giftVoucher: "",
@@ -299,6 +291,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
+        sbuId: 0,
       })),
       status: true,
       noOfMachines: otherDetails.noOfMachines,

@@ -31,10 +31,10 @@ import CDSDropDown from "./CDSDropDown";
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
-  const [email, setEmail] = useState("");
-  // const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
-  const [password, setPassword] = useState("");
-  // const [password, setPassword] = useState("1235");
+  // const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
+  // const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("1235");
   const [otp, setOTP] = useState("");
   const [alertState, setAlertState] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);

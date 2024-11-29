@@ -179,10 +179,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
       <>
         {leadDetails &&
         leadDetails.statusCode == 200 &&
-        leadDetails.message &&
-        leadDetails.message.length &&
-        itemData &&
-        itemData.length ? (
+        leadDetails.message.length ? (
           <>
             {itemData.map((item, i) => (
               <View style={style.itemView}>
@@ -269,10 +266,18 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
           </>
         ) : leadDetails &&
           leadDetails.statusCode == 200 &&
-          leadDetails.message &&
-          !leadDetails.message ? (
-          <View>
-            <Text>No data found!</Text>
+          leadDetails.message ? (
+          <View style={{}}>
+            <Text
+              style={{
+                textAlign: "center",
+                textAlignVertical: "center",
+                fontWeight: "500",
+                fontSize: 20,
+              }}
+            >
+              No data found!
+            </Text>
           </View>
         ) : leadDetails && leadDetails.statusCode != 200 ? (
           <View>

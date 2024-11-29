@@ -20,6 +20,7 @@ import { GetUsersRequest } from "../../services/userRequest/GetUserRequest";
 import { RoleMasterRequest } from "../../services/roleMasterRequest/RoleMasterRequest";
 import { GetRoleNameById } from "./createUser/CreateUserUtility";
 import CDSLoader from "../../component/CDSLoader";
+import CDSDropDown from "../login/CDSDropDown";
 
 type UserScreenProps = NativeStackScreenProps<RootStackParamList, "Users">;
 
@@ -146,6 +147,7 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
       style={{ flex: 1 }}
     >
       {renderSearchBar()}
+
       <ScrollView contentContainerStyle={{ paddingBottom: "50%" }}>
         {renderItems()}
       </ScrollView>

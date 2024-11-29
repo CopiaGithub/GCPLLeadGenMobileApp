@@ -18,9 +18,7 @@ export const getCustomerDetails = async (
       setCustomerDetails(allRows as any);
       return allRows;
     }
-  } catch (error) {
-    console.warn(error);
-  }
+  } catch (error) {}
   return "";
 };
 //Insert Data into table
@@ -39,12 +37,9 @@ export const addCustomerDetails = async (
   );
   result
     .then((val) => {
-      console.warn(val);
       getCustomerDetails(setCustomerDetails);
     })
-    .catch((err) => {
-      console.error(err);
-    });
+    .catch((err) => {});
 };
 //Delete Item
 export const deleteCustomer = async (

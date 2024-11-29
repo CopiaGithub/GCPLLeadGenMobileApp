@@ -10,6 +10,7 @@ export interface GetUserRespMessage {
   address: string;
   pincode: number;
   roleId: number;
+  status: boolean;
 }
 export interface GetUserResp {
   message: Array<GetUserRespMessage>;

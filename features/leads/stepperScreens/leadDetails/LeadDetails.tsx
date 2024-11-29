@@ -10,7 +10,7 @@ import CDSDropDown from "../../../login/CDSDropDown";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   addCustomerDetails,
   createCustomerDetailsTable,
@@ -36,6 +36,10 @@ import {
 import { CompanyTypeRequest } from "../../../../services/companyTypeRequest/CompanyTypeRequest";
 import { IndustryTypeRequest } from "../../../../services/industryTypeRequest/IndustryTypeRequest";
 import { FormState } from "../../createLead/CreateLeadScreen";
+import { SaveLeadRequest } from "../../../../services/leadsServices/SaveLeadDataRequest";
+import { SaveLeadReq } from "../../../../types/leadTypes/CreateLeadTypes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CDSAlertBox from "../../../../component/CDSAlertBox";
 
 type LeadDetailsProps = {
   setFormData: (value: React.SetStateAction<AddCustomerData>) => void;
@@ -76,12 +80,29 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
     (state: RootState) => state.industryTypeData
   );
 
+  const [alertState, setAlertState] = useState(false);
+  const [loaderState, setLoaderState] = useState(false);
+
   const formHelper = new AddCustomerDataHelper();
   const [companyDetails, setCompanyDetails] = useState(true);
   const [custDetails, setCustDetails] = useState(false);
   const [custCartData, setCustCardData] = useState<Array<CustomerDetails>>(
     new Array<CustomerDetails>()
   );
+
+  const [sbuID, setSBUID] = useState(0);
+  const [orgId, setOrgId] = useState(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setOrgId(user.message.orgId);
+        setSBUID(user.message.sbuId);
+      }
+    });
+  }, [isFocused, sbuID]);
+  console.warn("Async Data --cscs?", sbuID);
 
   useEffect(() => {
     createCustomerDetailsTable();
@@ -139,6 +160,48 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
     },
   });
 
+  const SaveLeadData = async () => {
+    setLoaderState(true);
+    const val = submitLeadDetails.values;
+    const payload: SaveLeadReq = {
+      orgId: orgId,
+      sbuId: sbuID,
+      campaignId: +val.campaignID,
+      industryTypeId: +val.industryTypeId,
+      companyType: +val.companyTypeID,
+      companyName: val.companyName,
+      address: val.location,
+      pincode: +val.pinCode,
+      stateId: 2,
+      districtId: 13,
+      productsInterested: [],
+      attachmentId: 0,
+      giftVoucher: "",
+      gvDisbursement: "",
+      createdBy: "",
+      visitorDetails: custCartData.map((item) => ({
+        email: item.email,
+        mobileNo: item.mobileNumber,
+        sbuId: sbuID,
+        visitorName: item.customerName,
+      })),
+      status: true,
+      noOfMachines: 0,
+      planningTimeline: "",
+      financingReuired: false,
+      noOfPeopleAccompanied: 0,
+      noOfGiftsNeeded: 0,
+    };
+    console.warn("Visitor Master Payload--->", payload);
+
+    const resp = await SaveLeadRequest(payload);
+    setLoaderState(resp ? false : true);
+    if (resp && resp.statusCode == 201) {
+      setAlertState(true);
+    } else {
+      DisplayToast(`${resp.message}`);
+    }
+  };
   const addToCart = () => {
     const data = submitLeadDetails.values;
     const cartData: CustomerDetails = {
@@ -147,7 +210,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       email: data.email,
       mobileNumber: data.mobileNumber,
       ID: 0,
+      sbuId: sbuID,
     };
+
     addCustomerDetails(cartData, setCustCardData);
   };
 
@@ -260,6 +325,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                   placeholder="Select industry type"
                   data={GetIndustry(IndustryType)}
                   onSelect={(val) => {
+                    DisplayToast(`${val.value}`);
                     submitLeadDetails.setFieldValue(
                       "industryTypeId",
                       val.value
@@ -392,9 +458,24 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       </View>
     );
   };
-
+  const navigation = useNavigation();
   return (
     <View>
+      <CDSAlertBox
+        alertVisibility={alertState}
+        alertTitle="Create Lead"
+        alertDesc="Lead created successfully!"
+        showNegativeBtn={false}
+        positiveBtnTxt="Cancel"
+        negativeBtnTxt="Ok"
+        onNegativeClick={() => {
+          setAlertState(false);
+          navigation.navigate("Leads");
+        }}
+        onPositiveClick={() => {
+          setAlertState(false);
+        }}
+      />
       <View style={style.optionView}>
         <Text
           onPress={() => setDetailsOpt(leadDetailOption.ADD_CUSTOMER)}
@@ -458,10 +539,21 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               }
             }}
           >
-            <Text style={style.btnText}>Save Leave Details</Text>
+            <Text style={style.btnText}>Save Lead details</Text>
           </TouchableOpacity>
         ) : null}
       </>
+      <TouchableOpacity
+        style={style.btn}
+        onPress={() => {
+          const val = submitLeadDetails.values;
+          if (isValid(val)) {
+            SaveLeadData();
+          }
+        }}
+      >
+        <Text style={style.btnText}>Save & create lead</Text>
+      </TouchableOpacity>
     </View>
   );
 };

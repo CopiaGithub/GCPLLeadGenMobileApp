@@ -26,11 +26,13 @@ export interface ProductsInterested {
   productFamilyId: number;
   productId: number;
   modelId: number;
+  sbuId: number;
 }
 export interface VisitorDetails {
   visitorName: string;
   email: string;
   mobileNo: string;
+  sbuId: number;
 }
 export interface SaveLeadMessage {
   id: number;

@@ -11,6 +11,8 @@ import { ProductModelSlice } from "./productFamilyModelSlice/ProductModelSlice";
 import { GetLeadDataSlice } from "./leadSlice/GetLeadDataSlice";
 import { RoleMasterSlice } from "./roleMasterSlice/RoleMasterSlice";
 import { GetUserSlice } from "./userSlice/GetUserSlice";
+import { SBUMasterSlice } from "./sbuMasterSlice/SBUMasterSlice";
+import { ProductTotalSlice } from "./dashboardSlice/ProductTotalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +28,8 @@ export const store = configureStore({
     leadData: GetLeadDataSlice.reducer,
     roleMaster: RoleMasterSlice.reducer,
     userArray: GetUserSlice.reducer,
+    sbuMaster: SBUMasterSlice.reducer,
+    productTotal: ProductTotalSlice.reducer,
   },
 });
 export default store;

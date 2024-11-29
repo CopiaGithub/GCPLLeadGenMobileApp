@@ -60,8 +60,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
   const submitRegData = useFormik({
     initialValues: formHelper.formikInitialValue,
     onSubmit: async (values) => {
-      console.warn(values.formData);
-
       if (isRegisterFormValid(values.formData, cPass)) {
         await handleAPI(values.formData);
       }
@@ -94,7 +92,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
       </>
     );
   };
-  console.warn("Org Data Dropdown", orgData);
 
   const [value, setValue] = useState("");
   const renderResgisterBox = () => {

@@ -25,6 +25,7 @@ import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSLoader from "../../component/CDSLoader";
 import { RoleMasterRequest } from "../../services/roleMasterRequest/RoleMasterRequest";
 import { GetRoleNameById } from "../user/createUser/CreateUserUtility";
+import CDSDropDown from "../login/CDSDropDown";
 
 type ApprovalScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -41,6 +42,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
   const [approvalData, setApprovalData] = useState<Array<GetUserRespMessage>>(
     new Array<GetUserRespMessage>()
   );
+  const [userStatus, setUserStatus] = useState(true);
   useEffect(() => {
     if (isFocused) {
       dispatch(GetUsersRequest(""));
@@ -56,11 +58,13 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       getUsers.message &&
       getUsers.message.length
     ) {
-      setApprovalData(getUsers.message);
+      setApprovalData(
+        getUsers.message.filter((item) => item.status == userStatus)
+      );
     } else {
       setApprovalData([]);
     }
-  }, [isFocused, getUsers?.statusCode]);
+  }, [isFocused, getUsers?.statusCode, userStatus]);
 
   const renderSearchBar = () => {
     return (
@@ -143,6 +147,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
                   </Text>
                   <View style={style.extra}></View>
                 </View>
+
                 {renderButtons(item.id)}
               </View>
             ))}
@@ -182,6 +187,18 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
         }}
       />
       {renderSearchBar()}
+      <View style={{ marginHorizontal: "4%" }}>
+        <CDSDropDown
+          data={[
+            { label: "Approved Users", value: "1" },
+            { label: "Rejected Users", value: "0" },
+          ]}
+          placeholder="Approved Users"
+          onSelect={(val) => {
+            setUserStatus(val.value == "1" ? true : false);
+          }}
+        />
+      </View>
       <ScrollView>{renderItems()}</ScrollView>
     </ImageBackground>
   );

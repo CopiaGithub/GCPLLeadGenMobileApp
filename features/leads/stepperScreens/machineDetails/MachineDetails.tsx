@@ -30,6 +30,8 @@ import {
 } from "./machineDetailsDao/MachineDetailsDao";
 import { DisplayToast } from "../../../../utility/ToastMessage";
 import { FormState } from "../../createLead/CreateLeadScreen";
+import { GetSBUMaster } from "../../../dashboard/DashboardUtility";
+import { SBUMasterRequest } from "../../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
 
 type MachineDetailsProps = {
   setFormData: React.Dispatch<React.SetStateAction<MachineDetailsData[]>>;
@@ -40,12 +42,16 @@ type MachineDetailsProps = {
 const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
+
+  const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
+
   const { ProductFamily } = useSelector(
     (state: RootState) => state.productFamily
   );
   const { ProductModel } = useSelector(
     (state: RootState) => state.productModel
   );
+
   const [productFamilyID, setProductFamilyID] = useState<{
     id: string;
     name: string;
@@ -56,14 +62,16 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
     product: string;
   }>({ id: "0", name: "", product: "" });
   const [noOfMachines, setNoOfMachines] = useState("0");
+  const [sbuId, setSBUId] = useState("0");
   const [machineCartData, setMachineCartData] = useState<
     Array<MachineDetailsData>
   >(new Array<MachineDetailsData>());
 
-  console.warn("Product Model---", productModelID);
-
   const isValid = () => {
-    if (productFamilyID.id == "0") {
+    if (sbuId == "0") {
+      DisplayToast("Please select SBU");
+      return false;
+    } else if (productFamilyID.id == "0") {
       DisplayToast("Please select product family");
       return false;
     } else if (productModelID.id == "0") {
@@ -78,7 +86,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
   };
   useEffect(() => {
     if (isFocused) {
-      dispatch(ProductFamilyRequest(""));
+      dispatch(SBUMasterRequest(null));
       createMachineDetailsTable();
       resetMachineDetailsTable(setMachineCartData);
       getMachineDetails(setMachineCartData);
@@ -133,7 +141,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
       </ScrollView>
     );
   };
-  console.warn("Product Details----", machineCartData);
+
   return (
     <View style={{ margin: "2%" }}>
       <Text style={style.headerText}>
@@ -147,9 +155,12 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select SBU"
-            data={GetProductFamily(ProductFamily)}
+            data={GetSBUMaster(sbuMaster)}
             onSelect={(val) => {
-              handleProductFamily(val);
+              if (val) {
+                setSBUId(val.value);
+                dispatch(ProductFamilyRequest(+val.value));
+              }
             }}
           />
         </View>
@@ -208,6 +219,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
                 productModelID: productModelID?.id,
                 productModelName: productModelID?.name,
                 productID: productModelID.product,
+                sbuId: Number(sbuId),
               };
 
               addMachineDetails(cartData, setMachineCartData);

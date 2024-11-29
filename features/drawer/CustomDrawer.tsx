@@ -30,7 +30,6 @@ const CustomDrawer = (props: any) => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-        console.warn(res);
       }
     });
   }, [isFocused]);

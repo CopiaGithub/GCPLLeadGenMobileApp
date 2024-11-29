@@ -6,6 +6,7 @@ export interface CustomerDetails {
   mobileNumber: string;
   alternativeMobileNumber: string;
   email: string;
+  sbuId: number;
 }
 
 export interface AddCustomerData {

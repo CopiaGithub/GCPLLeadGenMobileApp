@@ -6,4 +6,5 @@ export interface MachineDetailsData {
   productModelName: string;
   noOfMachines: string;
   productID: string;
+  sbuId: number;
 }

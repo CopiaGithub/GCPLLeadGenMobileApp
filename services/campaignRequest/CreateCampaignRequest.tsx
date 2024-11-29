@@ -16,12 +16,9 @@ export async function CreateCampaignRequest(
     data: reqData,
   })
     .then((resp) => {
-      console.error("Response Then", resp.data);
-
       return resp.data;
     })
     .catch((error) => {
-      console.error("Response error", error);
       return error;
     });
 }

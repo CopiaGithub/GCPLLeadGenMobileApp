@@ -22,7 +22,13 @@ export const GetProductFamily = (data: ProductFamilyResponse | null) => {
 
 export const GetProductModel = (data: ProductModelResponse | null) => {
   const respData: DropDownType[] = [];
-  if (data && data.statusCode == 200 && data.message) {
+  if (
+    data &&
+    data.statusCode == 200 &&
+    data.message &&
+    data.message.model &&
+    data.message.model.length
+  ) {
     for (let i = 0; i < data.message.model.length; i++) {
       respData.push({
         label: data.message.model[i].modelName.toString(),

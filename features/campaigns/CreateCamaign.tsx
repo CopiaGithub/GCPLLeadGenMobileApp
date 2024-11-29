@@ -72,7 +72,6 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
   const submitCampaignData = useFormik({
     initialValues: formHelper.formikInitialValue,
     onSubmit: async (values) => {
-      console.warn(values);
       if (isValid(values)) {
         setLoaderState(true);
         const reqPayload: CreateCampaignReq = {
@@ -90,7 +89,6 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
           toDate: moment(values.toDate, "DD, MMM YYYY").format("YYYY-MM-DD"),
         };
         const resp = await CreateCampaignRequest(reqPayload);
-        console.warn("Request payload", reqPayload);
 
         setLoaderState(resp ? false : true);
         if (resp && resp.statusCode == 201) {
