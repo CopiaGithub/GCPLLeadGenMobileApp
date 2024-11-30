@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootStackParamList } from "../../types";
 import style from "./LoginStyle";
 import {
@@ -27,10 +27,23 @@ import { LoginValidateOTPRequest } from "../../services/loginRequest/LoginValida
 import CDSTest from "./CDSDropDown";
 import Dropdown from "./CDSDropDown";
 import CDSDropDown from "./CDSDropDown";
+import { useIsFocused } from "@react-navigation/native";
+import { ExpoNotification } from "../../utility/ExpoNotification";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
+  const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      ExpoNotification()
+        .then((val) => setExpoPushToken(val))
+        .catch((err) => console.log(err));
+    }
+  }, [isFocused]);
+  console.warn("Expo Push Notification Token--->", expoPushToken);
+
   // const [email, setEmail] = useState("");
   const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
   // const [password, setPassword] = useState("");
@@ -136,7 +149,6 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
     return (
       <View style={style.boxView}>
         {renderSignOptions()}
-
         <View style={style.txView}>
           <Foundation name="mail" size={24} style={style.leftIcon} />
           <TextInput

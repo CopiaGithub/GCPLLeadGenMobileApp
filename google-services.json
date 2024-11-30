@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "343439515535",
+    "project_id": "gcpl-lead-gen-b086e",
+    "storage_bucket": "gcpl-lead-gen-b086e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343439515535:android:11f6c0011b02dcdb0df5fa",
+        "android_client_info": {
+          "package_name": "com.gcpl.catLeadGen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa16rjc63Jcb94ip6Hhm96eFtr6T04nOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
