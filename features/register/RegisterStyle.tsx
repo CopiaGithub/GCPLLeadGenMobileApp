@@ -65,6 +65,7 @@ export const style = StyleSheet.create({
     marginLeft: "2%",
     fontSize: 14,
     fontWeight: "500",
+    padding: "3%",
   },
   signUpBtnTxt: {
     color: "white",

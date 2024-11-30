@@ -33,6 +33,7 @@ export const style = StyleSheet.create({
     width: "100%",
     padding: Platform.OS == "ios" ? "6%" : "4%",
     textAlignVertical: "center",
+    marginBottom: "10%",
   },
   dHAText: {
     fontWeight: "500",
@@ -64,6 +65,7 @@ export const style = StyleSheet.create({
   },
   txtInput: {
     width: "84%",
+    padding: "4%",
   },
   forgotPwd: {
     margin: "2%",

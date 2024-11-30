@@ -58,9 +58,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       getUsers.message &&
       getUsers.message.length
     ) {
-      setApprovalData(
-        getUsers.message.filter((item) => item.status == userStatus)
-      );
+      setApprovalData(getUsers.message);
     } else {
       setApprovalData([]);
     }
@@ -187,7 +185,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
         }}
       />
       {renderSearchBar()}
-      <View style={{ marginHorizontal: "4%" }}>
+      {/* <View style={{ marginHorizontal: "4%" }}>
         <CDSDropDown
           data={[
             { label: "Approved Users", value: "1" },
@@ -198,7 +196,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
             setUserStatus(val.value == "1" ? true : false);
           }}
         />
-      </View>
+      </View> */}
       <ScrollView>{renderItems()}</ScrollView>
     </ImageBackground>
   );

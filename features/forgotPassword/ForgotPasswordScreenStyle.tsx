@@ -17,6 +17,7 @@ export const style = StyleSheet.create({
   },
   txtInput: {
     fontWeight: "500",
+    padding: "4%",
   },
   boxView: {
     backgroundColor: "white",

@@ -7,7 +7,7 @@ export const style = StyleSheet.create({
   },
   searchView: {
     margin: "4%",
-    padding: "1%",
+    padding: "14%",
     borderWidth: 1,
     borderColor: "#d6d4d4",
     borderRadius: 8,

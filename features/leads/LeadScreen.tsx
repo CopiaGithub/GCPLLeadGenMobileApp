@@ -54,7 +54,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-      dispatch(ProductFamilyRequest(""));
+      dispatch(ProductFamilyRequest(1));
     }
   }, [isFocused]);
   const { ProductFamily } = useSelector(
