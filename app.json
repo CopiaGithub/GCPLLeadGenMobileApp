@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "catLeadGen",
+    "name": "GCPL Lead Gen",
     "slug": "catLeadGen",
-    "version": "1.0.0",
+    "scheme": "myapp",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,16 +14,24 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gcpl.leadGen"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gcpl.catLeadGen"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a1be7ca8-e7d1-463e-b0ee-0b1dc84a4269"
+      }
+    },
+    "plugins": ["expo-sqlite"]
   }
 }

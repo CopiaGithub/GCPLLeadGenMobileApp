@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import "react-native-gesture-handler";
-
 import {
   StyleSheet,
   Image,
@@ -9,11 +6,9 @@ import {
   Linking,
   ActivityIndicator,
 } from "react-native";
-import { EventArg } from "@react-navigation/native";
-
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import DashboardScreen from "../dashboard/DashboardScreen";
 import CustomDrawer from "./CustomDrawer";
 import { APP_THEME_COLOR } from "../../constants/Colors";
@@ -55,16 +50,19 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Dashboard",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Dashboard",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: {
                 backgroundColor: `${APP_THEME_COLOR}`,
               },
 
               drawerIcon: () => (
-                <MaterialIcons name="dashboard" size={24} color="black" />
+                <Image
+                  source={require("../../assets/dashboard.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -74,13 +72,16 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Leads",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Leads",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
               drawerActiveTintColor: "black",
               drawerIcon: () => (
-                <FontAwesome5 name="fire" size={24} color="black" />
+                <Image
+                  source={require("../../assets/leads.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -90,14 +91,17 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Campaigns",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Campaigns",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <MaterialIcons name="campaign" size={24} color="black" />
+                <Image
+                  source={require("../../assets/campaign.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -107,14 +111,17 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Users",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Users",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <FontAwesome5 name="users" size={24} color="black" />
+                <Image
+                  source={require("../../assets/users.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -124,14 +131,17 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Approvals",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Approvals",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <Ionicons name="shield-checkmark" size={24} color="black" />
+                <Image
+                  source={require("../../assets/approve.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -141,14 +151,17 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Gifts",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Gifts",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <FontAwesome5 name="gifts" size={24} color="black" />
+                <Image
+                  source={require("../../assets/gift.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />
@@ -158,14 +171,17 @@ const CdsDrawer: React.FC = () => {
             options={{
               drawerLabel: "Reports",
               drawerLabelStyle: styles.dLabels,
-              headerTintColor: "black",
+              headerTintColor: "white",
               headerTitle: "Reports",
-              headerTitleStyle: { color: "black" },
+              headerTitleStyle: { color: "white" },
               drawerActiveTintColor: "black",
               headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
               drawerIcon: () => (
-                <FontAwesome5 name="file-contract" size={24} color="black" />
+                <Image
+                  source={require("../../assets/report.png")}
+                  style={styles.imageStyle}
+                />
               ),
             }}
           />

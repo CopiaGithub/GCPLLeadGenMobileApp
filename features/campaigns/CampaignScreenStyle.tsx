@@ -4,6 +4,7 @@ import { APP_THEME_COLOR } from "../../constants/Colors";
 export const style = StyleSheet.create({
   headerIcon: {
     marginRight: "8%",
+    color: "white",
   },
   searchView: {
     margin: "4%",

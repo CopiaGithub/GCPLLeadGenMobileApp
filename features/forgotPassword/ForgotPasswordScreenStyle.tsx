@@ -17,6 +17,7 @@ export const style = StyleSheet.create({
   },
   txtInput: {
     fontWeight: "500",
+    padding: "4%",
   },
   boxView: {
     backgroundColor: "white",
@@ -42,6 +43,7 @@ export const style = StyleSheet.create({
     marginHorizontal: "2%",
     color: APP_THEME_COLOR,
     marginBottom: "2%",
+    textAlign: "right",
   },
   iconView: {
     borderWidth: 1,

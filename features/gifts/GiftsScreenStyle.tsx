@@ -69,6 +69,6 @@ export const style = StyleSheet.create({
     borderColor: "#d6d4d4",
     borderRadius: 8,
     flex: 1.1,
-    paddingVertical: "-6%",
+    padding: "1%",
   },
 });

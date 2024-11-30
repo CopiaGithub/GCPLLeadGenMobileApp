@@ -12,6 +12,7 @@ export const style = StyleSheet.create({
     fontSize: 22,
     fontWeight: "500",
     color: "#333",
+    textAlign: "center",
   },
   childText: {
     textAlign: "center",
@@ -26,13 +27,13 @@ export const style = StyleSheet.create({
     padding: "2%",
     margin: "2%",
     borderRadius: 8,
-    marginVertical: "4%",
   },
   registerView: {
     backgroundColor: "white",
     width: "100%",
     padding: Platform.OS == "ios" ? "6%" : "4%",
     textAlignVertical: "center",
+    marginBottom: "10%",
   },
   dHAText: {
     fontWeight: "500",
@@ -58,12 +59,20 @@ export const style = StyleSheet.create({
     color: APP_THEME_COLOR,
     alignSelf: "center",
   },
-  txtInput: {},
+  rightIcon: {
+    color: "black",
+    alignSelf: "center",
+  },
+  txtInput: {
+    width: "84%",
+    padding: "4%",
+  },
   forgotPwd: {
     margin: "2%",
     textAlign: "right",
     fontWeight: "500",
     fontSize: 14,
+    color: APP_THEME_COLOR,
   },
   btn: {
     backgroundColor: "black",
@@ -136,6 +145,36 @@ export const style = StyleSheet.create({
     fontSize: 30,
     fontWeight: "800",
     marginTop: "-3%",
+  },
+  toggleView: {
+    flexDirection: "row",
+    backgroundColor: "#d7d9d7",
+    padding: "1%",
+    borderWidth: 1,
+    borderStartEndRadius: 8,
+    borderEndEndRadius: 8,
+    borderColor: "#bfbdbd",
+  },
+  activeToggle: {
+    flex: 1,
+    padding: "2%",
+    backgroundColor: "white",
+    textAlign: "center",
+    borderWidth: 1,
+    borderRadius: 6,
+    fontWeight: "500",
+    borderColor: "#b0aeae",
+    color: "black",
+  },
+  disableToggle: {
+    flex: 1,
+    padding: "2%",
+    backgroundColor: "#d7d9d7",
+    textAlign: "center",
+    borderWidth: 0.8,
+    borderColor: "#d7d9d7",
+    color: "black",
+    fontWeight: "500",
   },
 });
 export default style;

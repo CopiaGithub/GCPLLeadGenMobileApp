@@ -4,6 +4,7 @@ import { APP_THEME_COLOR } from "../../constants/Colors";
 export const style = StyleSheet.create({
   headerIcon: {
     marginRight: "8%",
+    color: "white",
   },
   searchView: {
     margin: "4%",
@@ -51,5 +52,45 @@ export const style = StyleSheet.create({
   extra: {
     flex: 0.2,
     alignSelf: "center",
+  },
+  showCustBtnView: {
+    flexDirection: "row",
+    marginVertical: "1%",
+    backgroundColor: "#edebeb",
+  },
+  showCustTxt: {
+    flex: 1.8,
+    padding: "1%",
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  showCustIcon: {
+    flex: 0.2,
+  },
+  showProdBtnView: {
+    flexDirection: "row",
+    marginVertical: "1%",
+  },
+  showProdTxt: {
+    flex: 1.8,
+    padding: "1%",
+  },
+  showProdIcon: {
+    flex: 0.2,
+  },
+  showMoreParentView: {
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
+    marginVertical: "1%",
+  },
+  showMoreView: {
+    flexDirection: "row",
+  },
+  showMoreLTxt: {
+    flex: 1,
+    fontWeight: "500",
+  },
+  showMoreRTxt: {
+    flex: 1,
   },
 });

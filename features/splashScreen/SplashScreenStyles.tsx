@@ -1,19 +1,28 @@
 import { StyleSheet } from "react-native";
+import { APP_THEME_COLOR } from "../../constants/Colors";
 
 export const style = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+  },
+  imageIcon: {
+    height: 90,
+    width: 360,
+    alignSelf: "center",
+    marginVertical: "6%",
+  },
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#eef2f3",
+    alignContent: "center",
   },
-  text: {
-    fontSize: 34, // Font size
-    fontWeight: "bold", // Font weight (e.g., bold, 100-900)
-    color: "#333", // Font color
-    textAlign: "center", // Text alignment
-    fontStyle: "italic", // Italicize text
-    textDecorationLine: "underline",
+  yellowBlock: {
+    backgroundColor: APP_THEME_COLOR,
+    height: "6%",
+  },
+  blackBlock: {
+    backgroundColor: "black",
+    height: "1%",
   },
 });
 export default style;

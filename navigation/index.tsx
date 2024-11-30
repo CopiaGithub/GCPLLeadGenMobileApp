@@ -18,10 +18,10 @@ import ApprovalScreen from "../features/approvals/ApprovalScreen";
 import CampaignScreen from "../features/campaigns/CampaignScreen";
 import GiftScreen from "../features/gifts/GiftsScreen";
 import ReportScreen from "../features/reports/ReportScreen";
-import CreateUserScreen from "../features/user/CreateUserScreen";
+import CreateUserScreen from "../features/user/createUser/CreateUserScreen";
 import CreateCampaignScreen from "../features/campaigns/CreateCamaign";
-import CustomerCreateOptionsScreen from "../features/leads/customerCreateOptions/CustomerCreateOption";
-import AddMachineDetailsScreen from "../features/leads/machineDetails/AddMachineDetails";
+import "react-native-gesture-handler";
+import CreateLeadScreen from "../features/leads/createLead/CreateLeadScreen";
 
 export default function Navigation({
   colorScheme,
@@ -45,7 +45,15 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator
+      initialRouteName="Splash"
+      screenOptions={{
+        headerTitleStyle: {
+          color: "white",
+        },
+        headerTintColor: "white",
+      }}
+    >
       <Stack.Screen
         name="Splash"
         component={SplashScreen}
@@ -59,7 +67,6 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Login",
           headerTintColor: "white",
           headerBackVisible: false,
@@ -73,9 +80,8 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Register",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -106,9 +112,8 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Forgot Password",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -119,35 +124,20 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Leads",
-          headerTintColor: "black",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
       />
+
       <Stack.Screen
-        name="CustomerCreateOption"
-        component={CustomerCreateOptionsScreen}
+        name="CreateLead"
+        component={CreateLeadScreen}
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
-          headerTitle: "Add Customer",
-          headerTintColor: "black",
-          gestureEnabled: false,
-          gestureDirection: "horizontal",
-        }}
-      />
-      <Stack.Screen
-        name="AddMachineDetails"
-        component={AddMachineDetailsScreen}
-        options={{
-          title: "",
-          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
-          headerTitle: "Add Machine Details",
-          headerTintColor: "black",
+          headerTitle: "Create Lead",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -158,9 +148,8 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "User",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -171,9 +160,8 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Create New User",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -184,8 +172,7 @@ function RootNavigator() {
         options={{
           title: "Registration Approval",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -196,9 +183,8 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Campaigns",
-          headerTintColor: "black",
+
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -209,9 +195,7 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Create New Campaign",
-          headerTintColor: "black",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -222,9 +206,7 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Gifts",
-          headerTintColor: "black",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}
@@ -235,9 +217,7 @@ function RootNavigator() {
         options={{
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-          headerTitleStyle: { color: "black" },
           headerTitle: "Reports",
-          headerTintColor: "black",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}

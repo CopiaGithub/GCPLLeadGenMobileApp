@@ -1,3 +1,5 @@
+import { GetUserRespMessage } from "./types/userTypes/GetUserTypes";
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
@@ -11,8 +13,7 @@ export type RootStackParamList = {
   DashboardDrawer: undefined;
   ForgotPassword: undefined;
   Leads: undefined;
-  CustomerCreateOption: undefined;
-  AddMachineDetails: undefined;
+  CreateLead: undefined;
   Approvals: undefined;
   Campaigns: undefined;
   CreateCampaign: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   Users: undefined;
   CreateUser: {
     operation: string;
+    item: GetUserRespMessage;
   };
   Reports: undefined;
 };

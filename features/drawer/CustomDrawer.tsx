@@ -1,4 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -7,24 +14,45 @@ import {
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CustomDrawer = (props: any) => {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [sdtSuperUser, setSdtSuperUser] = useState("");
   const [UserName, setUserName] = useState("");
   const [Designation_Desc, setDesignation_Desc] = useState("");
-  const navigation = useNavigation();
+
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+      }
+    });
+  }, [isFocused]);
   const icon = () => {
     return (
-      <View style={styles.iconView}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.txtOne}>GCPL</Text>
-          <Text style={styles.txtSymbol}>®</Text>
-        </View>
-        <Text style={styles.txtTwo}>LEAD</Text>
-        <Text style={styles.txtThree}>GEN</Text>
+      <Image
+        source={require("../../assets/mainLogo.png")}
+        style={{
+          height: 60,
+          width: 220,
+          alignSelf: "center",
+        }}
+      />
+    );
+  };
+  const renderHorizontalBorder = () => {
+    return <View style={{ borderTopWidth: 0.8, borderTopColor: "grey" }} />;
+  };
+  const userDetails = () => {
+    return (
+      <View style={{ marginTop: "1%", marginBottom: "4%" }}>
+        <Text style={styles.headerTxt}>Exibhition Admin</Text>
+        <Text style={styles.childTxt}>Super Admin</Text>
       </View>
     );
   };
@@ -34,18 +62,30 @@ const CustomDrawer = (props: any) => {
         {...props}
         contentContainerStyle={styles.drawerStyle}
       >
-        <View style={styles.headerView}>
-          {icon()}
-          <View style={{ flex: 1, justifyContent: "center", marginLeft: "2%" }}>
-            <Text style={styles.headerTxt}>Exibhition Admin</Text>
-            <Text style={styles.childTxt}>Super Admin</Text>
-          </View>
-        </View>
+        {icon()}
+        {renderHorizontalBorder()}
+        {userDetails()}
+        <View style={styles.headerView}></View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <TouchableOpacity
         style={{ backgroundColor: "black" }}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() =>
+          Alert.alert("Hold on!", "Are you sure you want to logout?", [
+            {
+              text: "Cancel",
+              onPress: () => null,
+              style: "cancel",
+            },
+            {
+              text: "YES",
+              onPress: () => {
+                AsyncStorage.removeItem("@userData").then(() => {});
+                props.navigation.navigate("Login");
+              },
+            },
+          ])
+        }
       >
         <View style={styles.logoutView}>
           <AntDesign name="logout" size={24} color="white" />
@@ -123,17 +163,17 @@ const styles = StyleSheet.create({
   headerTxt: {
     fontWeight: "500",
     fontSize: 20,
-    color: "grey",
+    textAlign: "center",
+    textAlignVertical: "center",
   },
   childTxt: {
     fontWeight: "500",
     fontSize: 16,
-    color: "grey",
+    textAlign: "center",
+    textAlignVertical: "center",
   },
   headerView: {
-    flexDirection: "row",
     borderBottomColor: "#d6d4d4",
     borderBottomWidth: 1,
-    marginVertical: "2%",
   },
 });
