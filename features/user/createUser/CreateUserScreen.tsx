@@ -28,6 +28,9 @@ import CDSLoader from "../../../component/CDSLoader";
 import { CreateUserRequest } from "../../../services/userRequest/CreateUserRequest";
 import { UpdateUserRequest } from "../../../services/userRequest/UpdateUserRequest";
 import CDSImageBG from "../../../component/CDSImageBG";
+import { useNetworkState } from "expo-network";
+import { addUserMasterData } from "../userMasterDao/UserMasterDao";
+import { UserMaster } from "../userMasterDao/UserMaster";
 
 type CreateUserScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -49,6 +52,10 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
       dispatch(RoleMasterRequest(""));
     }
   }, [isFocused]);
+  const networkState = useNetworkState();
+  const [userMaster, setUserMaster] = useState<Array<UserMaster>>(
+    new Array<UserMaster>()
+  );
   const createUser = useFormik({
     initialValues: formHelper.formikInitialValue,
     onSubmit: async (values) => {
@@ -66,14 +73,39 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         pincode: Number(val.pincode),
         roleId: Number(val.roleId),
       };
-      if (item && item.id) {
-        const resp = await UpdateUserRequest(payload, item.id);
+      if (item && item.masterId) {
+        const resp = await UpdateUserRequest(payload, item.masterId);
         setLoaderState(resp ? false : true);
         if (resp && resp.statusCode == 200) {
           setAlertState(true);
         } else {
           DisplayToast(`${resp.message}`);
         }
+      } else if (networkState && !networkState.isConnected) {
+        const data: UserMaster = {
+          ID: "0",
+          masterId: 0,
+          orgId: payload.orgId,
+          orgName: payload.orgName,
+          sbuId: payload.sbuId,
+          username: payload.username,
+          password: payload.password,
+          email: payload.email,
+          mobile: payload.mobile,
+          address: payload.address,
+          pincode: payload.pincode,
+          roleId: payload.roleId,
+          status: true,
+        };
+        addUserMasterData(data, setUserMaster)
+          .then(() => {
+            DisplayToast("Success");
+            setLoaderState(false);
+          })
+          .catch(() => {
+            DisplayToast("Fail");
+            setLoaderState(false);
+          });
       } else {
         const resp = await CreateUserRequest(payload);
         setLoaderState(resp ? false : true);
@@ -298,9 +330,9 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         <>
           <CDSAlertBox
             alertVisibility={alertState}
-            alertTitle={item && item.id ? "Edit User" : "Create User"}
+            alertTitle={item && item.masterId ? "Edit User" : "Create User"}
             alertDesc={
-              item && item.id
+              item && item.masterId
                 ? "User updated successfully!"
                 : "User created successfully!"
             }

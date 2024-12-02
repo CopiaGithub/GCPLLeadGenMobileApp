@@ -1,3 +1,4 @@
+import { UserMaster } from "./features/user/userMasterDao/UserMaster";
 import { GetUserRespMessage } from "./types/userTypes/GetUserTypes";
 
 declare global {
@@ -21,7 +22,7 @@ export type RootStackParamList = {
   Users: undefined;
   CreateUser: {
     operation: string;
-    item: GetUserRespMessage;
+    item: UserMaster;
   };
   Reports: undefined;
 };

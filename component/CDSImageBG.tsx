@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { checkInternetConnection } from "../utility/NetInfo";
 import { useIsFocused } from "@react-navigation/native";
 import { DisplayToast } from "../utility/ToastMessage";
-import { useNetworkState } from "expo-network";
+import { NetworkState, useNetworkState } from "expo-network";
 
 type CDSImageBGProps = {
   renderJXX: () => React.JSX.Element;
@@ -22,6 +22,7 @@ type CDSImageBGProps = {
 
 const CDSImageBG: React.FC<CDSImageBGProps> = (props) => {
   const networkState = useNetworkState();
+
   const renderConnected = () => {
     setTimeout(() => {
       return (

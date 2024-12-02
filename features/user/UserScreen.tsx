@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { RootStackParamList } from "../../types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Feather from "@expo/vector-icons/Feather";
 import { style } from "./UserScreenStyle";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,20 +22,84 @@ import { GetRoleNameById } from "./createUser/CreateUserUtility";
 import CDSLoader from "../../component/CDSLoader";
 import CDSDropDown from "../login/CDSDropDown";
 import CDSImageBG from "../../component/CDSImageBG";
+import { UserMaster } from "./userMasterDao/UserMaster";
+import {
+  addUserMasterData,
+  createUserMasterTable,
+  getUserMasterData,
+  resetUserMasterTable,
+} from "./userMasterDao/UserMasterDao";
+import { DisplayToast } from "../../utility/ToastMessage";
+import { checkInternetConnection } from "../../utility/NetInfo";
+import { NetworkState, useNetworkState } from "expo-network";
+import { GetUserResp } from "../../types/userTypes/GetUserTypes";
 
 type UserScreenProps = NativeStackScreenProps<RootStackParamList, "Users">;
 
 const UserScreen: React.FC<UserScreenProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
   const isFocused = useIsFocused();
+  const [userMaster, setUserMaster] = useState<Array<UserMaster>>(
+    new Array<UserMaster>()
+  );
+  const [netState, setNetState] = useState(checkInternetConnection());
   const { getUsers } = useSelector((state: RootState) => state.userArray);
   const { roleMaster } = useSelector((state: RootState) => state.roleMaster);
   useEffect(() => {
     if (isFocused) {
       dispatch(GetUsersRequest(""));
       dispatch(RoleMasterRequest(""));
+      createUserMasterTable();
     }
   }, [isFocused]);
+  const networkState = useNetworkState();
+  useEffect(() => {
+    if (isFocused && networkState) {
+      DisplayToast(`${networkState.isConnected}`);
+    }
+  }, [networkState, isFocused]);
+  const handleOfflineOnlineState = (
+    getUsers: GetUserResp | null,
+    networkState: NetworkState,
+    userMaster: UserMaster[]
+  ) => {
+    if (
+      getUsers &&
+      getUsers.statusCode == 200 &&
+      getUsers.message.length &&
+      getUsers.message.length == userMaster.length &&
+      networkState &&
+      networkState.isConnected
+    ) {
+      resetUserMasterTable(setUserMaster);
+      const val = getUsers.message;
+      for (let i = 0; i < val.length; i++) {
+        const data: UserMaster = {
+          ID: "0",
+          masterId: val[i].id,
+          orgId: val[i].orgId,
+          orgName: val[i].orgName,
+          sbuId: val[i].sbuId,
+          username: val[i].username,
+          password: val[i].password,
+          email: val[i].email,
+          mobile: val[i].mobile,
+          address: val[i].address,
+          pincode: val[i].pincode,
+          roleId: val[i].roleId,
+          status: val[i].status,
+        };
+        addUserMasterData(data, setUserMaster);
+      }
+    } else {
+      getUserMasterData(setUserMaster);
+    }
+  };
+  useEffect(() => {
+    if (isFocused) {
+      handleOfflineOnlineState(getUsers, networkState, userMaster);
+    }
+  }, [isFocused, getUsers?.statusCode, networkState]);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -85,12 +149,9 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
   const renderItems = () => {
     return (
       <>
-        {getUsers &&
-        getUsers.statusCode == 200 &&
-        getUsers.message &&
-        getUsers.message.length ? (
+        {userMaster && userMaster.length ? (
           <>
-            {getUsers.message.map((item, i) => (
+            {userMaster.map((item, i) => (
               <View style={style.itemView} key={i}>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Name:</Text>
@@ -121,20 +182,18 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Role:</Text>
                   <Text style={style.valueText}>
-                    {item.roleId ? GetRoleNameById(roleMaster, item.id) : null}
+                    {item.roleId
+                      ? GetRoleNameById(roleMaster, item.roleId)
+                      : null}
                   </Text>
                   <View style={style.extra}></View>
                 </View>
               </View>
             ))}
           </>
-        ) : getUsers && getUsers.statusCode == 200 && !getUsers.message ? (
+        ) : userMaster && userMaster.length ? (
           <View>
             <Text>No Data Found!</Text>
-          </View>
-        ) : getUsers && getUsers.statusCode != 200 ? (
-          <View>
-            <Text>{`${getUsers.message}`}</Text>
           </View>
         ) : (
           <CDSLoader />

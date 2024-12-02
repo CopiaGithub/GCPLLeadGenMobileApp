@@ -33,6 +33,8 @@ import { DisplayToast } from "../../utility/ToastMessage";
 
 import { checkInternetConnection } from "../../utility/NetInfo";
 import CDSImageBG from "../../component/CDSImageBG";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { NetworkState, useNetworkState } from "expo-network";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -43,6 +45,30 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
   const [visitorCount, setVisitorCoint] = useState(0);
+  const networkState = useNetworkState();
+  const renderHeaderIcon = (state: NetworkState) => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <View style={{ marginRight: "14%", justifyContent: "center" }}>
+          <AntDesign
+            name="sync"
+            size={24}
+            disabled={networkState && networkState.isConnected ? false : true}
+            color={networkState && networkState.isConnected ? "white" : "grey"}
+            onLongPress={() => {
+              DisplayToast("Sync Data");
+            }}
+          />
+        </View>
+      ),
+    });
+  };
+  useEffect(() => {
+    if (networkState) {
+      renderHeaderIcon(networkState);
+    }
+  }, [networkState]);
+
   useEffect(() => {
     if (isFocused) {
       dispatch(GetLeadDataRequest(""));
