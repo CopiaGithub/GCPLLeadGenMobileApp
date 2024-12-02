@@ -29,6 +29,7 @@ import Dropdown from "./CDSDropDown";
 import CDSDropDown from "./CDSDropDown";
 import { useIsFocused } from "@react-navigation/native";
 import { ExpoNotification } from "../../utility/ExpoNotification";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -52,10 +53,10 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   }, [isFocused]);
   console.warn("Expo Push Notification Token--->", expoPushToken);
 
-  const [email, setEmail] = useState("");
-  // const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
-  const [password, setPassword] = useState("");
-  // const [password, setPassword] = useState("1235");
+  // const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
+  // const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("1235");
   const [otp, setOTP] = useState("");
   const [alertState, setAlertState] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
@@ -281,46 +282,45 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   };
   const [first, setfirst] = useState("");
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      <>
-        {loaderState ? (
-          <CDSLoader />
-        ) : (
-          <>
-            <ScrollView
-              contentContainerStyle={{
-                flex: 1,
-                justifyContent: "center",
-                alignContent: "center",
-              }}
-            >
-              <CDSAlertBox
-                alertVisibility={alertState}
-                alertTitle="Register"
-                alertDesc="User registerd successfully!"
-                showNegativeBtn={false}
-                positiveBtnTxt="Cancel"
-                negativeBtnTxt="Ok"
-                onNegativeClick={() => {
-                  setAlertState(false);
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          {loaderState ? (
+            <CDSLoader />
+          ) : (
+            <>
+              <ScrollView
+                contentContainerStyle={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignContent: "center",
                 }}
-                onPositiveClick={() => {
-                  setAlertState(false);
-                }}
-              />
+              >
+                <CDSAlertBox
+                  alertVisibility={alertState}
+                  alertTitle="Register"
+                  alertDesc="User registerd successfully!"
+                  showNegativeBtn={false}
+                  positiveBtnTxt="Cancel"
+                  negativeBtnTxt="Ok"
+                  onNegativeClick={() => {
+                    setAlertState(false);
+                  }}
+                  onPositiveClick={() => {
+                    setAlertState(false);
+                  }}
+                />
 
-              {icon()}
-              {renderHeader()}
-              {renderLoginBox()}
-            </ScrollView>
-            {renderSignUp()}
-          </>
-        )}
-      </>
-    </ImageBackground>
+                {icon()}
+                {renderHeader()}
+                {renderLoginBox()}
+              </ScrollView>
+              {renderSignUp()}
+            </>
+          )}
+        </>
+      )}
+    ></CDSImageBG>
   );
 };
 export default LoginScreen;

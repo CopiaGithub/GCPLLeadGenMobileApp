@@ -34,6 +34,7 @@ import { useFormik } from "formik";
 import { RegisterUserRequest } from "../../services/registerUserRequest/RegisterUserRequest";
 import { RegisterUser } from "../../types/registerType/RegisterType";
 import CDSDropDown from "../login/CDSDropDown";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -216,36 +217,35 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      <ScrollView
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: "center",
-          alignContent: "center",
-        }}
-      >
-        <CDSAlertBox
-          alertVisibility={alertState}
-          alertTitle="Register"
-          alertDesc="User registerd successfully!"
-          showNegativeBtn={false}
-          positiveBtnTxt="Cancel"
-          negativeBtnTxt="Ok"
-          onNegativeClick={() => {
-            setAlertState(false);
+    <CDSImageBG
+      renderJXX={() => (
+        <ScrollView
+          contentContainerStyle={{
+            flex: 1,
+            justifyContent: "center",
+            alignContent: "center",
           }}
-          onPositiveClick={() => {
-            setAlertState(false);
-          }}
-        />
-        {renderHeader()}
-        {renderResgisterBox()}
-        {renderSignUpBtn()}
-      </ScrollView>
-    </ImageBackground>
+        >
+          <CDSAlertBox
+            alertVisibility={alertState}
+            alertTitle="Register"
+            alertDesc="User registerd successfully!"
+            showNegativeBtn={false}
+            positiveBtnTxt="Cancel"
+            negativeBtnTxt="Ok"
+            onNegativeClick={() => {
+              setAlertState(false);
+            }}
+            onPositiveClick={() => {
+              setAlertState(false);
+            }}
+          />
+          {renderHeader()}
+          {renderResgisterBox()}
+          {renderSignUpBtn()}
+        </ScrollView>
+      )}
+    />
   );
 };
 export default RegisterScreen;

@@ -15,6 +15,7 @@ import { useState } from "react";
 import { DisplayToast } from "../../utility/ToastMessage";
 import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSLoader from "../../component/CDSLoader";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type ReportScreenProps = NativeStackScreenProps<RootStackParamList, "Reports">;
 
@@ -86,35 +87,35 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      <CDSAlertBox
-        alertVisibility={alertState}
-        alertTitle="Report!"
-        alertDesc="Report sent successfully!"
-        showNegativeBtn={false}
-        positiveBtnTxt="Cancel"
-        negativeBtnTxt="Ok"
-        onNegativeClick={() => {
-          setAlertState(false);
-          setEmail("");
-        }}
-        onPositiveClick={() => {
-          setAlertState(false);
-        }}
-      />
-      {!loaderState ? (
+    <CDSImageBG
+      renderJXX={() => (
         <>
-          {renderForm()}
-          {renderBtn()}
+          <CDSAlertBox
+            alertVisibility={alertState}
+            alertTitle="Report!"
+            alertDesc="Report sent successfully!"
+            showNegativeBtn={false}
+            positiveBtnTxt="Cancel"
+            negativeBtnTxt="Ok"
+            onNegativeClick={() => {
+              setAlertState(false);
+              setEmail("");
+            }}
+            onPositiveClick={() => {
+              setAlertState(false);
+            }}
+          />
+          {!loaderState ? (
+            <>
+              {renderForm()}
+              {renderBtn()}
+            </>
+          ) : (
+            <CDSLoader />
+          )}
         </>
-      ) : (
-        <CDSLoader />
       )}
-      <></>
-    </ImageBackground>
+    />
   );
 };
 export default ReportScreen;

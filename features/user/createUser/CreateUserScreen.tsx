@@ -27,6 +27,7 @@ import CDSAlertBox from "../../../component/CDSAlertBox";
 import CDSLoader from "../../../component/CDSLoader";
 import { CreateUserRequest } from "../../../services/userRequest/CreateUserRequest";
 import { UpdateUserRequest } from "../../../services/userRequest/UpdateUserRequest";
+import CDSImageBG from "../../../component/CDSImageBG";
 
 type CreateUserScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -292,43 +293,44 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      <CDSAlertBox
-        alertVisibility={alertState}
-        alertTitle={item && item.id ? "Edit User" : "Create User"}
-        alertDesc={
-          item && item.id
-            ? "User updated successfully!"
-            : "User created successfully!"
-        }
-        showNegativeBtn={false}
-        positiveBtnTxt="Cancel"
-        negativeBtnTxt="Ok"
-        onNegativeClick={() => {
-          setAlertState(false);
-          props.navigation.navigate("Users");
-        }}
-        onPositiveClick={() => {
-          setAlertState(false);
-        }}
-      />
-      <>
-        {loaderState ? (
-          <CDSLoader />
-        ) : (
-          <ScrollView
-            keyboardShouldPersistTaps="always"
-            contentContainerStyle={{ paddingBottom: "50%" }}
-          >
-            {renderCreateUserView()}
-            {renderBtn()}
-          </ScrollView>
-        )}
-      </>
-    </ImageBackground>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          <CDSAlertBox
+            alertVisibility={alertState}
+            alertTitle={item && item.id ? "Edit User" : "Create User"}
+            alertDesc={
+              item && item.id
+                ? "User updated successfully!"
+                : "User created successfully!"
+            }
+            showNegativeBtn={false}
+            positiveBtnTxt="Cancel"
+            negativeBtnTxt="Ok"
+            onNegativeClick={() => {
+              setAlertState(false);
+              props.navigation.navigate("Users");
+            }}
+            onPositiveClick={() => {
+              setAlertState(false);
+            }}
+          />
+          <>
+            {loaderState ? (
+              <CDSLoader />
+            ) : (
+              <ScrollView
+                keyboardShouldPersistTaps="always"
+                contentContainerStyle={{ paddingBottom: "50%" }}
+              >
+                {renderCreateUserView()}
+                {renderBtn()}
+              </ScrollView>
+            )}
+          </>
+        </>
+      )}
+    />
   );
 };
 export default CreateUserScreen;

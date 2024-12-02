@@ -26,6 +26,7 @@ import { GetStateNameByID, HandleSearchList } from "./CampaignUtility";
 import { GetCampaignMessage } from "../../types/campaignTypes/GetCampaignsTypes";
 import { StateRequest } from "../../services/stateRequest/StateRequest";
 import moment from "moment";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type CampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -196,19 +197,20 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {renderSearchBar()}
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {renderItems()}
-      </ScrollView>
-    </ImageBackground>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          {renderSearchBar()}
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            {renderItems()}
+          </ScrollView>
+        </>
+      )}
+    />
   );
 };
 export default CampaignScreen;

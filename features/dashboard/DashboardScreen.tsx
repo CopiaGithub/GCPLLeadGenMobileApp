@@ -31,6 +31,9 @@ import CDSLoader from "../../component/CDSLoader";
 import { VisitorMasterCountRequest } from "../../services/visitorMasterCountRequest/VisitorMasterCountRequest";
 import { DisplayToast } from "../../utility/ToastMessage";
 
+import { checkInternetConnection } from "../../utility/NetInfo";
+import CDSImageBG from "../../component/CDSImageBG";
+
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "Dashboard"
@@ -269,27 +272,28 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {renderHorizontalMenus()}
-      {renderCampaignName()}
-      <View
-        style={{
-          marginTop: "4%",
-          marginHorizontal: "2%",
-        }}
-      >
-        <CDSDropDown
-          data={GetSBUMaster(sbuMaster)}
-          onSelect={() => {}}
-          placeholder="Select SBU"
-        />
-      </View>
-      {renderCountBox()}
-      {renderModelDetails()}
-    </ImageBackground>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          {renderHorizontalMenus()}
+          {renderCampaignName()}
+          <View
+            style={{
+              marginTop: "4%",
+              marginHorizontal: "2%",
+            }}
+          >
+            <CDSDropDown
+              data={GetSBUMaster(sbuMaster)}
+              onSelect={() => {}}
+              placeholder="Select SBU"
+            />
+          </View>
+          {renderCountBox()}
+          {renderModelDetails()}
+        </>
+      )}
+    ></CDSImageBG>
   );
 };
 export default DashboardScreen;

@@ -26,6 +26,7 @@ import { EnterGiftDetails } from "../../services/giftsRequest/EnterGiftDetailsRe
 import { EnterGiftDetailsReq } from "../../types/giftTypes/EnterGiftDetailsTypes";
 import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSDropDown from "../login/CDSDropDown";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type GiftScreenProps = NativeStackScreenProps<RootStackParamList, "Gifts">;
 
@@ -225,46 +226,47 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {loaderState ? (
-        <CDSLoader />
-      ) : (
+    <CDSImageBG
+      renderJXX={() => (
         <>
-          <CDSAlertBox
-            alertVisibility={alertState}
-            alertTitle="Gifts!"
-            alertDesc="Gift data updated successfully!"
-            showNegativeBtn={false}
-            positiveBtnTxt="Cancel"
-            negativeBtnTxt="Ok"
-            onNegativeClick={() => {
-              setAlertState(false);
-              dispatch(GetLeadDataRequest(""));
-            }}
-            onPositiveClick={() => {
-              setAlertState(false);
-            }}
-          />
-          {renderSearchBar()}
-          <View style={{ marginHorizontal: "4%" }}>
-            <CDSDropDown
-              data={[
-                { label: "Delivered Gifts", value: "1" },
-                { label: "Undelivered Gifts", value: "0" },
-              ]}
-              placeholder="Undelivered Gifts"
-              onSelect={(val) => {
-                setGiftStatus(val.value == "1" ? true : false);
-              }}
-            />
-          </View>
-          <ScrollView>{renderItems()}</ScrollView>
+          {loaderState ? (
+            <CDSLoader />
+          ) : (
+            <>
+              <CDSAlertBox
+                alertVisibility={alertState}
+                alertTitle="Gifts!"
+                alertDesc="Gift data updated successfully!"
+                showNegativeBtn={false}
+                positiveBtnTxt="Cancel"
+                negativeBtnTxt="Ok"
+                onNegativeClick={() => {
+                  setAlertState(false);
+                  dispatch(GetLeadDataRequest(""));
+                }}
+                onPositiveClick={() => {
+                  setAlertState(false);
+                }}
+              />
+              {renderSearchBar()}
+              <View style={{ marginHorizontal: "4%" }}>
+                <CDSDropDown
+                  data={[
+                    { label: "Delivered Gifts", value: "1" },
+                    { label: "Undelivered Gifts", value: "0" },
+                  ]}
+                  placeholder="Undelivered Gifts"
+                  onSelect={(val) => {
+                    setGiftStatus(val.value == "1" ? true : false);
+                  }}
+                />
+              </View>
+              <ScrollView>{renderItems()}</ScrollView>
+            </>
+          )}
         </>
       )}
-    </ImageBackground>
+    />
   );
 };
 export default GiftScreen;

@@ -21,6 +21,7 @@ import { RoleMasterRequest } from "../../services/roleMasterRequest/RoleMasterRe
 import { GetRoleNameById } from "./createUser/CreateUserUtility";
 import CDSLoader from "../../component/CDSLoader";
 import CDSDropDown from "../login/CDSDropDown";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type UserScreenProps = NativeStackScreenProps<RootStackParamList, "Users">;
 
@@ -142,16 +143,17 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {renderSearchBar()}
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          {renderSearchBar()}
 
-      <ScrollView contentContainerStyle={{ paddingBottom: "50%" }}>
-        {renderItems()}
-      </ScrollView>
-    </ImageBackground>
+          <ScrollView contentContainerStyle={{ paddingBottom: "50%" }}>
+            {renderItems()}
+          </ScrollView>
+        </>
+      )}
+    />
   );
 };
 export default UserScreen;

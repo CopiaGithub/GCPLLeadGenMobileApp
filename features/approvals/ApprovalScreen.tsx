@@ -26,6 +26,7 @@ import CDSLoader from "../../component/CDSLoader";
 import { RoleMasterRequest } from "../../services/roleMasterRequest/RoleMasterRequest";
 import { GetRoleNameById } from "../user/createUser/CreateUserUtility";
 import CDSDropDown from "../login/CDSDropDown";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type ApprovalScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -165,40 +166,30 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      <CDSAlertBox
-        alertVisibility={alertState}
-        alertTitle="Approval!"
-        alertDesc="User updated successfully!"
-        showNegativeBtn={false}
-        positiveBtnTxt="Cancel"
-        negativeBtnTxt="Ok"
-        onNegativeClick={() => {
-          setAlertState(false);
-          dispatch(GetUsersRequest(""));
-        }}
-        onPositiveClick={() => {
-          setAlertState(false);
-        }}
-      />
-      {renderSearchBar()}
-      {/* <View style={{ marginHorizontal: "4%" }}>
-        <CDSDropDown
-          data={[
-            { label: "Approved Users", value: "1" },
-            { label: "Rejected Users", value: "0" },
-          ]}
-          placeholder="Approved Users"
-          onSelect={(val) => {
-            setUserStatus(val.value == "1" ? true : false);
-          }}
-        />
-      </View> */}
-      <ScrollView>{renderItems()}</ScrollView>
-    </ImageBackground>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          <CDSAlertBox
+            alertVisibility={alertState}
+            alertTitle="Approval!"
+            alertDesc="User updated successfully!"
+            showNegativeBtn={false}
+            positiveBtnTxt="Cancel"
+            negativeBtnTxt="Ok"
+            onNegativeClick={() => {
+              setAlertState(false);
+              dispatch(GetUsersRequest(""));
+            }}
+            onPositiveClick={() => {
+              setAlertState(false);
+            }}
+          />
+          {renderSearchBar()}
+
+          <ScrollView>{renderItems()}</ScrollView>
+        </>
+      )}
+    />
   );
 };
 export default ApprovalScreen;

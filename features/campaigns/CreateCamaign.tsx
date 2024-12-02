@@ -38,6 +38,7 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { OrganizationRequest } from "../../services/organizationRequest/OrganizationRequest";
 import CDSLoader from "../../component/CDSLoader";
 import CDSAlertBox from "../../component/CDSAlertBox";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type CreateCampaignScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -262,36 +263,37 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
   const [selectedValue, setSelectedValue] = useState("java");
 
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      <CDSAlertBox
-        alertVisibility={alertState}
-        alertTitle="Campaign"
-        alertDesc="Campaign created successfully!"
-        showNegativeBtn={false}
-        positiveBtnTxt="Cancel"
-        negativeBtnTxt="Ok"
-        onNegativeClick={() => {
-          setAlertState(false);
-        }}
-        onPositiveClick={() => {
-          setAlertState(false);
-        }}
-      />
-      {loaderState ? (
-        <CDSLoader />
-      ) : (
-        <ScrollView
-          keyboardShouldPersistTaps="always"
-          contentContainerStyle={{ paddingBottom: "50%" }}
-        >
-          {renderCreateCampaignView()}
-          {renderBtn()}
-        </ScrollView>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          <CDSAlertBox
+            alertVisibility={alertState}
+            alertTitle="Campaign"
+            alertDesc="Campaign created successfully!"
+            showNegativeBtn={false}
+            positiveBtnTxt="Cancel"
+            negativeBtnTxt="Ok"
+            onNegativeClick={() => {
+              setAlertState(false);
+            }}
+            onPositiveClick={() => {
+              setAlertState(false);
+            }}
+          />
+          {loaderState ? (
+            <CDSLoader />
+          ) : (
+            <ScrollView
+              keyboardShouldPersistTaps="always"
+              contentContainerStyle={{ paddingBottom: "50%" }}
+            >
+              {renderCreateCampaignView()}
+              {renderBtn()}
+            </ScrollView>
+          )}
+        </>
       )}
-    </ImageBackground>
+    />
   );
 };
 export default CreateCampaignScreen;

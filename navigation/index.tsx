@@ -149,7 +149,7 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "User",
-
+          headerSearchBarOptions: { barTintColor: "black" },
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}

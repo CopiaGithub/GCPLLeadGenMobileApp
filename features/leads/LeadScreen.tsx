@@ -29,6 +29,7 @@ import { HandleSearchList } from "./LeadScreenUtility";
 import CDSLoader from "../../component/CDSLoader";
 import { GetProductFamNameById } from "./stepperScreens/machineDetails/MachineDetailsUtility";
 import { ProductFamilyRequest } from "../../services/productFamilyModelRequest/ProductFamilyRequest";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type LeadScreenProps = NativeStackScreenProps<RootStackParamList, "Leads">;
 
@@ -290,15 +291,16 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {renderSearchBar()}
-      <ScrollView contentContainerStyle={{ paddingBottom: "40%" }}>
-        {renderItems()}
-      </ScrollView>
-    </ImageBackground>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          {renderSearchBar()}
+          <ScrollView contentContainerStyle={{ paddingBottom: "40%" }}>
+            {renderItems()}
+          </ScrollView>
+        </>
+      )}
+    />
   );
 };
 export default LeadScreen;

@@ -25,6 +25,7 @@ import CDSLoader from "../../../component/CDSLoader";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { GetLeadDataRequest } from "../../../services/leadsServices/GetLeadDataRequest";
+import CDSImageBG from "../../../component/CDSImageBG";
 
 type CreateLeadScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -385,19 +386,20 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     );
   };
   return (
-    <ImageBackground
-      source={require("../../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {loaderState ? (
-        <CDSLoader />
-      ) : (
+    <CDSImageBG
+      renderJXX={() => (
         <>
-          {renderSteppers()}
-          {renderLeadForm()}
+          {loaderState ? (
+            <CDSLoader />
+          ) : (
+            <>
+              {renderSteppers()}
+              {renderLeadForm()}
+            </>
+          )}
         </>
       )}
-    </ImageBackground>
+    />
   );
 };
 export default CreateLeadScreen;

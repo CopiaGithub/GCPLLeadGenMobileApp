@@ -22,6 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CDSLoader from "../../component/CDSLoader";
 import { OTPFormState } from "../../types/loginTypes/loginWOTPTypes/LoginSentOTPTypes";
 import { UpdatePasswordRequest } from "../../services/updatePasswordRequest/UpdatePasswordRequest";
+import CDSImageBG from "../../component/CDSImageBG";
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -225,31 +226,32 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/background_image.png")}
-      style={{ flex: 1 }}
-    >
-      {loaderState ? (
-        <CDSLoader />
-      ) : (
-        <ScrollView
-          contentContainerStyle={{
-            flex: 1,
-            justifyContent: "center",
-            alignContent: "center",
-          }}
-        >
-          {renderHeader()}
-          <View style={style.boxView}>
-            {renderHeaderOne()}
-            {formState == OTPFormState.SUBMIT_PASS
-              ? renderPasswordFields()
-              : null}
-          </View>
-          {formState == OTPFormState.SUBMIT_PASS ? renderButton() : null}
-        </ScrollView>
+    <CDSImageBG
+      renderJXX={() => (
+        <>
+          {loaderState ? (
+            <CDSLoader />
+          ) : (
+            <ScrollView
+              contentContainerStyle={{
+                flex: 1,
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
+              {renderHeader()}
+              <View style={style.boxView}>
+                {renderHeaderOne()}
+                {formState == OTPFormState.SUBMIT_PASS
+                  ? renderPasswordFields()
+                  : null}
+              </View>
+              {formState == OTPFormState.SUBMIT_PASS ? renderButton() : null}
+            </ScrollView>
+          )}
+        </>
       )}
-    </ImageBackground>
+    />
   );
 };
 export default ForgotPasswordScreen;
