@@ -33,6 +33,14 @@ import { ExpoNotification } from "../../utility/ExpoNotification";
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
+  ///Ofline
+  //1. Save data [Leave Data (All DD), Campaign(All DD), Gifts, Reports & Approvals]
+
+  //Subscription [Re]
+  //Menus + Subscriptions[My Data(Edit, add picture), Organization(Org name, address, add your logo)-To Create, Payment(1 Year Plan, In App Razorpay setup), SBU Creation(DD Orgname,SBU Name, Address )]
+  //
+  //Register - TextInput for organization
+  //
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -44,10 +52,10 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
   }, [isFocused]);
   console.warn("Expo Push Notification Token--->", expoPushToken);
 
-  // const [email, setEmail] = useState("");
-  const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
-  // const [password, setPassword] = useState("");
-  const [password, setPassword] = useState("1235");
+  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
+  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("1235");
   const [otp, setOTP] = useState("");
   const [alertState, setAlertState] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
