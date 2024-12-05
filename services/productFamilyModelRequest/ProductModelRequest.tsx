@@ -4,11 +4,9 @@ import API from "../../API";
 
 export const ProductModelRequest = createAsyncThunk(
   "productModelData/fetchProductModelData",
-  async (productID: number, { rejectWithValue }) => {
+  async (sbuId: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${API.PRODUCT_FAMILY_MODEL}/${productID}`
-      );
+      const response = await axios.get(`${API.PRODUCT_MODEL}/${sbuId}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

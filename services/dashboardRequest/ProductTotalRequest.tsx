@@ -10,8 +10,9 @@ export const ProductTotalRequest = createAsyncThunk(
         sbuId: sbuID,
       };
 
-      const response = await axios.post(`${API.PRODUCT_INTERESTED}`, payload);
-
+      const response = await axios.get(
+        `${API.PRODUCT_INTERESTED}/${sbuID == 4 ? 0 : sbuID}`
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

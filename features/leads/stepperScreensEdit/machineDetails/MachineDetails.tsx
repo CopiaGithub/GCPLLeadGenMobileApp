@@ -18,7 +18,10 @@ import { ProductModelRequest } from "../../../../services/productFamilyModelRequ
 import {
   GetModelFromProductModel,
   GetProductFamily,
+  GetProductFamNameById,
   GetProductModel,
+  GetProductModelNameById,
+  GetSBUNameById,
 } from "./MachineDetailsUtility";
 import { MachineDetailsData } from "./machineDetailsDao/MachineDetails";
 import {
@@ -32,11 +35,13 @@ import { DisplayToast } from "../../../../utility/ToastMessage";
 import { FormState } from "../../createLead/CreateLeadScreen";
 import { GetSBUMaster } from "../../../dashboard/DashboardUtility";
 import { SBUMasterRequest } from "../../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
+import { GetProductsIntersted } from "../../../../types/leadTypes/GetLeadsTypes";
 
 type MachineDetailsProps = {
   setFormData: React.Dispatch<React.SetStateAction<MachineDetailsData[]>>;
   setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
   allFormState: FormState;
+  productsInterested: GetProductsIntersted[];
   companyType: number;
 };
 
@@ -63,16 +68,24 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
     product: string;
   }>({ id: "0", name: "", product: "" });
   const [noOfMachines, setNoOfMachines] = useState("0");
-  const [sbuId, setSBUId] = useState("0");
+  const [sbuId, setSBUId] = useState(
+    props.productsInterested.length ? props.productsInterested[0].sbuId : "0"
+  );
   const [machineCartData, setMachineCartData] = useState<
     Array<MachineDetailsData>
   >(new Array<MachineDetailsData>());
 
   const isValid = () => {
-    if (sbuId == "0" && props.companyType && props.companyType == 2) {
-      DisplayToast("Please select brand");
+    if (
+      machineCartData.length == 0 &&
+      sbuId == "0" &&
+      props.companyType &&
+      props.companyType == 2
+    ) {
+      DisplayToast("Please select SBU");
       return false;
     } else if (
+      machineCartData.length == 0 &&
       productFamilyID.id == "0" &&
       props.companyType &&
       props.companyType == 2
@@ -80,6 +93,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
       DisplayToast("Please select product family");
       return false;
     } else if (
+      machineCartData.length == 0 &&
       productModelID.id == "0" &&
       props.companyType &&
       props.companyType == 2
@@ -87,6 +101,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
       DisplayToast("Please select product model");
       return false;
     } else if (
+      machineCartData.length == 0 &&
       noOfMachines == "0" &&
       props.companyType &&
       props.companyType == 2
@@ -99,10 +114,44 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
   };
   useEffect(() => {
     if (isFocused) {
+      dispatch(ProductFamilyRequest(props.productsInterested[0].sbuId));
+      // dispatch(ProductModelRequest(props.productsInterested[0].sbuId));
+      dispatch(ProductModelRequest(2));
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
       dispatch(SBUMasterRequest(null));
       createMachineDetailsTable();
       resetMachineDetailsTable(setMachineCartData);
       getMachineDetails(setMachineCartData);
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused && props.productsInterested.length) {
+      for (let i = 0; i < props.productsInterested.length; i++) {
+        const val = props.productsInterested[i];
+        const cartData: MachineDetailsData = {
+          ID: val.id,
+          noOfMachines: val.noOfMachines ? val.noOfMachines.toString() : "0",
+          productFamilyID: val.productFamilyId.toString(),
+          productFamilyName: GetProductFamNameById(
+            ProductFamily,
+            val.productFamilyId
+          ) as any,
+          productModelID: val.productId as any,
+          productModelName: GetProductModelNameById(
+            ProductModel,
+            val.id
+          ) as any,
+          productID: val.productId as any,
+          sbuId: Number(val.sbuId),
+        };
+
+        addMachineDetails(cartData, setMachineCartData);
+      }
     }
   }, [isFocused]);
 
@@ -166,7 +215,11 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <Text style={style.labelText}>SBU:</Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
-            placeholder="Select Brand"
+            placeholder={
+              GetSBUNameById(sbuMaster, +props.productsInterested[0].sbuId)
+                ? GetSBUNameById(sbuMaster, +props.productsInterested[0].sbuId)
+                : "Select SBU"
+            }
             data={GetSBUMaster(sbuMaster)}
             onSelect={(val) => {
               if (val) {

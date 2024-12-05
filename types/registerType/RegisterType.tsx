@@ -1,6 +1,8 @@
 export interface RegisterUser {
   orgId: number;
   orgName: string;
+  campaignId: number;
+  campaignName: string;
   sbuId: number;
   username: string;
   password: string;

@@ -27,9 +27,13 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { GetCampaignNameByID, HandleSearchList } from "./LeadScreenUtility";
 import CDSLoader from "../../component/CDSLoader";
-import { GetProductFamNameById } from "./stepperScreens/machineDetails/MachineDetailsUtility";
+import {
+  GetProductFamNameById,
+  GetProductModelNameById,
+} from "./stepperScreens/machineDetails/MachineDetailsUtility";
 import { ProductFamilyRequest } from "../../services/productFamilyModelRequest/ProductFamilyRequest";
 import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
+import { ProductModelRequest } from "../../services/productFamilyModelRequest/ProductModelRequest";
 
 type LeadScreenProps = NativeStackScreenProps<RootStackParamList, "Leads">;
 
@@ -54,11 +58,12 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   }, [isFocused]);
 
   useEffect(() => {
-    if (isFocused) {
-      dispatch(ProductFamilyRequest(1));
+    if (isFocused && leadDetails?.statusCode == 200) {
+      dispatch(ProductFamilyRequest(+leadDetails.message[0].sbuId));
+      dispatch(ProductModelRequest(+leadDetails.message[0].sbuId));
       dispatch(GetCampaignDataRequest({}));
     }
-  }, [isFocused]);
+  }, [isFocused, leadDetails?.message.length]);
   const { ProductFamily } = useSelector(
     (state: RootState) => state.productFamily
   );
@@ -141,16 +146,20 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
             <View style={style.showMoreView}>
               <Text style={style.showMoreLTxt}>Product Family:</Text>
               <Text style={style.showMoreRTxt}>
-                {GetProductFamNameById(ProductFamily, +item.modelId)}
+                {GetProductFamNameById(ProductFamily, +item.productFamilyId)}
               </Text>
             </View>
             <View style={style.showMoreView}>
               <Text style={style.showMoreLTxt}>Model:</Text>
-              <Text style={style.showMoreRTxt}>{item.productFamilyId}</Text>
+              <Text style={style.showMoreRTxt}>
+                {GetProductModelNameById(ProductModel, +item.productId)}
+              </Text>
             </View>
             <View style={style.showMoreView}>
               <Text style={style.showMoreLTxt}>No of Machines:</Text>
-              <Text style={style.showMoreRTxt}>{item.noOfMachines}</Text>
+              <Text style={style.showMoreRTxt}>
+                {item.noOfMachines ? item.noOfMachines : 0}
+              </Text>
             </View>
           </View>
         ))}
@@ -191,18 +200,16 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Lead ID:</Text>
                   <Text style={style.valueText}>{item.id}</Text>
-                  <View style={style.extra}></View>
-                  {/* <FontAwesome5
-                    name="gifts"
-                    size={16}
-                    color="black"
-                    style={style.extra}
-                    onPress={() => {
-                      props.navigation.navigate("CreateUser", {
-                        operation: "1",
-                      });
-                    }}
-                  /> */}
+                  <View style={style.extra}>
+                    <Feather
+                      name="edit"
+                      size={16}
+                      color="black"
+                      onPress={() =>
+                        props.navigation.navigate("editLeadCustomer", item)
+                      }
+                    />
+                  </View>
                 </View>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Company:</Text>

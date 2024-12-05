@@ -1,14 +1,11 @@
 export interface GetProductsIntersted {
   id: number;
+  sbuId: number;
   visitorMasterId: number;
   productFamilyId: number;
   productId: number;
-  modelId: number;
+  modelId: string;
   noOfMachines: number;
-  planningTimeline: string;
-  financingReuired: boolean;
-  noOfPeopleAccompanied: number;
-  noOfGiftsNeeded: number;
 }
 export interface GetVisitorDetails {
   id: number;
@@ -26,8 +23,7 @@ export interface GetLeadRespMessage {
   companyType: string;
   companyName: string;
   address: string;
-  noOfGifts: string;
-  giftDetails: string;
+
   stateId: number;
   districtId: number;
   pincode: number;
@@ -41,6 +37,12 @@ export interface GetLeadRespMessage {
   visitorDetails: Array<GetVisitorDetails>;
   productCollapseState: boolean;
   visitorCollapseState: boolean;
+  noOfGifts: string;
+  giftDetails: string;
+  planningTimeline: string;
+  financingReuired: boolean;
+  noOfPeopleAccompanied: number;
+  noOfGiftsNeeded: number;
 }
 
 export interface GetLeadResp {

@@ -9,26 +9,30 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { RootStackParamList } from "../../../types";
-import { style } from "./CreateLeadStyle";
+import { style } from "./EditLeadStyle";
 import { DisplayToast } from "../../../utility/ToastMessage";
-import { useState } from "react";
-import LeadDetails from "../stepperScreens/leadDetails/LeadDetails";
-import MachineDetails from "../stepperScreens/machineDetails/MachineDetails";
-import OtherDetails from "../stepperScreens/otherDetails/OtherDetails";
-import UserConsent from "../stepperScreens/userConsent/UserConsent";
-import { AddCustomerData } from "../stepperScreens/leadDetails/LeadDetailsHelper";
-import { MachineDetailsData } from "../stepperScreens/machineDetails/machineDetailsDao/MachineDetails";
+import { useEffect, useState } from "react";
+import LeadDetails from "../stepperScreensEdit/leadDetails/LeadDetails";
+import MachineDetails from "../stepperScreensEdit/machineDetails/MachineDetails";
+import OtherDetails from "../stepperScreensEdit/otherDetails/OtherDetails";
+import UserConsent from "../stepperScreensEdit/userConsent/UserConsent";
+import { AddCustomerData } from "../stepperScreensEdit/leadDetails/LeadDetailsHelper";
+import { MachineDetailsData } from "../stepperScreensEdit/machineDetails/machineDetailsDao/MachineDetails";
 import { SaveLeadReq } from "../../../types/leadTypes/CreateLeadTypes";
-import { SaveLeadRequest } from "../../../services/leadsServices/SaveLeadDataRequest";
+import {
+  EditLeaveRequest,
+  SaveLeadRequest,
+} from "../../../services/leadsServices/SaveLeadDataRequest";
 import CDSAlertBox from "../../../component/CDSAlertBox";
 import CDSLoader from "../../../component/CDSLoader";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { GetLeadDataRequest } from "../../../services/leadsServices/GetLeadDataRequest";
+import { useIsFocused } from "@react-navigation/native";
 
-type CreateLeadScreenProps = NativeStackScreenProps<
+type EditLeadScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  "CreateLead"
+  "editLeadCustomer"
 >;
 
 export interface OtherDetailsData {
@@ -44,17 +48,43 @@ export interface FormState {
   formThree: boolean;
   formFour: boolean;
 }
-const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
+const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
+  const {
+    id,
+    address,
+    pincode,
+    visitorDetails,
+    campaignId,
+    industryTypeId,
+    companyName,
+    attachmentId,
+    companyType,
+    productsInterested,
+    noOfGifts,
+    planningTimeline,
+    noOfPeopleAccompanied,
+    financingReuired,
+    noOfGiftsNeeded,
+  } = props.route.params;
+  const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
   const [addCustomerData, setAddCustomerData] = useState<AddCustomerData>({
-    campaignID: 0,
-    companyName: "",
-    companyTypeID: 0,
-    customerArray: [],
-    industryTypeId: 0,
-    location: "",
-    pinCode: "",
+    campaignID: +campaignId,
+    companyName: companyName,
+    companyTypeID: +companyType,
+    customerArray: visitorDetails.map((item) => ({
+      alternativeMobileNumber: "",
+      customerName: item.visitorName,
+      email: item.email,
+      ID: item.id,
+      mobileNumber: item.mobileNo,
+      sbuId: item.id,
+    })),
+    industryTypeId: +industryTypeId,
+    location: address,
+    pinCode: pincode.toString(),
   });
+
   const [machineDetails, setMachineDetails] = useState<
     Array<MachineDetailsData>
   >(new Array<MachineDetailsData>());
@@ -286,7 +316,6 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       attachmentId: 0,
       giftVoucher: "",
       gvDisbursement: "",
-
       visitorDetails: addCustomerData.customerArray.map((item) => ({
         email: item.email,
         mobileNo: item.mobileNumber,
@@ -300,7 +329,8 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       noOfPeopleAccompanied: otherDetails.noOfPeople,
       noOfGiftsNeeded: otherDetails.noOfGifts,
     };
-    const resp = await SaveLeadRequest(payload);
+
+    const resp = await EditLeaveRequest(payload, +id);
     setLoaderState(resp ? false : true);
     if (resp && resp.statusCode == 201) {
       setAlertState(true);
@@ -313,8 +343,8 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       <>
         <CDSAlertBox
           alertVisibility={alertState}
-          alertTitle="Create Lead"
-          alertDesc="Lead created successfully!"
+          alertTitle="Create Edit"
+          alertDesc="Lead updated successfully!"
           showNegativeBtn={false}
           positiveBtnTxt="Cancel"
           negativeBtnTxt="Ok"
@@ -333,6 +363,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
           {stepperScreen == CurrentSteeperScreen.LEAD_DETAILS ? (
             <LeadDetails
               setFormData={setAddCustomerData}
+              addCustomerData={addCustomerData}
               setAllFormState={setAllFormState}
               allFormState={allFormState}
             />
@@ -341,20 +372,28 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
               setFormData={setMachineDetails}
               setAllFormState={setAllFormState}
               allFormState={allFormState}
-              companyType={+addCustomerData.companyTypeID}
+              productsInterested={productsInterested}
+              companyType={+companyType}
             />
           ) : stepperScreen == CurrentSteeperScreen.OTHER_DETAILS ? (
             <OtherDetails
               setOtherDetails={setOtherDetails}
               setAllFormState={setAllFormState}
               allFormState={allFormState}
-              companyType={+addCustomerData.companyTypeID}
+              productsInterested={productsInterested}
+              financingRequired={financingReuired}
+              noOfGifts={+noOfGiftsNeeded}
+              noOfPeople={noOfPeopleAccompanied}
+              timeline={planningTimeline}
+              companyType={+companyType}
             />
           ) : stepperScreen == CurrentSteeperScreen.USER_CONSENT ? (
             <UserConsent
               setAllFormState={setAllFormState}
               allFormState={allFormState}
-              sbuID={machineDetails.length ? machineDetails[0].sbuId : 0}
+              sbuID={
+                productsInterested.length ? productsInterested[0].sbuId : 0
+              }
             />
           ) : null}
           <View style={{ flexDirection: "row" }}>
@@ -403,4 +442,4 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     </ImageBackground>
   );
 };
-export default CreateLeadScreen;
+export default EditLeadScreen;

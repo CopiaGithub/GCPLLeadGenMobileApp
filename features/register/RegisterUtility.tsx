@@ -28,6 +28,9 @@ export const isRegisterFormValid = (val: RegisterUser, cPass: string) => {
   } else if (!val.orgId) {
     DisplayToast("Please select organization");
     return false;
+  } else if (!val.campaignId) {
+    DisplayToast("Please select campaign");
+    return false;
   } else if (!val.email) {
     DisplayToast("Please enter email");
     return false;

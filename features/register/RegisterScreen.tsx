@@ -34,6 +34,8 @@ import { useFormik } from "formik";
 import { RegisterUserRequest } from "../../services/registerUserRequest/RegisterUserRequest";
 import { RegisterUser } from "../../types/registerType/RegisterType";
 import CDSDropDown from "../login/CDSDropDown";
+import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
+import { GetCampaignData } from "../user/createUser/CreateUserUtility";
 
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -45,6 +47,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
   const isFocused = useIsFocused();
   const { orgData } = useSelector((state: RootState) => state.orgnizationData);
+  const { getCampaignData } = useSelector(
+    (state: RootState) => state.getCampaignData
+  );
   const [alertState, setAlertState] = useState(false);
 
   const [cPass, setCPass] = useState("");
@@ -68,6 +73,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
 
   useEffect(() => {
     if (isFocused) {
+      dispatch(GetCampaignDataRequest({}));
       dispatch(OrganizationRequest({}));
     }
   }, [isFocused]);
@@ -126,6 +132,30 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
             }}
           />
         </View>
+        {/* Organization */}
+
+        <CDSDropDown
+          data={GetCampaignData(getCampaignData)}
+          hasSearchOperation={true}
+          searchPlaceholder="Search campaign"
+          leftIcon={() => (
+            <SimpleLineIcons
+              name="organization"
+              size={24}
+              style={style.leftIcon}
+            />
+          )}
+          onSelect={(val) => {
+            submitRegData.setFieldValue(
+              "formData.campaignId",
+              Number(val.value)
+            );
+            submitRegData.setFieldValue("formData.campaignName", val.label);
+          }}
+          hasLeftIcon={true}
+          placeholder="Please select campaign"
+        />
+        <View style={{ marginTop: "2%" }} />
         {/* Organization */}
 
         <CDSDropDown

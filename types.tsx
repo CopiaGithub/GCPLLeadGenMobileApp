@@ -1,3 +1,4 @@
+import { GetLeadRespMessage } from "./types/leadTypes/GetLeadsTypes";
 import { GetUserRespMessage } from "./types/userTypes/GetUserTypes";
 
 declare global {
@@ -24,4 +25,5 @@ export type RootStackParamList = {
     item: GetUserRespMessage;
   };
   Reports: undefined;
+  editLeadCustomer: GetLeadRespMessage;
 };

@@ -30,8 +30,11 @@ import { AppDispatch, RootState } from "../../../../redux/store";
 import { GetCampaignDataRequest } from "../../../../services/campaignRequest/GetCampaignDataRequest";
 import {
   GetCampaignData,
+  GetCampNameById,
   GetCompanyType,
+  GetCompanyTypeNameById,
   GetIndustry,
+  GetIndustryNameById,
 } from "./LeadDetailsUtility";
 import { CompanyTypeRequest } from "../../../../services/companyTypeRequest/CompanyTypeRequest";
 import { IndustryTypeRequest } from "../../../../services/industryTypeRequest/IndustryTypeRequest";
@@ -44,24 +47,65 @@ import CDSAlertBox from "../../../../component/CDSAlertBox";
 type LeadDetailsProps = {
   setFormData: (value: React.SetStateAction<AddCustomerData>) => void;
   setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  addCustomerData: AddCustomerData;
   allFormState: FormState;
 };
 
 const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
-
   const [isDataFilled, setIsDataFilled] = useState(false);
+  const [formData, setFormData] = useState<AddCustomerData>(
+    props.addCustomerData
+  );
+  const [custCartData, setCustCardData] = useState<Array<CustomerDetails>>(
+    new Array<CustomerDetails>()
+  );
 
-  const [formData, setFormData] = useState<AddCustomerData>({
-    campaignID: 0,
-    companyName: "",
-    companyTypeID: 0,
-    customerArray: [],
-    industryTypeId: 0,
-    location: "",
-    pinCode: "",
-  });
+  useEffect(() => {
+    createCustomerDetailsTable();
+    resetCustomerDetailsTable(setCustCardData);
+    getCustomerDetails(setCustCardData);
+    dispatch(GetCampaignDataRequest({}));
+    dispatch(CompanyTypeRequest(""));
+    dispatch(IndustryTypeRequest(""));
+  }, [isFocused]);
+  useEffect(() => {
+    if (isFocused && props.addCustomerData.customerArray.length) {
+      for (let i = 0; i < props.addCustomerData.customerArray.length; i++) {
+        const data = props.addCustomerData.customerArray[i];
+        const cartData: CustomerDetails = {
+          alternativeMobileNumber: data.alternativeMobileNumber,
+          customerName: data.customerName,
+          email: data.email,
+          mobileNumber: data.mobileNumber,
+          ID: 0,
+          sbuId: sbuID,
+        };
+
+        addCustomerDetails(cartData, setCustCardData);
+      }
+    }
+  }, [isFocused, props.addCustomerData.companyName]);
+  console.warn("Form Data-----", formData);
+
+  useEffect(() => {
+    if (isFocused) {
+      submitLeadDetails.setValues({
+        alternativeMobileNumber: "",
+        campaignID: formData.campaignID,
+        companyName: formData.companyName,
+        companyTypeID: formData.companyTypeID,
+        customerName: "",
+        email: "",
+        industryTypeId: formData.industryTypeId,
+        location: formData.location,
+        mobileNumber: "",
+        pinCode: formData.pinCode,
+      });
+    }
+  }, [isFocused]);
+
   enum leadDetailOption {
     ADD_CUSTOMER = "ADD_CUSTOMER",
     SCAN = "SCAN",
@@ -86,9 +130,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   const formHelper = new AddCustomerDataHelper();
   const [companyDetails, setCompanyDetails] = useState(true);
   const [custDetails, setCustDetails] = useState(false);
-  const [custCartData, setCustCardData] = useState<Array<CustomerDetails>>(
-    new Array<CustomerDetails>()
-  );
 
   const [sbuID, setSBUID] = useState(0);
   const [orgId, setOrgId] = useState(0);
@@ -102,16 +143,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       }
     });
   }, [isFocused, sbuID]);
-  console.warn("Async Data --cscs?", sbuID);
-
-  useEffect(() => {
-    createCustomerDetailsTable();
-    resetCustomerDetailsTable(setCustCardData);
-    getCustomerDetails(setCustCardData);
-    dispatch(GetCampaignDataRequest({}));
-    dispatch(CompanyTypeRequest(""));
-    dispatch(IndustryTypeRequest(""));
-  }, [isFocused]);
+  console.warn("Async Data --cscs?", formData);
 
   const isValid = (values: IAddCustomerData) => {
     if (values.campaignID == 0) {
@@ -178,6 +210,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       attachmentId: 0,
       giftVoucher: "",
       gvDisbursement: "",
+
       visitorDetails: custCartData.map((item) => ({
         email: item.email,
         mobileNo: item.mobileNumber,
@@ -287,7 +320,17 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <Text style={style.labelText}>Campaign Name:</Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
-                  placeholder="Select campaign type"
+                  placeholder={
+                    GetCampNameById(
+                      getCampaignData,
+                      +submitLeadDetails.values.campaignID
+                    )
+                      ? GetCampNameById(
+                          getCampaignData,
+                          +submitLeadDetails.values.campaignID
+                        )
+                      : "Select campaign name"
+                  }
                   data={GetCampaignData(getCampaignData)}
                   onSelect={(val) => {
                     submitLeadDetails.setFieldValue("campaignID", val.value);
@@ -299,7 +342,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <Text style={style.labelText}>Company Name:</Text>
               <TextInput
                 style={style.inputTxt}
-                placeholder="Enter Company Name"
+                placeholder={"Enter Company Name"}
                 placeholderTextColor={"grey"}
                 value={submitLeadDetails.values.companyName}
                 onChangeText={(val) => {
@@ -310,7 +353,17 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <Text style={style.labelText}>Company Type:</Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
-                  placeholder="Select company type"
+                  placeholder={
+                    GetCompanyTypeNameById(
+                      CompanyType,
+                      submitLeadDetails.values.companyTypeID
+                    )
+                      ? GetCompanyTypeNameById(
+                          CompanyType,
+                          submitLeadDetails.values.companyTypeID
+                        )
+                      : "Select company type"
+                  }
                   data={GetCompanyType(CompanyType)}
                   onSelect={(val) => {
                     submitLeadDetails.setFieldValue("companyTypeID", val.value);
@@ -321,7 +374,17 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <Text style={style.labelText}>Industry Type:</Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
-                  placeholder="Select industry type"
+                  placeholder={
+                    GetIndustryNameById(
+                      IndustryType,
+                      submitLeadDetails.values.industryTypeId
+                    )
+                      ? GetIndustryNameById(
+                          IndustryType,
+                          submitLeadDetails.values.industryTypeId
+                        )
+                      : "Select industry type"
+                  }
                   data={GetIndustry(IndustryType)}
                   onSelect={(val) => {
                     submitLeadDetails.setFieldValue(
@@ -541,7 +604,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           </TouchableOpacity>
         ) : null}
       </>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={style.btn}
         onPress={() => {
           const val = submitLeadDetails.values;
@@ -551,7 +614,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
         }}
       >
         <Text style={style.btnText}>Save & create lead</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

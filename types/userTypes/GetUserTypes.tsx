@@ -11,6 +11,8 @@ export interface GetUserRespMessage {
   pincode: number;
   roleId: number;
   status: boolean;
+  campaignId: number;
+  campaignName: string;
 }
 export interface GetUserResp {
   message: Array<GetUserRespMessage>;

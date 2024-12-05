@@ -25,4 +25,6 @@ export interface LoginValidOTPMessage {
   modifiedBy: string;
   modifiedOn: string;
   status: boolean;
+  campaignId: string;
+  campaignName: string;
 }

@@ -8,7 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import { SBUMasterRequest } from "../../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
-import { GetSBUNameById } from "../../stepperScreensEdit/machineDetails/MachineDetailsUtility";
+import { GetSBUNameById } from "../machineDetails/MachineDetailsUtility";
 
 type UserConsentProps = {
   setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
@@ -21,14 +21,18 @@ const UserConsent: React.FC<UserConsentProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [selectedValue, setSelectedValue] = useState("1");
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
+  console.warn("SBU name", props.sbuID);
 
   useEffect(() => {
     if (isFocused) {
       dispatch(SBUMasterRequest(null));
     }
   }, [isFocused]);
+
   const [sbuName, setSBUName] = useState(
     GetSBUNameById(sbuMaster, props.sbuID)
+      ? GetSBUNameById(sbuMaster, props.sbuID)
+      : ""
   );
   const radioButtonsData: RadioButtonProps[] = [
     {
@@ -49,19 +53,6 @@ const UserConsent: React.FC<UserConsentProps> = (props) => {
         selectedId={selectedValue}
         containerStyle={styles.rbContainer}
       />
-      {/* {!props.allFormState.formFour ? (
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => {
-            props.setAllFormState((val) => ({
-              ...val,
-              formFour: true,
-            }));
-          }}
-        >
-          <Text style={styles.btnText}>Save User Consent</Text>
-        </TouchableOpacity>
-      ) : null} */}
     </View>
   );
 };

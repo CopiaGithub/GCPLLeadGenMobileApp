@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,20 +13,44 @@ import {
 } from "./OtherMachinesUtility";
 import { FormState, OtherDetailsData } from "../../createLead/CreateLeadScreen";
 import { DisplayToast } from "../../../../utility/ToastMessage";
+import { GetProductsIntersted } from "../../../../types/leadTypes/GetLeadsTypes";
+import { useIsFocused } from "@react-navigation/native";
 
 type OtherDetailsProps = {
   setOtherDetails: React.Dispatch<React.SetStateAction<OtherDetailsData>>;
   setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
   allFormState: FormState;
+  productsInterested: GetProductsIntersted[];
+  timeline: string;
+  financingRequired: boolean;
+  noOfPeople: number;
+  noOfGifts: number;
   companyType: number;
 };
 
 const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
+  console.warn("Product Interested", props.noOfGifts);
+
   const [purchase, setPurchase] = useState("");
   const [financing, setFinancing] = useState("");
-  const [noOfMachines, setNoOfMachines] = useState(0);
+  const [noOfMachines, setNoOfMachines] = useState("0");
   const [noOfPeople, setNoOfPeople] = useState(0);
   const [noOfGifts, setNoOfGifts] = useState(0);
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      setNoOfGifts(props.noOfGifts);
+      setNoOfPeople(props.noOfPeople);
+      setFinancing(props.financingRequired == true ? "Yes" : "No");
+      setNoOfMachines(
+        props.productsInterested.length &&
+          props.productsInterested[0].noOfMachines
+          ? props.productsInterested[0].noOfMachines.toString()
+          : "0"
+      );
+      setPurchase(props.timeline);
+    }
+  }, [isFocused, props.productsInterested.length]);
 
   const isValid = () => {
     if (!purchase && props.companyType && props.companyType == 2) {
@@ -36,7 +60,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
       DisplayToast("Please select financing required");
       return false;
     } else if (
-      noOfMachines == 0 &&
+      noOfMachines == "0" &&
       props.companyType &&
       props.companyType == 2
     ) {
@@ -60,7 +84,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
             onSelect={(val) => {
               setPurchase(val.value);
             }}
-            placeholder="Select timeline"
+            placeholder={purchase ? purchase : "Select timeline"}
           />
         </View>
         {/* Financing Required? */}
@@ -71,7 +95,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
             onSelect={(val) => {
               setFinancing(val.value);
             }}
-            placeholder="Select one option"
+            placeholder={financing ? financing : "Select one option"}
           />
         </View>
         {/* No. of machines */}
@@ -81,10 +105,10 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           placeholder="Enter No. of machines"
           placeholderTextColor={"grey"}
           keyboardType="numeric"
-          value={noOfMachines.toString()}
+          value={noOfMachines}
           maxLength={2}
           onChangeText={(val) => {
-            setNoOfMachines(Number(val));
+            setNoOfMachines(val);
           }}
         />
         {/* No. of people accompanied */}
@@ -107,8 +131,8 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           placeholder="Enter No. of gifts needed"
           placeholderTextColor={"grey"}
           keyboardType="numeric"
-          value={noOfGifts as any}
-          maxLength={1}
+          value={noOfGifts.toString()}
+          maxLength={2}
           onChangeText={(val) => {
             setNoOfGifts(Number(val));
           }}
@@ -122,7 +146,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
               props.setOtherDetails({
                 financingRequired: financing == "Yes" ? true : false,
                 noOfGifts: noOfGifts,
-                noOfMachines: noOfMachines,
+                noOfMachines: +noOfMachines,
                 noOfPeople: noOfPeople,
                 purchaseTimeline: purchase,
               });

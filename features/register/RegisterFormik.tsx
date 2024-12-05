@@ -29,6 +29,8 @@ class RegisterHelper implements IRegisterHelper {
         sbuId: 1,
         status: true,
         username: "",
+        campaignId: 0,
+        campaignName: "",
       },
     };
   }

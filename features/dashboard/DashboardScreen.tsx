@@ -43,6 +43,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   const [visitorCount, setVisitorCoint] = useState(0);
   const [footfallCount, setFootfallCount] = useState(0);
   const [userSbuId, setUserSbuId] = useState(0);
+  const [campaignName, setCampaignName] = useState("");
 
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
@@ -55,6 +56,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
       if (res) {
         const user = JSON.parse(res);
         setUserSbuId(user.message.sbuId);
+        setCampaignName(user.message.campaignName);
       }
     });
   }, [isFocused, userSbuId]);
@@ -119,7 +121,9 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     return (
       <View style={style.headerNameView}>
         <Text style={style.headerTxtValue}>Campaign Name:</Text>
-        <Text style={style.headerTxtKey}>Campaign ABCD</Text>
+        <Text style={style.headerTxtKey}>
+          {campaignName ? campaignName : null}
+        </Text>
       </View>
     );
   };
@@ -302,7 +306,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               dispatch(ProductTotalRequest(+val.value));
             }
           }}
-          placeholder="Select SBU"
+          placeholder="Select Brand"
         />
       </View>
       {renderCountBox()}

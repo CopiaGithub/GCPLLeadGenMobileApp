@@ -1,9 +1,6 @@
 import axios from "axios";
 import API from "../../API";
-import {
-  RegisterUser,
-  RegisterUserResponse,
-} from "../../types/registerType/RegisterType";
+import { RegisterUser } from "../../types/registerType/RegisterType";
 import {
   LoginWPasswordReq,
   LoginWPasswordResp,

@@ -14,7 +14,7 @@ export const LoginValidateOTPRequest = async (
     return response.data;
   } catch (err) {
     return {
-      message: "",
+      message: null as any,
       statusCode: 0,
       error: "",
     };

@@ -7,7 +7,9 @@ export const VisitorMasterCountRequest = async (
   id: number
 ): Promise<VisitorMasterCount> => {
   try {
-    const response = await axios.get(`${API.VISITOR_MASTER_COUNT}/${id}`);
+    const response = await axios.get(
+      `${API.VISITOR_MASTER_COUNT}/${id == 4 ? 0 : id}`
+    );
     return response.data;
   } catch (err) {
     return {

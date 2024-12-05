@@ -120,7 +120,9 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Role:</Text>
                   <Text style={style.valueText}>
-                    {item.roleId ? GetRoleNameById(roleMaster, item.id) : null}
+                    {item.roleId
+                      ? GetRoleNameById(roleMaster, item.roleId)
+                      : null}
                   </Text>
                   <View style={style.extra}></View>
                 </View>

@@ -29,4 +29,6 @@ export interface LoginWPasswordRespMessage {
   modifiedBy: string;
   modifiedOn: string;
   status: boolean;
+  campaignId: string;
+  campaignName: string;
 }

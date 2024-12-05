@@ -22,6 +22,8 @@ import CreateUserScreen from "../features/user/createUser/CreateUserScreen";
 import CreateCampaignScreen from "../features/campaigns/CreateCamaign";
 import "react-native-gesture-handler";
 import CreateLeadScreen from "../features/leads/createLead/CreateLeadScreen";
+import EditLeadCustomerScreen from "../features/leads/edit/EditLeadCustomer";
+import EditLeadScreen from "../features/leads/editLead/EditLeadScreen";
 
 export default function Navigation({
   colorScheme,
@@ -137,6 +139,18 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Create Lead",
+
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="editLeadCustomer"
+        component={EditLeadScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitle: "Edit Lead",
 
           gestureEnabled: false,
           gestureDirection: "horizontal",

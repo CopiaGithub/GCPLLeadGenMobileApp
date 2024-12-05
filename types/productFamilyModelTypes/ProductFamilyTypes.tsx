@@ -1,11 +1,8 @@
 export interface ProductFamily {
   id: number;
-  orgId: number;
   sbuId: number;
-  productFamilyId: number;
-  productCode: string;
-  productName: string;
-  productDescription: string;
+  productFamilyName: string;
+  productFamilyDescription: string;
 }
 export interface ProductFamilyResponse {
   message: Array<ProductFamily>;

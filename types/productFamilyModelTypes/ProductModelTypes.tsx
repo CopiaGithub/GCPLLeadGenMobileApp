@@ -5,12 +5,16 @@ export interface Models {
 }
 
 export interface ProductModel {
-  model: Array<Models>;
+  id: number;
+  orgId: number;
+  sbuId: number;
+  productFamilyId: number;
+  productCode: string;
+  productName: string;
+  productDescription: string;
 }
 export interface ProductModelResponse {
-  message: ProductModel;
-  statusCode: number;
-  error: string;
+  message: Array<ProductModel>;
 }
 export interface ProductModelState {
   ProductModel: ProductModelResponse | null;

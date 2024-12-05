@@ -22,3 +22,22 @@ export async function SaveLeadRequest(
       return error;
     });
 }
+
+export async function EditLeaveRequest(
+  reqData: SaveLeadReq,
+  id: number
+): Promise<SaveLeadResp> {
+  let data = {} as SaveLeadResp;
+
+  return await axios({
+    method: "patch",
+    url: `${API.LEAD_MASTER}/${id}`,
+    data: reqData,
+  })
+    .then((resp) => {
+      return resp.data;
+    })
+    .catch((error) => {
+      return error;
+    });
+}

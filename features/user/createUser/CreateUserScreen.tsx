@@ -13,7 +13,13 @@ import { useEffect, useState } from "react";
 import { style } from "./CreateUserStyle";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GetRoleMaster, GetRoleNameById, UserData } from "./CreateUserUtility";
+import {
+  GetCampaignData,
+  GetRoleMaster,
+  GetRoleNameById,
+  GetSBUNameById,
+  UserData,
+} from "./CreateUserUtility";
 import CreateUserHelper from "./CreateUserHelper";
 import { useFormik } from "formik";
 import CDSDropDown from "../../login/CDSDropDown";
@@ -22,11 +28,16 @@ import { AppDispatch, RootState } from "../../../redux/store";
 import { RoleMasterRequest } from "../../../services/roleMasterRequest/RoleMasterRequest";
 import { DisplayToast } from "../../../utility/ToastMessage";
 import { CreateUserReq } from "../../../types/userTypes/CreateUserTypes";
-
 import CDSAlertBox from "../../../component/CDSAlertBox";
 import CDSLoader from "../../../component/CDSLoader";
 import { CreateUserRequest } from "../../../services/userRequest/CreateUserRequest";
 import { UpdateUserRequest } from "../../../services/userRequest/UpdateUserRequest";
+import { CompanyTypeRequest } from "../../../services/companyTypeRequest/CompanyTypeRequest";
+import { GetCampNameById } from "../../leads/stepperScreensEdit/leadDetails/LeadDetailsUtility";
+import { CampaignTypeRequest } from "../../../services/campaignTypeRequest/CampaignTypeRequest";
+import { GetCampaignDataRequest } from "../../../services/campaignRequest/GetCampaignDataRequest";
+import { SBUMasterRequest } from "../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
+import { GetSBUMaster } from "../../dashboard/DashboardUtility";
 
 type CreateUserScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,14 +51,20 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
 
   const formHelper = new CreateUserHelper();
   const { operation, item } = props.route.params;
-
+  const { getCampaignData } = useSelector(
+    (state: RootState) => state.getCampaignData
+  );
+  const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
   const [loaderState, setLoaderState] = useState(false);
   const [alertState, setAlertState] = useState(false);
   useEffect(() => {
     if (isFocused) {
       dispatch(RoleMasterRequest(""));
+      dispatch(GetCampaignDataRequest({}));
+      dispatch(SBUMasterRequest(null));
     }
   }, [isFocused]);
+
   const createUser = useFormik({
     initialValues: formHelper.formikInitialValue,
     onSubmit: async (values) => {
@@ -56,7 +73,7 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
       const payload: CreateUserReq = {
         orgId: val.orgId,
         orgName: val.orgName,
-        sbuId: val.sbuId,
+        sbuId: Number(val.sbuId),
         username: val.username,
         password: val.password,
         email: val.email,
@@ -64,6 +81,8 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         address: val.address,
         pincode: Number(val.pincode),
         roleId: Number(val.roleId),
+        campaignId: Number(val.campaignId),
+        campaignName: val.campaignName,
       };
       if (item && item.id) {
         const resp = await UpdateUserRequest(payload, item.id);
@@ -75,6 +94,8 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         }
       } else {
         const resp = await CreateUserRequest(payload);
+        console.warn("Submit Payload--->", payload);
+
         setLoaderState(resp ? false : true);
         if (resp && resp.statusCode == 201) {
           setAlertState(true);
@@ -98,6 +119,8 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
           roleId: item.roleId,
           sbuId: item.sbuId,
           username: item.username,
+          campaignId: item.campaignId,
+          campaignName: item.campaignName,
         },
       });
     }
@@ -123,7 +146,14 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
   }, [operation]);
   const isValid = () => {
     const val = createUser.values.formData;
-    if (!val.username) {
+
+    if (val.sbuId == 0) {
+      DisplayToast("Please select SBU");
+      return false;
+    } else if (val.campaignId == 0) {
+      DisplayToast("Please select campaign ");
+      return false;
+    } else if (!val.username) {
       DisplayToast("Please enter username");
       return false;
     } else if (!val.mobile) {
@@ -144,6 +174,8 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
     }
     return true;
   };
+  console.warn("Campaign Name Data", getCampaignData);
+
   const renderCreateUserView = () => {
     return (
       <View style={style.createView}>
@@ -151,14 +183,33 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         <Text style={style.labelText}>SBU:</Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
-            data={GetRoleMaster(roleMaster)}
+            data={GetSBUMaster(sbuMaster)}
             onSelect={(val) => {
-              createUser.setFieldValue("formData.roleId", val.value);
+              createUser.setFieldValue("formData.sbuId", val.value);
             }}
             placeholder={
-              createUser.values.formData.roleId
-                ? GetRoleNameById(roleMaster, createUser.values.formData.roleId)
-                : "Select SBU"
+              createUser.values.formData.sbuId
+                ? GetSBUNameById(sbuMaster, createUser.values.formData.sbuId)
+                : "Select Brand"
+            }
+          />
+        </View>
+        {/* Role */}
+        <Text style={style.labelText}>Campaign Name:</Text>
+        <View style={{ marginVertical: "2%" }}>
+          <CDSDropDown
+            data={GetCampaignData(getCampaignData)}
+            onSelect={(val) => {
+              createUser.setFieldValue("formData.campaignId", val.value);
+              createUser.setFieldValue("formData.campaignName", val.label);
+            }}
+            placeholder={
+              createUser.values.formData.campaignId
+                ? GetCampNameById(
+                    getCampaignData,
+                    createUser.values.formData.campaignId
+                  )
+                : "Select Campaign"
             }
           />
         </View>

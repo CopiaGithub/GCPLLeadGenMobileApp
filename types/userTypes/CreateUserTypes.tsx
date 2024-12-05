@@ -9,6 +9,8 @@ export interface CreateUserReq {
   address: string;
   pincode: number;
   roleId: number;
+  campaignId: number;
+  campaignName: string;
 }
 export interface CreateUserMessage {
   id: number;

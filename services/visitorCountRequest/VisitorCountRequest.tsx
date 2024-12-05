@@ -9,7 +9,7 @@ export async function FootfallCountRequest(
 
   return await axios({
     method: "get",
-    url: `${API.FOOTFALL_COUNT}/${sbuId}`,
+    url: `${API.FOOTFALL_COUNT}/${sbuId == 4 ? 0 : sbuId}`,
   })
     .then((resp) => {
       return resp.data;

@@ -18,7 +18,6 @@ export interface SaveLeadReq {
   attachmentId: number;
   giftVoucher: string;
   gvDisbursement: string;
-  createdBy: string;
   visitorDetails: Array<VisitorDetails>;
   status: true;
 }
