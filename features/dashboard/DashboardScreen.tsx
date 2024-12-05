@@ -30,6 +30,7 @@ import { ProductTotalRequest } from "../../services/dashboardRequest/ProductTota
 import CDSLoader from "../../component/CDSLoader";
 import { VisitorMasterCountRequest } from "../../services/visitorMasterCountRequest/VisitorMasterCountRequest";
 import { DisplayToast } from "../../utility/ToastMessage";
+import { FootfallCountRequest } from "../../services/visitorCountRequest/VisitorCountRequest";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,30 +41,46 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
   const [visitorCount, setVisitorCoint] = useState(0);
-  useEffect(() => {
-    if (isFocused) {
-      dispatch(GetLeadDataRequest(""));
-      dispatch(SBUMasterRequest(null));
-      dispatch(ProductTotalRequest(""));
-    }
-  }, [isFocused]);
-
-  useEffect(() => {
-    if (isFocused) {
-      GetVisitorMasterCount();
-    }
-  }, [isFocused, visitorCount]);
-
-  const GetVisitorMasterCount = async () => {
-    const count = await VisitorMasterCountRequest(1);
-    setVisitorCoint(count ? count.totalVisitorDetails : 0);
-  };
+  const [footfallCount, setFootfallCount] = useState(0);
+  const [userSbuId, setUserSbuId] = useState(0);
 
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
   const { productTotals } = useSelector(
     (state: RootState) => state.productTotal
   );
+
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setUserSbuId(user.message.sbuId);
+      }
+    });
+  }, [isFocused, userSbuId]);
+
+  useEffect(() => {
+    if (isFocused && userSbuId) {
+      GetVisitorMasterCount(userSbuId);
+      GetFootfallCount(userSbuId);
+      dispatch(ProductTotalRequest(userSbuId));
+    }
+  }, [isFocused, userSbuId]);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(SBUMasterRequest(null));
+    }
+  }, [isFocused]);
+
+  const GetVisitorMasterCount = async (sbuID: number) => {
+    const count = await VisitorMasterCountRequest(sbuID);
+    setVisitorCoint(count ? count.totalVisitorDetails : 0);
+  };
+  const GetFootfallCount = async (sbuID: number) => {
+    const count = await FootfallCountRequest(sbuID);
+    setFootfallCount(count ? count.totalVisitorDetails : 0);
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -199,17 +216,11 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
         <View style={{ flexDirection: "row" }}>
           <View style={style.subCBBox}>
             <Text style={style.countLabel}>No. of Leads</Text>
-            <Text style={style.countTxt}>
-              {leadDetails &&
-              leadDetails.statusCode == 200 &&
-              leadDetails.message.length
-                ? leadDetails.message.length
-                : 0}
-            </Text>
+            <Text style={style.countTxt}>{visitorCount}</Text>
           </View>
           <View style={style.subCBBox}>
             <Text style={style.countLabel}>Footfall</Text>
-            <Text style={style.countTxt}>{visitorCount}</Text>
+            <Text style={style.countTxt}>{footfallCount}</Text>
           </View>
         </View>
       </View>
@@ -242,9 +253,10 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
               <Text
                 style={{
                   fontWeight: "500",
-                  fontSize: 24,
+                  fontSize: 22,
                   textAlign: "center",
                   textAlignVertical: "center",
+                  margin: "4%",
                 }}
               >
                 No products found!
@@ -283,7 +295,13 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
       >
         <CDSDropDown
           data={GetSBUMaster(sbuMaster)}
-          onSelect={() => {}}
+          onSelect={(val) => {
+            if (val && val.value) {
+              GetVisitorMasterCount(+val.value);
+              GetFootfallCount(+val.value);
+              dispatch(ProductTotalRequest(+val.value));
+            }
+          }}
           placeholder="Select SBU"
         />
       </View>

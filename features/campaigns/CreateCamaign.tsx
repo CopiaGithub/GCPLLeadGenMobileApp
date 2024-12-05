@@ -223,7 +223,7 @@ const CreateCampaignScreen: React.FC<CreateCampaignScreenProps> = (props) => {
           searchPlaceholder="Search State"
         />
         {/* Location */}
-        <Text style={style.labelText}>Location:</Text>
+        <Text style={style.labelText}>Address/Location:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Location"

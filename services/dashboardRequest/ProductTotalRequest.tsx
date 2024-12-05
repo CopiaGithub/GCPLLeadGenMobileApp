@@ -4,9 +4,13 @@ import API from "../../API";
 
 export const ProductTotalRequest = createAsyncThunk(
   "productTotalData/fetchProductTotal",
-  async (stateID: string, { rejectWithValue }) => {
+  async (sbuID: number, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API.PRODUCT_INTERESTED}`);
+      const payload = {
+        sbuId: sbuID,
+      };
+
+      const response = await axios.post(`${API.PRODUCT_INTERESTED}`, payload);
 
       return response.data;
     } catch (error: any) {

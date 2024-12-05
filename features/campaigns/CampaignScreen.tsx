@@ -163,7 +163,7 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>
-                  <Text style={style.keyText}>Location:</Text>
+                  <Text style={style.keyText}>Address/Location:</Text>
                   <Text style={style.valueText}>{item.location}</Text>
                   <View style={style.extra}></View>
                 </View>

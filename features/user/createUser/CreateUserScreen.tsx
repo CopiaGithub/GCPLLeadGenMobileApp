@@ -224,7 +224,7 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
           placeholderTextColor={"grey"}
         /> */}
         {/* Location */}
-        <Text style={style.labelText}>Location:</Text>
+        <Text style={style.labelText}>Address/Location:</Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter Location"

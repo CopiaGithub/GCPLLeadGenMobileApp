@@ -25,10 +25,11 @@ import {
   GetVisitorDetails,
 } from "../../types/leadTypes/GetLeadsTypes";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { HandleSearchList } from "./LeadScreenUtility";
+import { GetCampaignNameByID, HandleSearchList } from "./LeadScreenUtility";
 import CDSLoader from "../../component/CDSLoader";
 import { GetProductFamNameById } from "./stepperScreens/machineDetails/MachineDetailsUtility";
 import { ProductFamilyRequest } from "../../services/productFamilyModelRequest/ProductFamilyRequest";
+import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
 
 type LeadScreenProps = NativeStackScreenProps<RootStackParamList, "Leads">;
 
@@ -55,6 +56,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   useEffect(() => {
     if (isFocused) {
       dispatch(ProductFamilyRequest(1));
+      dispatch(GetCampaignDataRequest({}));
     }
   }, [isFocused]);
   const { ProductFamily } = useSelector(
@@ -62,6 +64,9 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   );
   const { ProductModel } = useSelector(
     (state: RootState) => state.productModel
+  );
+  const { getCampaignData } = useSelector(
+    (state: RootState) => state.getCampaignData
   );
   useEffect(() => {
     if (
@@ -206,7 +211,9 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
                 </View>
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Campaign:</Text>
-                  <Text style={style.valueText}>{item.campaignId}</Text>
+                  <Text style={style.valueText}>
+                    {GetCampaignNameByID(getCampaignData, +item.campaignId)}
+                  </Text>
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>

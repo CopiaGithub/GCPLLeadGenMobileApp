@@ -334,7 +334,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 />
               </View>
               {/* Location */}
-              <Text style={style.labelText}>Location:</Text>
+              <Text style={style.labelText}>Addresss/Location:</Text>
               <TextInput
                 style={style.inputTxt}
                 placeholder="Enter Location"

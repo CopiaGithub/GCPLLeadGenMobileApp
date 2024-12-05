@@ -32,6 +32,7 @@ const API = {
   SBU_MASTER: `${apiUrl}sbu-master`,
   PRODUCT_INTERESTED: `${apiUrl}products-interested/totals`,
   VISITOR_MASTER_COUNT: `${apiUrl}visitor-master/visitor-count`,
+  FOOTFALL_COUNT: `${apiUrl}visitor-master/visitor-details-count/`,
   PRODUCT_MODEL_SBU: `${apiUrl}products-interested/totals`,
   SEND_REPORT: `${apiUrl}visitor-master/generate-report`,
 };

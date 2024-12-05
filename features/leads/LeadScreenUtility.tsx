@@ -1,3 +1,4 @@
+import { GetCampaignDataResp } from "../../types/campaignTypes/GetCampaignsTypes";
 import {
   GetLeadResp,
   GetLeadRespMessage,
@@ -32,5 +33,16 @@ export const HandleSearchList = (
     return setItemData(result);
   } else {
     return setItemData(campaignList?.message as any);
+  }
+};
+
+export const GetCampaignNameByID = (
+  data: GetCampaignDataResp | null,
+  id: number
+) => {
+  if (data && data.statusCode == 200 && data.message && data.message.length) {
+    return data.message.find((item) => item.id == id)?.campaignName;
+  } else {
+    return "";
   }
 };
