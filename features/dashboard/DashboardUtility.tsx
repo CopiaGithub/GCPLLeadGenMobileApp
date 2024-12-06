@@ -1,7 +1,7 @@
 import { SBUMasterResp } from "../../types/sbuMasterTypes/SBUMasterTypes";
 import { DropDownType } from "../login/CDSDropDown";
 
-export const GetSBUMaster = (data: SBUMasterResp | null) => {
+export const GetSBUMaster = (data: SBUMasterResp | null, roleID: number) => {
   const pickerData: DropDownType[] = [];
   if (data && data.statusCode == 200 && data.message.length) {
     for (let i = 0; i < data.message.length; i++) {
@@ -11,5 +11,7 @@ export const GetSBUMaster = (data: SBUMasterResp | null) => {
       });
     }
   }
-  return pickerData;
+  return roleID && roleID == 1
+    ? pickerData.filter((item) => item.label != "All")
+    : pickerData;
 };

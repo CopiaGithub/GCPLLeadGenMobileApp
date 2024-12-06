@@ -8,7 +8,7 @@ export interface LoginValidOTPResp {
   statusCode: number;
   error: string;
 }
-export interface LoginValidOTPMessage {
+export interface LoginValidOTPUser {
   id: number;
   orgId: number;
   orgName: string;
@@ -27,4 +27,8 @@ export interface LoginValidOTPMessage {
   status: boolean;
   campaignId: string;
   campaignName: string;
+  menus: Array<string>;
+}
+export interface LoginValidOTPMessage {
+  user: LoginValidOTPUser;
 }

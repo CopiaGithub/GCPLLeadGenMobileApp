@@ -97,8 +97,8 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-        setOrgId(user.message.orgId);
-        setSBUID(user.message.sbuId);
+        setOrgId(user.message.user.orgId);
+        setSBUID(user.message.user.sbuId);
       }
     });
   }, [isFocused, sbuID]);

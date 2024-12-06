@@ -129,7 +129,7 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-        const data = user.message;
+        const data = user.message.user;
         createUser.setFieldValue("formData.orgId", data.orgId);
         createUser.setFieldValue("formData.orgName", data.orgName);
         createUser.setFieldValue("formData.orgsbuId", data.orgsbuId);

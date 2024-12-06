@@ -34,6 +34,7 @@ import {
 import { ProductFamilyRequest } from "../../services/productFamilyModelRequest/ProductFamilyRequest";
 import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
 import { ProductModelRequest } from "../../services/productFamilyModelRequest/ProductModelRequest";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type LeadScreenProps = NativeStackScreenProps<RootStackParamList, "Leads">;
 
@@ -51,9 +52,22 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   );
 
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
+  const [sbuID, setSBUID] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+
+        setSBUID(user.message.user.sbuId);
+      }
+    });
+  }, [isFocused, sbuID]);
+
+  console.warn("SBUID--", sbuID);
+
   useEffect(() => {
     if (isFocused) {
-      dispatch(GetLeadDataRequest(""));
+      dispatch(GetLeadDataRequest(sbuID));
     }
   }, [isFocused]);
 
@@ -96,7 +110,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
             size={24}
             style={style.headerIcon}
             onPress={() => {
-              dispatch(GetLeadDataRequest(""));
+              dispatch(GetLeadDataRequest(sbuID));
               setSearchTxt("");
             }}
           />

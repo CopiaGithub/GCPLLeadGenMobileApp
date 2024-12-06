@@ -67,11 +67,11 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
         password: password,
       });
       setLoaderState(resp ? false : true);
-      if (resp && resp.statusCode == 200 && resp.message.username) {
+      if (resp && resp.statusCode == 200 && resp.message.user.username) {
         const userDataJSON = JSON.stringify(resp);
         await AsyncStorage.setItem("@userData", userDataJSON);
         props.navigation.navigate("DashboardDrawer");
-        DisplayToast(`Welcome ${resp.message.username}`);
+        DisplayToast(`Welcome ${resp.message.user.username}`);
       } else {
         DisplayToast(`${resp.message}`);
       }
@@ -259,7 +259,7 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
       </View>
     );
   };
-  const [first, setfirst] = useState("");
+
   return (
     <ImageBackground
       source={require("../../assets/background_image.png")}

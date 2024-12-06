@@ -45,7 +45,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-        setId(user.id);
+        setId(user.message.user.id);
       }
     });
   }, [isFocused]);
@@ -110,7 +110,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = (props) => {
       setLoaderState(resp ? false : true);
       if (resp && resp.statusCode == 200) {
         handleFormState(OTPFormState.SUBMIT_PASS);
-        setId(resp.message.id);
+        setId(resp.message.user.id);
       } else {
         DisplayToast(`${resp.message}`);
       }

@@ -21,6 +21,8 @@ import GiftScreen from "../gifts/GiftsScreen";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
@@ -35,7 +37,19 @@ const CdsDrawer: React.FC = () => {
   const [accessModule, setAcceessModule] = useState<Array<String>>(
     new Array<String>()
   );
+  const isFocused = useIsFocused();
 
+  const [menus, setMenus] = useState<Array<string>>(new Array<string>());
+
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+
+        setMenus(user.message.menus);
+      }
+    });
+  }, [isFocused, menus]);
   const [isLoading, setIsLoading] = useState(false);
 
   function renderDrawerScreen() {
@@ -66,125 +80,137 @@ const CdsDrawer: React.FC = () => {
               ),
             }}
           />
-          <Drawer.Screen
-            name="Leads"
-            component={LeadScreen as any}
-            options={{
-              drawerLabel: "Leads",
-              drawerLabelStyle: styles.dLabels,
-              headerTintColor: "white",
-              headerTitle: "Leads",
-              headerTitleStyle: { color: "white" },
-              headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
-              drawerActiveTintColor: "black",
-              drawerIcon: () => (
-                <Image
-                  source={require("../../assets/leads.png")}
-                  style={styles.imageStyle}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Campaigns"
-            component={CampaignScreen as any}
-            options={{
-              drawerLabel: "Campaigns",
-              drawerLabelStyle: styles.dLabels,
-              headerTintColor: "white",
-              headerTitle: "Campaigns",
-              headerTitleStyle: { color: "white" },
-              drawerActiveTintColor: "black",
-              headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          {menus.includes("Leads") ? (
+            <Drawer.Screen
+              name="Leads"
+              component={LeadScreen as any}
+              options={{
+                drawerLabel: "Leads",
+                drawerLabelStyle: styles.dLabels,
+                headerTintColor: "white",
+                headerTitle: "Leads",
+                headerTitleStyle: { color: "white" },
+                headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+                drawerActiveTintColor: "black",
+                drawerIcon: () => (
+                  <Image
+                    source={require("../../assets/leads.png")}
+                    style={styles.imageStyle}
+                  />
+                ),
+              }}
+            />
+          ) : null}
+          {menus.includes("Campaign") ? (
+            <Drawer.Screen
+              name="Campaigns"
+              component={CampaignScreen as any}
+              options={{
+                drawerLabel: "Campaigns",
+                drawerLabelStyle: styles.dLabels,
+                headerTintColor: "white",
+                headerTitle: "Campaigns",
+                headerTitleStyle: { color: "white" },
+                drawerActiveTintColor: "black",
+                headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
-              drawerIcon: () => (
-                <Image
-                  source={require("../../assets/campaign.png")}
-                  style={styles.imageStyle}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Users"
-            component={UserScreen as any}
-            options={{
-              drawerLabel: "Users",
-              drawerLabelStyle: styles.dLabels,
-              headerTintColor: "white",
-              headerTitle: "Users",
-              headerTitleStyle: { color: "white" },
-              drawerActiveTintColor: "black",
-              headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+                drawerIcon: () => (
+                  <Image
+                    source={require("../../assets/campaign.png")}
+                    style={styles.imageStyle}
+                  />
+                ),
+              }}
+            />
+          ) : null}
+          {menus.includes("Users") ? (
+            <Drawer.Screen
+              name="Users"
+              component={UserScreen as any}
+              options={{
+                drawerLabel: "Users",
+                drawerLabelStyle: styles.dLabels,
+                headerTintColor: "white",
+                headerTitle: "Users",
+                headerTitleStyle: { color: "white" },
+                drawerActiveTintColor: "black",
+                headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
-              drawerIcon: () => (
-                <Image
-                  source={require("../../assets/users.png")}
-                  style={styles.imageStyle}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Approvals"
-            component={ApprovalScreen as any}
-            options={{
-              drawerLabel: "Approvals",
-              drawerLabelStyle: styles.dLabels,
-              headerTintColor: "white",
-              headerTitle: "Approvals",
-              headerTitleStyle: { color: "white" },
-              drawerActiveTintColor: "black",
-              headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+                drawerIcon: () => (
+                  <Image
+                    source={require("../../assets/users.png")}
+                    style={styles.imageStyle}
+                  />
+                ),
+              }}
+            />
+          ) : null}
+          {menus.includes("Approvals") ? (
+            <Drawer.Screen
+              name="Approvals"
+              component={ApprovalScreen as any}
+              options={{
+                drawerLabel: "Approvals",
+                drawerLabelStyle: styles.dLabels,
+                headerTintColor: "white",
+                headerTitle: "Approvals",
+                headerTitleStyle: { color: "white" },
+                drawerActiveTintColor: "black",
+                headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
-              drawerIcon: () => (
-                <Image
-                  source={require("../../assets/approve.png")}
-                  style={styles.imageStyle}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Gifts"
-            component={GiftScreen as any}
-            options={{
-              drawerLabel: "Gifts",
-              drawerLabelStyle: styles.dLabels,
-              headerTintColor: "white",
-              headerTitle: "Gifts",
-              headerTitleStyle: { color: "white" },
-              drawerActiveTintColor: "black",
-              headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+                drawerIcon: () => (
+                  <Image
+                    source={require("../../assets/approve.png")}
+                    style={styles.imageStyle}
+                  />
+                ),
+              }}
+            />
+          ) : null}
+          {menus.includes("Gifts") ? (
+            <Drawer.Screen
+              name="Gifts"
+              component={GiftScreen as any}
+              options={{
+                drawerLabel: "Gifts",
+                drawerLabelStyle: styles.dLabels,
+                headerTintColor: "white",
+                headerTitle: "Gifts",
+                headerTitleStyle: { color: "white" },
+                drawerActiveTintColor: "black",
+                headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
-              drawerIcon: () => (
-                <Image
-                  source={require("../../assets/gift.png")}
-                  style={styles.imageStyle}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Reports"
-            component={ReportScreen as any}
-            options={{
-              drawerLabel: "Reports",
-              drawerLabelStyle: styles.dLabels,
-              headerTintColor: "white",
-              headerTitle: "Reports",
-              headerTitleStyle: { color: "white" },
-              drawerActiveTintColor: "black",
-              headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+                drawerIcon: () => (
+                  <Image
+                    source={require("../../assets/gift.png")}
+                    style={styles.imageStyle}
+                  />
+                ),
+              }}
+            />
+          ) : null}
+          {menus.includes("Reports") ? (
+            <Drawer.Screen
+              name="Reports"
+              component={ReportScreen as any}
+              options={{
+                drawerLabel: "Reports",
+                drawerLabelStyle: styles.dLabels,
+                headerTintColor: "white",
+                headerTitle: "Reports",
+                headerTitleStyle: { color: "white" },
+                drawerActiveTintColor: "black",
+                headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
 
-              drawerIcon: () => (
-                <Image
-                  source={require("../../assets/report.png")}
-                  style={styles.imageStyle}
-                />
-              ),
-            }}
-          />
+                drawerIcon: () => (
+                  <Image
+                    source={require("../../assets/report.png")}
+                    style={styles.imageStyle}
+                  />
+                ),
+              }}
+            />
+          ) : null}
         </Drawer.Navigator>
       </>
     );

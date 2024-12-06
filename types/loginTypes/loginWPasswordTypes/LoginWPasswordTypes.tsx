@@ -2,17 +2,7 @@ export interface LoginWPasswordReq {
   email: string;
   password: string;
 }
-
-export interface LoginWPasswordResp {
-  message: LoginWPasswordRespMessage;
-  error: string;
-  statusCode: number;
-}
-export enum LoginMethod {
-  Password = "Password",
-  OTP = "OTP",
-}
-export interface LoginWPasswordRespMessage {
+export interface LoginWPassUser {
   id: number;
   orgId: number;
   orgName: string;
@@ -31,4 +21,17 @@ export interface LoginWPasswordRespMessage {
   status: boolean;
   campaignId: string;
   campaignName: string;
+  menus: Array<string>;
+}
+export interface LoginWPasswordResp {
+  message: LoginWPasswordRespMessage;
+  error: string;
+  statusCode: number;
+}
+export enum LoginMethod {
+  Password = "Password",
+  OTP = "OTP",
+}
+export interface LoginWPasswordRespMessage {
+  user: LoginWPassUser;
 }

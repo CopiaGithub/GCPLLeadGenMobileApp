@@ -50,13 +50,16 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   const { productTotals } = useSelector(
     (state: RootState) => state.productTotal
   );
-
+  const [menus, setMenus] = useState<Array<string>>(new Array<string>());
+  const [roleID, setRoleID] = useState(0);
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-        setUserSbuId(user.message.sbuId);
-        setCampaignName(user.message.campaignName);
+        setUserSbuId(user.message.user.sbuId);
+        setCampaignName(user.message.user.campaignName);
+        setMenus(user.message.menus);
+        setRoleID(user.message.user.roleId);
       }
     });
   }, [isFocused, userSbuId]);
@@ -110,13 +113,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
       };
     }, [])
   );
-  useEffect(() => {
-    AsyncStorage.getItem("@userData").then((res) => {
-      if (res) {
-        const user = JSON.parse(res);
-      }
-    });
-  }, [isFocused]);
+
   const renderCampaignName = () => {
     return (
       <View style={style.headerNameView}>
@@ -132,83 +129,100 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
       <View style={style.hmView}>
         <ScrollView horizontal contentContainerStyle={{ paddingRight: "50%" }}>
           {/* Leads */}
-          <TouchableOpacity
-            style={style.menuItemView}
-            onPress={() => {
-              props.navigation.navigate("Leads");
-            }}
-          >
-            <Image
-              source={require("../../assets/leads.png")}
-              style={{ width: 40, height: 40, alignSelf: "center" }}
-            />
-            <Text style={style.menuTxt}>Leads</Text>
-          </TouchableOpacity>
+          {menus.includes("Leads") ? (
+            <TouchableOpacity
+              style={style.menuItemView}
+              onPress={() => {
+                props.navigation.navigate("Leads");
+              }}
+            >
+              <Image
+                source={require("../../assets/leads.png")}
+                style={{ width: 40, height: 40, alignSelf: "center" }}
+              />
+              <Text style={style.menuTxt}>Leads</Text>
+            </TouchableOpacity>
+          ) : null}
+
           {/* Campaign */}
-          <TouchableOpacity
-            style={style.menuItemView}
-            onPress={() => {
-              props.navigation.navigate("Campaigns");
-            }}
-          >
-            <Image
-              source={require("../../assets/campaign.png")}
-              style={{ width: 40, height: 40, alignSelf: "center" }}
-            />
-            <Text style={style.menuTxt}>Campaign</Text>
-          </TouchableOpacity>
+          {menus.includes("Campaign") ? (
+            <TouchableOpacity
+              style={style.menuItemView}
+              onPress={() => {
+                props.navigation.navigate("Campaigns");
+              }}
+            >
+              <Image
+                source={require("../../assets/campaign.png")}
+                style={{ width: 40, height: 40, alignSelf: "center" }}
+              />
+              <Text style={style.menuTxt}>Campaign</Text>
+            </TouchableOpacity>
+          ) : null}
+
           {/* Users */}
-          <TouchableOpacity
-            style={style.menuItemView}
-            onPress={() => {
-              props.navigation.navigate("Users");
-            }}
-          >
-            <Image
-              source={require("../../assets/users.png")}
-              style={{ width: 40, height: 40, alignSelf: "center" }}
-            />
-            <Text style={style.menuTxt}>Users</Text>
-          </TouchableOpacity>
+          {menus.includes("Users") ? (
+            <TouchableOpacity
+              style={style.menuItemView}
+              onPress={() => {
+                props.navigation.navigate("Users");
+              }}
+            >
+              <Image
+                source={require("../../assets/users.png")}
+                style={{ width: 40, height: 40, alignSelf: "center" }}
+              />
+              <Text style={style.menuTxt}>Users</Text>
+            </TouchableOpacity>
+          ) : null}
+
           {/* Approvals */}
-          <TouchableOpacity
-            style={style.menuItemView}
-            onPress={() => {
-              props.navigation.navigate("Approvals");
-            }}
-          >
-            <Image
-              source={require("../../assets/approve.png")}
-              style={{ width: 40, height: 40, alignSelf: "center" }}
-            />
-            <Text style={style.menuTxt}>Approvals</Text>
-          </TouchableOpacity>
+          {menus.includes("Approvals") ? (
+            <TouchableOpacity
+              style={style.menuItemView}
+              onPress={() => {
+                props.navigation.navigate("Approvals");
+              }}
+            >
+              <Image
+                source={require("../../assets/approve.png")}
+                style={{ width: 40, height: 40, alignSelf: "center" }}
+              />
+              <Text style={style.menuTxt}>Approvals</Text>
+            </TouchableOpacity>
+          ) : null}
+
           {/* Gifts */}
-          <TouchableOpacity
-            style={style.menuItemView}
-            onPress={() => {
-              props.navigation.navigate("Gifts");
-            }}
-          >
-            <Image
-              source={require("../../assets/gift.png")}
-              style={{ width: 40, height: 40, alignSelf: "center" }}
-            />
-            <Text style={style.menuTxt}>Gifts</Text>
-          </TouchableOpacity>
+          {menus.includes("Gifts") ? (
+            <TouchableOpacity
+              style={style.menuItemView}
+              onPress={() => {
+                props.navigation.navigate("Gifts");
+              }}
+            >
+              <Image
+                source={require("../../assets/gift.png")}
+                style={{ width: 40, height: 40, alignSelf: "center" }}
+              />
+              <Text style={style.menuTxt}>Gifts</Text>
+            </TouchableOpacity>
+          ) : null}
+
           {/* Reports */}
-          <TouchableOpacity
-            style={style.menuItemView}
-            onPress={() => {
-              props.navigation.navigate("Reports");
-            }}
-          >
-            <Image
-              source={require("../../assets/report.png")}
-              style={{ width: 40, height: 40, alignSelf: "center" }}
-            />
-            <Text style={style.menuTxt}>Reports</Text>
-          </TouchableOpacity>
+          {menus.includes("Reports") ? (
+            <TouchableOpacity
+              style={style.menuItemView}
+              onPress={() => {
+                props.navigation.navigate("Reports");
+              }}
+            >
+              <Image
+                source={require("../../assets/report.png")}
+                style={{ width: 40, height: 40, alignSelf: "center" }}
+              />
+              <Text style={style.menuTxt}>Reports</Text>
+            </TouchableOpacity>
+          ) : null}
         </ScrollView>
       </View>
     );
@@ -298,7 +312,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
         }}
       >
         <CDSDropDown
-          data={GetSBUMaster(sbuMaster)}
+          data={GetSBUMaster(sbuMaster, roleID)}
           onSelect={(val) => {
             if (val && val.value) {
               GetVisitorMasterCount(+val.value);

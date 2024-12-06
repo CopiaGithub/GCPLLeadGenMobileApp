@@ -26,13 +26,6 @@ const CustomDrawer = (props: any) => {
   const [UserName, setUserName] = useState("");
   const [Designation_Desc, setDesignation_Desc] = useState("");
 
-  useEffect(() => {
-    AsyncStorage.getItem("@userData").then((res) => {
-      if (res) {
-        const user = JSON.parse(res);
-      }
-    });
-  }, [isFocused]);
   const icon = () => {
     return (
       <Image
