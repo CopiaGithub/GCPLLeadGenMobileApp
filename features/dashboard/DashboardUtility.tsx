@@ -11,7 +11,7 @@ export const GetSBUMaster = (data: SBUMasterResp | null, roleID: number) => {
       });
     }
   }
-  return roleID && roleID == 1
+  return roleID && roleID != 1
     ? pickerData.filter((item) => item.label != "All")
     : pickerData;
 };

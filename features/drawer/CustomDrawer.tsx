@@ -11,20 +11,40 @@ import {
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppDispatch, RootState } from "../../redux/store";
+import { RoleMasterRequest } from "../../services/roleMasterRequest/RoleMasterRequest";
+import { GetRoleNameById } from "../user/createUser/CreateUserUtility";
 
 const CustomDrawer = (props: any) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
   const isFocused = useIsFocused();
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [sdtSuperUser, setSdtSuperUser] = useState("");
   const [UserName, setUserName] = useState("");
-  const [Designation_Desc, setDesignation_Desc] = useState("");
+  const [roleId, setRolId] = useState(0);
+
+  const { roleMaster } = useSelector((state: RootState) => state.roleMaster);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setUserName(user.message.user.username);
+        setRolId(user.message.user.roleId);
+      }
+    });
+  }, [isFocused]);
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(RoleMasterRequest(""));
+    }
+  }, [isFocused]);
 
   const icon = () => {
     return (
@@ -41,11 +61,14 @@ const CustomDrawer = (props: any) => {
   const renderHorizontalBorder = () => {
     return <View style={{ borderTopWidth: 0.8, borderTopColor: "grey" }} />;
   };
+
   const userDetails = () => {
     return (
       <View style={{ marginTop: "1%", marginBottom: "4%" }}>
-        <Text style={styles.headerTxt}>Exibhition Admin</Text>
-        <Text style={styles.childTxt}>Super Admin</Text>
+        <Text style={styles.headerTxt}>{UserName ? UserName : ""}</Text>
+        <Text style={styles.childTxt}>
+          {GetRoleNameById(roleMaster, roleId)}
+        </Text>
       </View>
     );
   };

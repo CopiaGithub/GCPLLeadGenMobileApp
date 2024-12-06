@@ -31,10 +31,8 @@ import CDSDropDown from "./CDSDropDown";
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
-  // const [email, setEmail] = useState("");
-  const [email, setEmail] = useState("siddhesh.chaure@copiacs.com");
-  // const [password, setPassword] = useState("");
-  const [password, setPassword] = useState("1235");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [otp, setOTP] = useState("");
   const [alertState, setAlertState] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
@@ -67,7 +65,7 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
         password: password,
       });
       setLoaderState(resp ? false : true);
-      if (resp && resp.statusCode == 200 && resp.message.user.username) {
+      if (resp && resp.statusCode == 200) {
         const userDataJSON = JSON.stringify(resp);
         await AsyncStorage.setItem("@userData", userDataJSON);
         props.navigation.navigate("DashboardDrawer");

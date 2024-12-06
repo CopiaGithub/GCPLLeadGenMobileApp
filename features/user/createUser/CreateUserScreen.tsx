@@ -57,6 +57,15 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
   const [loaderState, setLoaderState] = useState(false);
   const [alertState, setAlertState] = useState(false);
+  const [sbuID, setSBUId] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setSBUId(user.message.user.sbuId);
+      }
+    });
+  }, [isFocused]);
   useEffect(() => {
     if (isFocused) {
       dispatch(RoleMasterRequest(""));
@@ -183,7 +192,7 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         <Text style={style.labelText}>SBU:</Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
-            data={GetSBUMaster(sbuMaster)}
+            data={GetSBUMaster(sbuMaster, sbuID)}
             onSelect={(val) => {
               createUser.setFieldValue("formData.sbuId", val.value);
             }}

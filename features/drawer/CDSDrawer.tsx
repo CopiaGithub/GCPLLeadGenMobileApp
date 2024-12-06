@@ -23,6 +23,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
+import CDSLoader from "../../component/CDSLoader";
 
 const Drawer = createDrawerNavigator();
 
@@ -49,7 +50,7 @@ const CdsDrawer: React.FC = () => {
         setMenus(user.message.menus);
       }
     });
-  }, [isFocused, menus]);
+  }, [isFocused]);
   const [isLoading, setIsLoading] = useState(false);
 
   function renderDrawerScreen() {
@@ -80,7 +81,7 @@ const CdsDrawer: React.FC = () => {
               ),
             }}
           />
-          {menus.includes("Leads") ? (
+          {menus.length && menus.includes("Leads") ? (
             <Drawer.Screen
               name="Leads"
               component={LeadScreen as any}
@@ -101,7 +102,7 @@ const CdsDrawer: React.FC = () => {
               }}
             />
           ) : null}
-          {menus.includes("Campaign") ? (
+          {menus.length && menus.includes("Campaign") ? (
             <Drawer.Screen
               name="Campaigns"
               component={CampaignScreen as any}
@@ -123,7 +124,7 @@ const CdsDrawer: React.FC = () => {
               }}
             />
           ) : null}
-          {menus.includes("Users") ? (
+          {menus.length && menus.includes("Users") ? (
             <Drawer.Screen
               name="Users"
               component={UserScreen as any}
@@ -145,7 +146,7 @@ const CdsDrawer: React.FC = () => {
               }}
             />
           ) : null}
-          {menus.includes("Approvals") ? (
+          {menus.length && menus.includes("Approvals") ? (
             <Drawer.Screen
               name="Approvals"
               component={ApprovalScreen as any}
@@ -167,7 +168,7 @@ const CdsDrawer: React.FC = () => {
               }}
             />
           ) : null}
-          {menus.includes("Gifts") ? (
+          {menus.length && menus.includes("Gifts") ? (
             <Drawer.Screen
               name="Gifts"
               component={GiftScreen as any}
@@ -189,7 +190,7 @@ const CdsDrawer: React.FC = () => {
               }}
             />
           ) : null}
-          {menus.includes("Reports") ? (
+          {menus.length && menus.includes("Reports") ? (
             <Drawer.Screen
               name="Reports"
               component={ReportScreen as any}
@@ -217,7 +218,7 @@ const CdsDrawer: React.FC = () => {
   }
 
   //return isLoading ? renderDrawerScreen() : <ActivityIndicator />;
-  return renderDrawerScreen();
+  return menus && menus.length ? renderDrawerScreen() : <CDSLoader />;
 };
 
 export default CdsDrawer;

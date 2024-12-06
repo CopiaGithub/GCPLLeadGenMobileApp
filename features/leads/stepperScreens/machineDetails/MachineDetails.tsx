@@ -167,7 +167,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select Brand"
-            data={GetSBUMaster(sbuMaster)}
+            data={GetSBUMaster(sbuMaster, +sbuId)}
             onSelect={(val) => {
               if (val) {
                 setSBUId(val.value);

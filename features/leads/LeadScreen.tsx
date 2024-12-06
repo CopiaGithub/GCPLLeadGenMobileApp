@@ -63,8 +63,6 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
     });
   }, [isFocused, sbuID]);
 
-  console.warn("SBUID--", sbuID);
-
   useEffect(() => {
     if (isFocused) {
       dispatch(GetLeadDataRequest(sbuID));

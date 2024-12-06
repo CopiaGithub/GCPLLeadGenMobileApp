@@ -26,6 +26,7 @@ import { EnterGiftDetails } from "../../services/giftsRequest/EnterGiftDetailsRe
 import { EnterGiftDetailsReq } from "../../types/giftTypes/EnterGiftDetailsTypes";
 import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSDropDown from "../login/CDSDropDown";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type GiftScreenProps = NativeStackScreenProps<RootStackParamList, "Gifts">;
 
@@ -43,13 +44,23 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
     new Array<GetLeadRespMessage>()
   );
   const [giftStatus, setGiftStatus] = useState(false);
+  const [sbuID, setSBUID] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+
+        setSBUID(user.message.user.sbuId);
+      }
+    });
+  }, [isFocused, sbuID]);
   const submitGifts = useFormik({
     initialValues: formHelper.formikInitialValue,
     onSubmit: async (values) => {},
   });
   useEffect(() => {
     if (isFocused) {
-      dispatch(GetLeadDataRequest(""));
+      dispatch(GetLeadDataRequest(sbuID));
     }
   }, [isFocused]);
 
@@ -216,7 +227,14 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
           </View>
         ) : leadDetails && leadDetails.statusCode != 200 ? (
           <View>
-            <Text>{`${leadDetails.message}`}</Text>
+            <Text
+              style={{
+                textAlign: "center",
+                margin: "6%",
+                fontSize: 20,
+                fontWeight: "500",
+              }}
+            >{`${leadDetails.message}`}</Text>
           </View>
         ) : (
           <CDSLoader />
@@ -242,7 +260,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
             negativeBtnTxt="Ok"
             onNegativeClick={() => {
               setAlertState(false);
-              dispatch(GetLeadDataRequest(""));
+              dispatch(GetLeadDataRequest(sbuID));
             }}
             onPositiveClick={() => {
               setAlertState(false);

@@ -25,6 +25,7 @@ export const style = StyleSheet.create({
     flex: 1.8,
     fontSize: 15,
     fontWeight: "500",
+    margin: "4%",
   },
   itemView: {
     marginVertical: "2%",

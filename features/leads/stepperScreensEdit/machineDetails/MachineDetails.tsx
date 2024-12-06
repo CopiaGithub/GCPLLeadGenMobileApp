@@ -220,7 +220,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
                 ? GetSBUNameById(sbuMaster, +props.productsInterested[0].sbuId)
                 : "Select SBU"
             }
-            data={GetSBUMaster(sbuMaster)}
+            data={GetSBUMaster(sbuMaster, +sbuId)}
             onSelect={(val) => {
               if (val) {
                 setSBUId(val.value);
