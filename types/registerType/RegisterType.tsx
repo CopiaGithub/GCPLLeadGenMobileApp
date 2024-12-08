@@ -9,7 +9,7 @@ export interface RegisterUser {
   email: string;
   mobile: string;
   address: string;
-  pincode: number;
+  pincode: string;
   roleId: number;
   status: boolean;
 }

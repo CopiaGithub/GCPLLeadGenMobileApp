@@ -87,7 +87,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       }
     }
   }, [isFocused, props.addCustomerData.companyName]);
-  console.warn("Form Data-----", formData);
 
   useEffect(() => {
     if (isFocused) {
@@ -146,6 +145,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   console.warn("Async Data --cscs?", formData);
 
   const isValid = (values: IAddCustomerData) => {
+    DisplayToast(`${values.campaignID}`);
     if (values.campaignID == 0) {
       DisplayToast("Please select campaign type");
       return false;
@@ -171,15 +171,34 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       return true;
     }
   };
-  const addToListValid = (values: IAddCustomerData) => {
+  const addToListValid = (
+    values: IAddCustomerData,
+    custCartData: CustomerDetails[]
+  ) => {
+    let emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
     if (!values.customerName) {
       DisplayToast("Please enter customer name");
       return false;
     } else if (!values.mobileNumber) {
       DisplayToast("Please enter mobile number");
       return false;
+    } else if (
+      custCartData.length &&
+      custCartData.find((item) => item.mobileNumber == values.mobileNumber)
+    ) {
+      DisplayToast("Mobile no is already exists");
+      return false;
     } else if (!values.email) {
       DisplayToast("Please enter email");
+      return false;
+    } else if (values.email && !emailRegex.test(values.email)) {
+      DisplayToast("Please enter valid mail");
+      return false;
+    } else if (
+      custCartData.length &&
+      custCartData.find((item) => item.email == values.email)
+    ) {
+      DisplayToast("Email is already exists");
       return false;
     } else {
       return true;
@@ -224,7 +243,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       noOfPeopleAccompanied: 0,
       noOfGiftsNeeded: 0,
     };
-    console.warn("Visitor Master Payload--->", payload);
 
     const resp = await SaveLeadRequest(payload);
     setLoaderState(resp ? false : true);
@@ -317,7 +335,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           {companyDetails ? (
             <>
               {/* Campaign Name */}
-              <Text style={style.labelText}>Campaign Name:</Text>
+              <Text style={style.labelText}>
+                Campaign Name:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
                   placeholder={
@@ -339,7 +359,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               </View>
 
               {/* Company Name */}
-              <Text style={style.labelText}>Company Name:</Text>
+              <Text style={style.labelText}>
+                Company Name:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={style.inputTxt}
                 placeholder={"Enter Company Name"}
@@ -350,7 +372,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 }}
               />
               {/* Company Type */}
-              <Text style={style.labelText}>Company Type:</Text>
+              <Text style={style.labelText}>
+                Company Type:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
                   placeholder={
@@ -371,7 +395,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 />
               </View>
               {/* Industry Type */}
-              <Text style={style.labelText}>Industry Type:</Text>
+              <Text style={style.labelText}>
+                Industry Type:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <View style={{ marginVertical: "2%" }}>
                 <CDSDropDown
                   placeholder={
@@ -395,7 +421,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 />
               </View>
               {/* Location */}
-              <Text style={style.labelText}>Addresss/Location:</Text>
+              <Text style={style.labelText}>
+                Addresss/Location:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={style.inputTxt}
                 placeholder="Enter Location"
@@ -406,7 +434,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 }}
               />
               {/* Pincode */}
-              <Text style={style.labelText}>Pincode:</Text>
+              <Text style={style.labelText}>
+                Pincode:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={style.inputTxt}
                 placeholder="Enter Pincode"
@@ -424,7 +454,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           {custDetails ? (
             <>
               {/* Contact Name */}
-              <Text style={style.labelText}>Contact Name:</Text>
+              <Text style={style.labelText}>
+                Contact Name:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 value={submitLeadDetails.values.customerName}
                 onChangeText={(val) => {
@@ -435,13 +467,16 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 placeholderTextColor={"grey"}
               />
               {/* Mobile Number */}
-              <Text style={style.labelText}>Mobile Number:</Text>
+              <Text style={style.labelText}>
+                Mobile Number:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 value={submitLeadDetails.values.mobileNumber}
                 maxLength={10}
                 keyboardType="numeric"
                 onChangeText={(val) => {
-                  submitLeadDetails.setFieldValue("mobileNumber", val);
+                  const numericValue = val.replace(/[^0-9]/g, "");
+                  submitLeadDetails.setFieldValue("mobileNumber", numericValue);
                 }}
                 style={style.inputTxt}
                 placeholder="Enter Mobile Number"
@@ -462,7 +497,9 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
                 placeholderTextColor={"grey"}
               /> */}
               {/* Email */}
-              <Text style={style.labelText}>Email:</Text>
+              <Text style={style.labelText}>
+                Email:<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 value={submitLeadDetails.values.email}
                 onChangeText={(val) => {
@@ -476,7 +513,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
               <TouchableOpacity
                 style={style.addBtnView}
                 onPress={() => {
-                  if (addToListValid(submitLeadDetails.values)) {
+                  if (addToListValid(submitLeadDetails.values, custCartData)) {
                     addToCart();
                   }
                 }}
@@ -604,17 +641,19 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           </TouchableOpacity>
         ) : null}
       </>
-      {/* <TouchableOpacity
-        style={style.btn}
-        onPress={() => {
-          const val = submitLeadDetails.values;
-          if (isValid(val)) {
-            SaveLeadData();
-          }
-        }}
-      >
-        <Text style={style.btnText}>Save & create lead</Text>
-      </TouchableOpacity> */}
+      {submitLeadDetails.values.companyTypeID != 2 ? (
+        <TouchableOpacity
+          style={style.btn}
+          onPress={() => {
+            const val = submitLeadDetails.values;
+            if (isValid(val)) {
+              SaveLeadData();
+            }
+          }}
+        >
+          <Text style={style.btnText}>Save & create lead</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

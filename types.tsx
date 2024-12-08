@@ -26,4 +26,5 @@ export type RootStackParamList = {
   };
   Reports: undefined;
   editLeadCustomer: GetLeadRespMessage;
+  MyAccount: undefined;
 };

@@ -24,12 +24,13 @@ class CreateUserHelper implements ICreateUserrHelper {
         orgId: 0,
         orgName: "",
         password: "",
-        pincode: 0,
+        pincode: "",
         roleId: 0,
         sbuId: 0,
         username: "",
         campaignId: 0,
         campaignName: "",
+        status: true,
       },
     };
   }

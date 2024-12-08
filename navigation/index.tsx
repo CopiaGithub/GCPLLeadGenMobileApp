@@ -24,6 +24,7 @@ import "react-native-gesture-handler";
 import CreateLeadScreen from "../features/leads/createLead/CreateLeadScreen";
 import EditLeadCustomerScreen from "../features/leads/edit/EditLeadCustomer";
 import EditLeadScreen from "../features/leads/editLead/EditLeadScreen";
+import MyAccountScreen from "../features/MyAccount/MyAccountScreen";
 
 export default function Navigation({
   colorScheme,
@@ -232,6 +233,17 @@ function RootNavigator() {
           title: "",
           headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
           headerTitle: "Reports",
+          gestureEnabled: false,
+          gestureDirection: "horizontal",
+        }}
+      />
+      <Stack.Screen
+        name="MyAccount"
+        component={MyAccountScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: `${APP_THEME_COLOR}` },
+          headerTitle: "My Account",
           gestureEnabled: false,
           gestureDirection: "horizontal",
         }}

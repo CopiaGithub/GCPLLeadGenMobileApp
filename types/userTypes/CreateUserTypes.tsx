@@ -7,10 +7,11 @@ export interface CreateUserReq {
   email: string;
   mobile: string;
   address: string;
-  pincode: number;
+  pincode: string;
   roleId: number;
   campaignId: number;
   campaignName: string;
+  status: boolean;
 }
 export interface CreateUserMessage {
   id: number;

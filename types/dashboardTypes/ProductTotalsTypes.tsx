@@ -1,4 +1,5 @@
 export interface ProductTotals {
+  sbuName: string;
   productId: number;
   productName: string;
   totalQuantity: number;

@@ -88,10 +88,11 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         email: val.email,
         mobile: val.mobile,
         address: val.address,
-        pincode: Number(val.pincode),
+        pincode: val.pincode,
         roleId: Number(val.roleId),
         campaignId: Number(val.campaignId),
         campaignName: val.campaignName,
+        status: val.status,
       };
       if (item && item.id) {
         const resp = await UpdateUserRequest(payload, item.id);
@@ -103,8 +104,6 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
         }
       } else {
         const resp = await CreateUserRequest(payload);
-        console.warn("Submit Payload--->", payload);
-
         setLoaderState(resp ? false : true);
         if (resp && resp.statusCode == 201) {
           setAlertState(true);
@@ -124,12 +123,13 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
           orgId: item.orgId,
           orgName: item.orgName,
           password: item.password,
-          pincode: item.pincode,
+          pincode: item.pincode.toString(),
           roleId: item.roleId,
           sbuId: item.sbuId,
           username: item.username,
           campaignId: item.campaignId,
           campaignName: item.campaignName,
+          status: item.status,
         },
       });
     }
@@ -155,12 +155,10 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
   }, [operation]);
   const isValid = () => {
     const val = createUser.values.formData;
+    let emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
 
     if (val.sbuId == 0) {
       DisplayToast("Please select SBU");
-      return false;
-    } else if (val.campaignId == 0) {
-      DisplayToast("Please select campaign ");
       return false;
     } else if (!val.username) {
       DisplayToast("Please enter username");
@@ -168,11 +166,14 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
     } else if (!val.mobile) {
       DisplayToast("Please enter mobile number");
       return false;
+    } else if (val.mobile && val.mobile.length < 10) {
+      DisplayToast("Please enter valid mobile number");
+      return false;
     } else if (!val.email) {
       DisplayToast("Please enter email");
       return false;
-    } else if (!val.address) {
-      DisplayToast("Please enter location");
+    } else if (val.email && !emailRegex.test(val.email)) {
+      DisplayToast("Please enter valid mail");
       return false;
     } else if (!val.password) {
       DisplayToast("Please enter password");
@@ -188,8 +189,22 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
   const renderCreateUserView = () => {
     return (
       <View style={style.createView}>
+        {/* Organization */}
+        <Text style={style.labelText}>Organization:</Text>
+        <TextInput
+          style={[style.inputTxt, { color: "grey" }]}
+          placeholder="Enter Organization*"
+          placeholderTextColor={"grey"}
+          editable={false}
+          value={createUser.values.formData.orgName}
+          onChangeText={(val) => {
+            createUser.setFieldValue("formData.orgName", val);
+          }}
+        />
         {/* Role */}
-        <Text style={style.labelText}>SBU:</Text>
+        <Text style={style.labelText}>
+          SBU/Brand:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             data={GetSBUMaster(sbuMaster, sbuID)}
@@ -199,12 +214,12 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
             placeholder={
               createUser.values.formData.sbuId
                 ? GetSBUNameById(sbuMaster, createUser.values.formData.sbuId)
-                : "Select Brand"
+                : "Select SBU/Brand"
             }
           />
         </View>
-        {/* Role */}
-        <Text style={style.labelText}>Campaign Name:</Text>
+        {/* Campaign */}
+        {/* <Text style={style.labelText}>Campaign Name:</Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             data={GetCampaignData(getCampaignData)}
@@ -218,57 +233,54 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
                     getCampaignData,
                     createUser.values.formData.campaignId
                   )
-                : "Select Campaign"
+                : "Select Campaign*"
             }
           />
-        </View>
+        </View> */}
         {/* User Name */}
-        <Text style={style.labelText}>User Name:</Text>
+        <Text style={style.labelText}>
+          User Name:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
           value={createUser.values.formData.username}
           onChangeText={(val) => {
             createUser.setFieldValue("formData.username", val);
           }}
-          placeholder="Enter User Name"
+          placeholder="Enter User Name*"
           placeholderTextColor={"grey"}
-        />
-        {/* Mobile Number */}
-        <Text style={style.labelText}>Mobile Number:</Text>
-        <TextInput
-          style={style.inputTxt}
-          placeholder="Enter Mobile Number"
-          maxLength={10}
-          keyboardType="numeric"
-          placeholderTextColor={"grey"}
-          value={createUser.values.formData.mobile}
-          onChangeText={(val) => {
-            createUser.setFieldValue("formData.mobile", val);
-          }}
         />
         {/* Email */}
-        <Text style={style.labelText}>Email:</Text>
+        <Text style={style.labelText}>
+          Email:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
-          placeholder="Enter Email"
+          placeholder="Enter Email*"
           placeholderTextColor={"grey"}
           value={createUser.values.formData.email}
           onChangeText={(val) => {
             createUser.setFieldValue("formData.email", val);
           }}
         />
-        {/* Organization */}
-        <Text style={style.labelText}>Organization:</Text>
+
+        {/* Mobile Number */}
+        <Text style={style.labelText}>
+          Mobile Number:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
-          placeholder="Enter Organization"
+          placeholder="Enter Mobile Number*"
+          maxLength={10}
+          keyboardType="numeric"
           placeholderTextColor={"grey"}
-          editable={false}
-          value={createUser.values.formData.orgName}
+          value={createUser.values.formData.mobile}
           onChangeText={(val) => {
-            createUser.setFieldValue("formData.orgName", val);
+            const numericValue = val.replace(/[^0-9]/g, "");
+            createUser.setFieldValue("formData.mobile", numericValue);
           }}
         />
+
         {/* State */}
         {/* <Text style={style.labelText}>State:</Text>
         <TextInput
@@ -295,23 +307,28 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
           }}
         />
         {/* Pincode */}
-        <Text style={style.labelText}>Pincode:</Text>
+        <Text style={style.labelText}>
+          Pincode:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
-          placeholder="Enter Pincode"
+          placeholder="Enter Pincode*"
           maxLength={6}
           keyboardType="numeric"
           placeholderTextColor={"grey"}
           value={createUser.values.formData.pincode.toString()}
           onChangeText={(val) => {
-            createUser.setFieldValue("formData.pincode", val);
+            const numericValue = val.replace(/[^0-9]/g, "");
+            createUser.setFieldValue("formData.pincode", numericValue);
           }}
         />
         {/* Password */}
-        <Text style={style.labelText}>Password:</Text>
+        <Text style={style.labelText}>
+          Password:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
-          placeholder="Enter Password"
+          placeholder="Enter Password*"
           placeholderTextColor={"grey"}
           value={createUser.values.formData.password}
           onChangeText={(val) => {
@@ -319,7 +336,9 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
           }}
         />
         {/* Role */}
-        <Text style={style.labelText}>Role:</Text>
+        <Text style={style.labelText}>
+          Role:<Text style={{ color: "red" }}> *</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             data={GetRoleMaster(roleMaster)}
@@ -329,7 +348,32 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
             placeholder={
               createUser.values.formData.roleId
                 ? GetRoleNameById(roleMaster, createUser.values.formData.roleId)
-                : "Select role"
+                : "Select role*"
+            }
+          />
+        </View>
+        {/* Role */}
+        <Text style={style.labelText}>
+          Status:<Text style={{ color: "red" }}> *</Text>
+        </Text>
+        <View style={{ marginVertical: "2%" }}>
+          <CDSDropDown
+            data={[
+              { label: "Active", value: "0" },
+              { label: "InActive", value: "1" },
+            ]}
+            onSelect={(val) => {
+              createUser.setFieldValue(
+                "formData.status",
+                val.value == "0" ? true : false
+              );
+            }}
+            placeholder={
+              createUser.values.formData.status == true
+                ? "Active"
+                : createUser.values.formData.status == false
+                ? "InActive"
+                : "Select status*"
             }
           />
         </View>

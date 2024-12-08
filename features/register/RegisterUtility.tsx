@@ -19,17 +19,17 @@ export const GetOrgData = (data: OrganizationDataResponse | null) => {
 };
 export const isRegisterFormValid = (val: RegisterUser, cPass: string) => {
   let emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
-  if (!val.username) {
+  if (!val.orgName) {
+    DisplayToast("Please select organization");
+    return false;
+  } else if (!val.username) {
     DisplayToast(`Please enter name ${val.username}`);
     return false;
   } else if (!val.mobile) {
     DisplayToast("Please enter mobile number");
     return false;
-  } else if (!val.orgId) {
-    DisplayToast("Please select organization");
-    return false;
-  } else if (!val.campaignId) {
-    DisplayToast("Please select campaign");
+  } else if (val.mobile && val.mobile.length < 10) {
+    DisplayToast("Please enter valid mobile number");
     return false;
   } else if (!val.email) {
     DisplayToast("Please enter email");

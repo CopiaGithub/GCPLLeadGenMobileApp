@@ -35,7 +35,6 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   const isFocused = useIsFocused();
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
   const formHelper = new GiftsHelper();
-
   const [noOfGifts, setNoOfGifts] = useState(0);
   const [giftDetails, setGiftDetails] = useState("");
   const [alertState, setAlertState] = useState(false);
@@ -76,10 +75,12 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
           ? leadDetails.message.filter((item) => item.noOfGifts)
           : leadDetails.message.filter((item) => item.noOfGifts == null),
       });
+      setLeadData(leadDetails.message);
     } else {
       submitGifts.setValues({
         formData: [],
       });
+      setLeadData([]);
     }
   }, [isFocused, leadDetails?.statusCode, giftStatus]);
 
@@ -126,8 +127,10 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
               noOfGifts: data.noOfGifts,
             };
             const resp = await EnterGiftDetails(payload, +data.id);
+            console.warn(resp);
+
             setLoaderState(resp ? false : true);
-            if (resp && resp.statusCode == 200) {
+            if (resp && resp.statusCode == 201) {
               setAlertState(true);
             } else {
               DisplayToast(`${resp.message}`);
@@ -148,7 +151,9 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   const renderItems = () => {
     return (
       <>
-        {leadDetails &&
+        {leadData &&
+        leadData.length &&
+        leadDetails &&
         leadDetails.statusCode == 200 &&
         leadDetails.message.length &&
         submitGifts.values.formData.length ? (
@@ -178,7 +183,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
                 </View> */}
                 <View style={style.txtView}>
                   <Text style={style.keyText}>No. of Gifts:</Text>
-                  {item.noOfGifts ? (
+                  {leadDetails.message[i].noOfGifts ? (
                     <Text style={style.valueText}>{item.noOfGifts}</Text>
                   ) : (
                     <TextInput
@@ -199,13 +204,15 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
 
                 <View style={style.txtView}>
                   <Text style={style.keyText}>Gift Details:</Text>
-                  {item.giftDetails ? (
+                  {leadDetails.message[i].giftDetails ? (
                     <Text style={style.valueText}>{item.giftDetails}</Text>
                   ) : (
                     <TextInput
                       style={style.txtInput}
                       placeholder="Enter Gift Details"
-                      editable={leadDetails.message[i].noOfGifts ? false : true}
+                      editable={
+                        leadDetails.message[i].giftDetails ? false : true
+                      }
                       placeholderTextColor={"grey"}
                       value={item.giftDetails as any}
                       onChangeText={(val) => {
@@ -215,7 +222,10 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
                   )}
                   <View style={style.extra}></View>
                 </View>
-                {item.giftDetails ? null : renderButton(i)}
+                {leadDetails.message[i].giftDetails &&
+                leadDetails.message[i].noOfGifts
+                  ? null
+                  : renderButton(i)}
               </View>
             ))}
           </>

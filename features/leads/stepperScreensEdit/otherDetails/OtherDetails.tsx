@@ -77,7 +77,9 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
     <View style={{ margin: "2%" }}>
       <View style={style.cardView}>
         {/* Purchase Timeline */}
-        <Text style={style.labelText}>Purchase Timeline:</Text>
+        <Text style={style.labelText}>
+          Purchase Timeline:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             data={GetPurchaseTimeline()}
@@ -88,7 +90,9 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           />
         </View>
         {/* Financing Required? */}
-        <Text style={style.labelText}>Financing Required?:</Text>
+        <Text style={style.labelText}>
+          Financing Required?:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             data={GetFinancingRequired()}
@@ -99,7 +103,9 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           />
         </View>
         {/* No. of machines */}
-        <Text style={style.labelText}>No. of machines:</Text>
+        <Text style={style.labelText}>
+          No. of machines:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of machines"
@@ -112,7 +118,9 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           }}
         />
         {/* No. of people accompanied */}
-        <Text style={style.labelText}>No. of people accompanied:</Text>
+        <Text style={style.labelText}>
+          No. of people accompanied:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of people accompanied"
@@ -125,7 +133,9 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           }}
         />
         {/* No. of gifts needed */}
-        <Text style={style.labelText}>No. of gifts needed:</Text>
+        <Text style={style.labelText}>
+          No. of gifts needed:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of gifts needed"

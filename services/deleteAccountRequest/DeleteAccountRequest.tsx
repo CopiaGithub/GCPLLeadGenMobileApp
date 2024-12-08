@@ -5,25 +5,14 @@ import {
   CreateUserResp,
 } from "../../types/userTypes/CreateUserTypes";
 
-export async function UpdateUserRequest(
-  reqData: CreateUserReq,
+export async function DeleteAccountRequest(
+  status: boolean,
   ID: number
 ): Promise<CreateUserResp> {
   let data = {} as CreateUserResp;
   const payload = {
-    address: reqData.address,
-    email: reqData.email,
-    mobile: reqData.mobile,
-    orgId: +reqData.orgId,
-    orgName: reqData.orgName,
-    password: reqData.password,
-    pincode: Number(reqData.pincode),
-    roleId: Number(reqData.roleId),
-    sbuId: Number(reqData.sbuId),
-    status: reqData.status,
-    username: reqData.username,
+    status: status,
   };
-  console.warn("Update User Request", payload);
 
   return await axios({
     method: "patch",

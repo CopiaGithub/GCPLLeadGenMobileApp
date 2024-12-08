@@ -9,11 +9,24 @@ export async function CreateUserRequest(
   reqData: CreateUserReq
 ): Promise<CreateUserResp> {
   let data = {} as CreateUserResp;
+  const payload = {
+    address: reqData.address,
+    email: reqData.email,
+    mobile: reqData.mobile,
+    orgId: +reqData.orgId,
+    orgName: reqData.orgName,
+    password: reqData.password,
+    pincode: Number(reqData.pincode),
+    roleId: Number(reqData.roleId),
+    sbuId: Number(reqData.sbuId),
+    status: reqData.status,
+    username: reqData.username,
+  };
 
   return await axios({
     method: "post",
     url: API.USER_MASTER,
-    data: reqData,
+    data: payload,
   })
     .then((resp) => {
       return resp.data;

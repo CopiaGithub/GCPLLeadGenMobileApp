@@ -32,6 +32,7 @@ import { VisitorMasterCountRequest } from "../../services/visitorMasterCountRequ
 import { DisplayToast } from "../../utility/ToastMessage";
 import { FootfallCountRequest } from "../../services/visitorCountRequest/VisitorCountRequest";
 import LeadScreen from "../leads/LeadScreen";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type DashboardScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -53,6 +54,23 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   );
   const [menus, setMenus] = useState<Array<string>>(new Array<string>());
   const [roleID, setRoleID] = useState(0);
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <View style={{ marginRight: "12%" }}>
+          <FontAwesome
+            name="user-circle"
+            size={28}
+            color="white"
+            onPress={() => {
+              props.navigation.navigate("MyAccount");
+            }}
+          />
+        </View>
+      ),
+    });
+  }, []);
+
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
@@ -212,7 +230,8 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     return (
       <View style={style.tableView}>
         <View style={style.tbHeaderView}>
-          <Text style={style.tbHeaderLeftText}>Model</Text>
+          <Text style={style.tbHeaderLeftText}>SBU/Brand</Text>
+          <Text style={style.tbHeaderCenterText}>Model</Text>
           <Text style={style.tbHeaderRightText}>No of Machines</Text>
         </View>
         <>
@@ -222,7 +241,8 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
             <>
               {productTotals.message.map((item, i) => (
                 <View style={style.tbHeaderView}>
-                  <Text style={style.tbLeftText}>{item.productName}</Text>
+                  <Text style={style.tbLeftText}>{item.sbuName}</Text>
+                  <Text style={style.tbCenterText}>{item.productName}</Text>
                   <Text style={style.tbRightText}>{item.totalQuantity}</Text>
                 </View>
               ))}

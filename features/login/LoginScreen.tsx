@@ -31,6 +31,39 @@ import CDSDropDown from "./CDSDropDown";
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = (props) => {
+  //User Creation
+  //Org Grey color
+  //SBU/Brand
+  //Campaign
+  //Asterick for  mandatory field
+  //Address optional
+
+  //Register User
+  //Org Name TextBox
+  //Remove Camp
+  //Name
+  //Email
+  //Mobile Number
+  //Location
+  //Pincode
+
+  //My Account (New Menu)
+  //All Data
+  //Delete My Account with data (Confimation Alert)
+
+  //Dashboard
+  //SBU DD - Selection All
+  //Table - Brand - Model -No Of Machines
+
+  //Lead Details
+  //Contact Detail - Validation
+  //Email, Mobile Number Duplicate check
+  //Company Type - Customer -
+
+  //User - Edit User - Status Active/InActive
+
+  //Name, Email Mobile, SBU[Blank]
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOTP] = useState("");

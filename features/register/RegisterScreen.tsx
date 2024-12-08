@@ -103,6 +103,24 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
   const renderResgisterBox = () => {
     return (
       <View style={style.registerBoxView}>
+        {/* Organization */}
+        <View style={style.txView}>
+          <SimpleLineIcons
+            name="organization"
+            size={20}
+            style={style.leftIcon}
+          />
+          <TextInput
+            placeholder="Organization*"
+            value={submitRegData.values.formData.orgName}
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+            onChangeText={(value) => {
+              submitRegData.setFieldValue("formData.orgId", 1);
+              submitRegData.setFieldValue("formData.orgName", value);
+            }}
+          />
+        </View>
         {/* Name */}
         <View style={style.txView}>
           <FontAwesome5 name="user-alt" size={18} style={style.leftIcon} />
@@ -132,50 +150,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
             }}
           />
         </View>
-        {/* Organization */}
-
-        <CDSDropDown
-          data={GetCampaignData(getCampaignData)}
-          hasSearchOperation={true}
-          searchPlaceholder="Search campaign"
-          leftIcon={() => (
-            <SimpleLineIcons
-              name="organization"
-              size={24}
-              style={style.leftIcon}
-            />
-          )}
-          onSelect={(val) => {
-            submitRegData.setFieldValue(
-              "formData.campaignId",
-              Number(val.value)
-            );
-            submitRegData.setFieldValue("formData.campaignName", val.label);
-          }}
-          hasLeftIcon={true}
-          placeholder="Please select campaign"
-        />
-        <View style={{ marginTop: "2%" }} />
-        {/* Organization */}
-
-        <CDSDropDown
-          data={GetOrgData(orgData)}
-          hasSearchOperation={true}
-          searchPlaceholder="Search orgnization"
-          leftIcon={() => (
-            <SimpleLineIcons
-              name="organization"
-              size={24}
-              style={style.leftIcon}
-            />
-          )}
-          onSelect={(val) => {
-            submitRegData.setFieldValue("formData.orgId", Number(val.value));
-            submitRegData.setFieldValue("formData.orgName", val.label);
-          }}
-          hasLeftIcon={true}
-          placeholder="Please select Organization"
-        />
 
         {/* Email */}
         <View style={style.txView}>
@@ -194,12 +168,29 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
         <View style={style.txView}>
           <MaterialIcons name="my-location" size={24} style={style.leftIcon} />
           <TextInput
-            placeholder="Location*"
+            placeholder="Location/Address*"
             value={submitRegData.values.formData.address}
             style={style.txtInput}
             placeholderTextColor={"grey"}
             onChangeText={(value) => {
               submitRegData.setFieldValue("formData.address", value);
+            }}
+          />
+        </View>
+
+        {/* Pincode */}
+        <View style={style.txView}>
+          <MaterialIcons name="my-location" size={24} style={style.leftIcon} />
+          <TextInput
+            placeholder="Pincode*"
+            value={submitRegData.values.formData.pincode}
+            style={style.txtInput}
+            placeholderTextColor={"grey"}
+            keyboardType="number-pad"
+            maxLength={6}
+            onChangeText={(value) => {
+              const numericValue = value.replace(/[^0-9]/g, "");
+              submitRegData.setFieldValue("formData.pincode", numericValue);
             }}
           />
         </View>
@@ -266,6 +257,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
           negativeBtnTxt="Ok"
           onNegativeClick={() => {
             setAlertState(false);
+            props.navigation.navigate("Login");
           }}
           onPositiveClick={() => {
             setAlertState(false);

@@ -91,6 +91,14 @@ export const style = StyleSheet.create({
     padding: "1%",
     textAlign: "center",
   },
+  tbHeaderCenterText: {
+    flex: 1,
+    fontWeight: "500",
+    borderWidth: 1,
+    borderColor: "black",
+    padding: "1%",
+    textAlign: "center",
+  },
   tbHeaderRightText: {
     flex: 1,
     fontWeight: "500",
@@ -104,6 +112,13 @@ export const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     borderRightColor: "white",
+    padding: "1%",
+    textAlign: "center",
+  },
+  tbCenterText: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "black",
     padding: "1%",
     textAlign: "center",
   },

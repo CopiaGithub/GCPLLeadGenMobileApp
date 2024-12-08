@@ -163,7 +163,9 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
       </Text>
       <View style={style.cardView}>
         {/* Select SBU */}
-        <Text style={style.labelText}>SBU:</Text>
+        <Text style={style.labelText}>
+          SBU:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select Brand"
@@ -178,7 +180,9 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
           />
         </View>
         {/* Product Family */}
-        <Text style={style.labelText}>Product Family:</Text>
+        <Text style={style.labelText}>
+          Product Family:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select product family"
@@ -189,7 +193,9 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
           />
         </View>
         {/* Product Model */}
-        <Text style={style.labelText}>Product Model:</Text>
+        <Text style={style.labelText}>
+          Product Model:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <View style={{ marginVertical: "2%" }}>
           <CDSDropDown
             placeholder="Select product model"
@@ -208,7 +214,9 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
           />
         </View>
         {/* No. of machines */}
-        <Text style={style.labelText}>No. of machines:</Text>
+        <Text style={style.labelText}>
+          No. of machines:<Text style={{ color: "red" }}>*</Text>
+        </Text>
         <TextInput
           style={style.inputTxt}
           placeholder="Enter No. of machines"
