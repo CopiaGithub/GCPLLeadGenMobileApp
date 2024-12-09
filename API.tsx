@@ -21,6 +21,11 @@ const API = {
     DATA: `${apiUrl}campaign-master`,
     TYPE: `${apiUrl}campaign-type-master`,
   },
+  REPROTS: {
+    USER_DETAILS: `${apiUrl}user-master/generate-user-report`,
+    LEAD_DETAILS: `${apiUrl}visitor-master/generate-visitor-details-report`,
+    LEAD: `${apiUrl}visitor-master/generate-visitor-report`,
+  },
   GET_STATES: `${apiUrl}state-master`,
   GET_DISTRICTS: `${apiUrl}district-master`,
   COMPANY_TYPE_MASTER: `${apiUrl}company-type-master`,

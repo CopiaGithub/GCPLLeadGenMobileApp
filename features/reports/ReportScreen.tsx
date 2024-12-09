@@ -21,6 +21,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { SBUMasterRequest } from "../../services/sbuMasterRequest.tsx/SBUMasterRequest";
 import { GetSBUMaster } from "../dashboard/DashboardUtility";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ReportTypesReq } from "../../types/reportTypes/ReportTypes";
 
 type ReportScreenProps = NativeStackScreenProps<RootStackParamList, "Reports">;
 
@@ -29,10 +30,11 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
-
   const [alertState, setAlertState] = useState(false);
   const [loaderState, setLoaderState] = useState(false);
   const [roleID, setRoleID] = useState(0);
+  const [sbuId, setSbuId] = useState(0);
+  const [reportId, setReportId] = useState(0);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -44,23 +46,34 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-
         setRoleID(user.message.user.roleId);
       }
     });
   }, [isFocused]);
+  const isValid = () => {
+    let emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
+    if (sbuId == 0) {
+      DisplayToast("Please select sbu/brand");
+      return false;
+    } else if (reportId == 0) {
+      DisplayToast("Please select report");
+      return false;
+    } else if (!email) {
+      DisplayToast("Please enter email");
+      return false;
+    } else if (email && !emailRegex.test(email)) {
+      DisplayToast("Please enter valid email");
+      return false;
+    } else {
+      return true;
+    }
+  };
   const renderBtn = () => {
     return (
       <TouchableOpacity
         style={style.btn}
         onPress={() => {
-          let emailRegex =
-            /^(?:[a-zA-Z0-9._-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})$/;
-          if (!email) {
-            DisplayToast("Please enter email");
-          } else if (email && !emailRegex.test(email)) {
-            DisplayToast("Please enter valid email");
-          } else {
+          if (isValid()) {
             sendReport(email);
           }
         }}
@@ -70,7 +83,14 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
     );
   };
   const sendReport = async (email: string) => {
-    const resp = await SendReportRequest({ email: email });
+    setLoaderState(true);
+    const payload: ReportTypesReq = {
+      email: email,
+      sbuId: sbuId == 4 ? 0 : sbuId,
+    };
+    console.warn("Payload----", payload);
+
+    const resp = await SendReportRequest(payload, reportId);
     setLoaderState(resp ? false : true);
     if (resp && resp.message) {
       setAlertState(true);
@@ -85,7 +105,11 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
         <Text style={style.labelText}>SBU/Brand:</Text>
         <CDSDropDown
           data={GetSBUMaster(sbuMaster, roleID)}
-          onSelect={() => {}}
+          onSelect={(val) => {
+            if (val && val.value) {
+              setSbuId(+val.value);
+            }
+          }}
           placeholder="Select SBU/Brand"
         />
         {/* Organization */}
@@ -96,11 +120,15 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
             { label: "Lead Details Report", value: "2" },
             { label: "Lead Report", value: "3" },
           ]}
-          onSelect={() => {}}
+          onSelect={(val) => {
+            if (val && val.value) {
+              setReportId(+val.value);
+            }
+          }}
           placeholder="Select report"
         />
         {/* State */}
-        <Text style={style.labelText}>Enter Email</Text>
+        <Text style={style.labelText}>Email</Text>
         <TextInput
           placeholder="Enter Email ID"
           value={email}

@@ -41,13 +41,16 @@ export const style = StyleSheet.create({
   txtView: {
     flexDirection: "row",
     marginVertical: "0.5%",
+    textAlignVertical: "center",
   },
   keyText: {
     flex: 0.7,
     fontWeight: "500",
+    textAlignVertical: "center",
   },
   valueText: {
     flex: 1.1,
+    textAlignVertical: "center",
   },
   extra: {
     flex: 0.2,

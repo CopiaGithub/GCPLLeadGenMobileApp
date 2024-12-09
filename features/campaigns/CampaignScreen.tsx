@@ -150,7 +150,6 @@ const CampaignScreen: React.FC<CampaignScreenProps> = (props) => {
                 <View style={style.txtView}>
                   <Text style={style.keyText}>From Date:</Text>
                   <Text style={style.valueText}>
-                    {" "}
                     {moment(item.fromDate, "YYYY-MM-DD").format("DD MMM YYYY")}
                   </Text>
                   <View style={style.extra}></View>

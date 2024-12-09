@@ -24,8 +24,17 @@ import { DisplayToast } from "../../utility/ToastMessage";
 import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSLoader from "../../component/CDSLoader";
 import { RoleMasterRequest } from "../../services/roleMasterRequest/RoleMasterRequest";
-import { GetRoleNameById } from "../user/createUser/CreateUserUtility";
+import {
+  GetRoleNameById,
+  GetSBUNameById,
+} from "../user/createUser/CreateUserUtility";
 import CDSDropDown from "../login/CDSDropDown";
+import ApprovalsHelper from "./ApprovalHelper";
+import { useFormik } from "formik";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SBUMasterRequest } from "../../services/sbuMasterRequest.tsx/SBUMasterRequest";
+import { GetSBUMaster } from "../dashboard/DashboardUtility";
+import { ApprovalsReq } from "../../types/approvalsTypes/ApprovalsTypes";
 
 type ApprovalScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -34,6 +43,7 @@ type ApprovalScreenProps = NativeStackScreenProps<
 
 const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
+  const formHelper = new ApprovalsHelper();
   const isFocused = useIsFocused();
   const { getUsers } = useSelector((state: RootState) => state.userArray);
   const { roleMaster } = useSelector((state: RootState) => state.roleMaster);
@@ -42,14 +52,35 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
   const [approvalData, setApprovalData] = useState<Array<GetUserRespMessage>>(
     new Array<GetUserRespMessage>()
   );
+  const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
   const [userStatus, setUserStatus] = useState(true);
+  const [roleID, setRoleID] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setRoleID(user.message.user.roleId);
+      }
+    });
+  }, [isFocused]);
   useEffect(() => {
     if (isFocused) {
       dispatch(GetUsersRequest(""));
       dispatch(RoleMasterRequest(""));
     }
   }, [isFocused]);
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(SBUMasterRequest(null));
+    }
+  }, [isFocused]);
 
+  const submitData = useFormik({
+    initialValues: formHelper.formikInitialValue,
+    onSubmit: async (values) => {
+      console.warn(values.items);
+    },
+  });
   useEffect(() => {
     if (
       isFocused &&
@@ -59,8 +90,14 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       getUsers.message.length
     ) {
       setApprovalData(getUsers.message);
+      submitData.setValues({
+        items: getUsers.message,
+      });
     } else {
       setApprovalData([]);
+      submitData.setValues({
+        items: [],
+      });
     }
   }, [isFocused, getUsers?.statusCode, userStatus]);
 
@@ -81,9 +118,15 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       </View>
     );
   };
-  const handleApproval = async (flag: boolean, id: number) => {
+  const handleApproval = async (flag: boolean, id: number, i: number) => {
     setLoaderState(true);
-    const resp = await ApprovalRequest({ status: flag }, id);
+    const payload: ApprovalsReq = {
+      status: flag,
+      sbuId: +submitData.values.items[i].sbuId,
+    };
+    console.warn(payload);
+
+    const resp = await ApprovalRequest(payload, id);
     setLoaderState(resp ? false : true);
     if (resp && resp.statusCode == 200) {
       setAlertState(true);
@@ -91,13 +134,17 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       DisplayToast(`${resp.message}`);
     }
   };
-  const renderButtons = (id: number) => {
+  const renderButtons = (id: number, i: number) => {
     return (
       <View style={style.btnsView}>
         <TouchableOpacity
           style={style.approveBtn}
           onPress={() => {
-            handleApproval(true, id);
+            if (submitData.values.items[i].sbuId === 0) {
+              DisplayToast("Please select SBU/Brand");
+            } else {
+              handleApproval(true, id, i);
+            }
           }}
         >
           <Text style={style.approveBtnTxt}>Approve</Text>
@@ -105,7 +152,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
         <TouchableOpacity
           style={style.rejectBtn}
           onPress={() => {
-            handleApproval(false, id);
+            handleApproval(false, id, i);
           }}
         >
           <Text style={style.rejectBtnTxt}>Reject</Text>
@@ -113,6 +160,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       </View>
     );
   };
+
   const renderItems = () => {
     return (
       <>
@@ -129,24 +177,38 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>
+                  <Text style={style.keyText}>Email:</Text>
+                  <Text style={style.valueText}>{item.email}</Text>
+                  <View style={style.extra}></View>
+                </View>
+                <View style={style.txtView}>
                   <Text style={style.keyText}>Mobile:</Text>
                   <Text style={style.valueText}>{item.mobile}</Text>
                   <View style={style.extra}></View>
                 </View>
                 <View style={style.txtView}>
-                  <Text style={style.keyText}>Organization:</Text>
-                  <Text style={style.valueText}>{item.orgName}</Text>
-                  <View style={style.extra}></View>
-                </View>
-                <View style={style.txtView}>
-                  <Text style={style.keyText}>Role:</Text>
-                  <Text style={style.valueText}>
-                    {GetRoleNameById(roleMaster, item.id)}
-                  </Text>
+                  <Text style={style.keyText}>SBU/Brand:</Text>
+                  <View style={style.valueText}>
+                    <CDSDropDown
+                      data={GetSBUMaster(sbuMaster, roleID)}
+                      onSelect={(val) => {
+                        submitData.values.items[0].sbuId;
+                        submitData.setFieldValue(
+                          `items[${i}].sbuId`,
+                          val.value
+                        );
+                      }}
+                      placeholder={
+                        GetSBUNameById(sbuMaster, item.sbuId)
+                          ? GetSBUNameById(sbuMaster, item.sbuId)
+                          : "Select SBU/Brand"
+                      }
+                    />
+                  </View>
                   <View style={style.extra}></View>
                 </View>
 
-                {renderButtons(item.id)}
+                {renderButtons(item.id, i)}
               </View>
             ))}
           </>

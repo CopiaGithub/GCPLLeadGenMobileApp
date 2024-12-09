@@ -27,6 +27,8 @@ import { EnterGiftDetailsReq } from "../../types/giftTypes/EnterGiftDetailsTypes
 import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSDropDown from "../login/CDSDropDown";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GetCampaignDataRequest } from "../../services/campaignRequest/GetCampaignDataRequest";
+import { GetCampaignNameByID } from "../leads/LeadScreenUtility";
 
 type GiftScreenProps = NativeStackScreenProps<RootStackParamList, "Gifts">;
 
@@ -44,11 +46,13 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   );
   const [giftStatus, setGiftStatus] = useState(false);
   const [sbuID, setSBUID] = useState(0);
+  const { getCampaignData } = useSelector(
+    (state: RootState) => state.getCampaignData
+  );
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-
         setSBUID(user.message.user.sbuId);
       }
     });
@@ -60,6 +64,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   useEffect(() => {
     if (isFocused) {
       dispatch(GetLeadDataRequest(sbuID));
+      dispatch(GetCampaignDataRequest({}));
     }
   }, [isFocused]);
 
@@ -71,9 +76,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
       leadDetails.message.length
     ) {
       submitGifts.setValues({
-        formData: giftStatus
-          ? leadDetails.message.filter((item) => item.noOfGifts)
-          : leadDetails.message.filter((item) => item.noOfGifts == null),
+        formData: leadDetails.message,
       });
       setLeadData(leadDetails.message);
     } else {
@@ -148,103 +151,84 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   const handleGiftDetails = (val: string, i: number) => {
     submitGifts.setFieldValue("formData[" + i + "].giftDetails", val);
   };
+
   const renderItems = () => {
     return (
       <>
-        {leadData &&
-        leadData.length &&
-        leadDetails &&
-        leadDetails.statusCode == 200 &&
-        leadDetails.message.length &&
-        submitGifts.values.formData.length ? (
+        {submitGifts.values.formData.length ? (
           <>
-            {submitGifts.values.formData.map((item, i) => (
-              <View style={style.itemView} key={i}>
-                <View style={style.txtView}>
-                  <Text style={style.keyText}>Campaign:</Text>
-                  <Text style={style.valueText}>{item.campaignId}</Text>
+            {submitGifts.values.formData
+              .filter((item, i) =>
+                !giftStatus ? item.noOfGifts == null : item.noOfGifts
+              )
+              .map((item, i) => (
+                <View style={style.itemView} key={i}>
+                  <View style={style.txtView}>
+                    <Text style={style.keyText}>Campaign:</Text>
+                    <Text style={style.valueText}>
+                      {GetCampaignNameByID(getCampaignData, +item.campaignId) ??
+                        ""}
+                    </Text>
 
-                  <View style={style.extra}></View>
-                </View>
-                <View style={style.txtView}>
-                  <Text style={style.keyText}>Lead ID:</Text>
-                  <Text style={style.valueText}>{item.id}</Text>
-                  <View style={style.extra}></View>
-                </View>
-                <View style={style.txtView}>
-                  <Text style={style.keyText}>Customer:</Text>
-                  <Text style={style.valueText}>{item.companyName}</Text>
-                  <View style={style.extra}></View>
-                </View>
-                {/* <View style={style.txtView}>
-                  <Text style={style.keyText}>Created By:</Text>
-                  <Text style={style.valueText}>{item.createdBy}</Text>
-                  <View style={style.extra}></View>
-                </View> */}
-                <View style={style.txtView}>
-                  <Text style={style.keyText}>No. of Gifts:</Text>
-                  {leadDetails.message[i].noOfGifts ? (
-                    <Text style={style.valueText}>{item.noOfGifts}</Text>
-                  ) : (
-                    <TextInput
-                      style={style.txtInput}
-                      placeholder="Enter No. of Gifts"
-                      placeholderTextColor={"grey"}
-                      keyboardType="numeric"
-                      maxLength={2}
-                      editable={leadDetails.message[i].noOfGifts ? false : true}
-                      value={item.noOfGifts as any}
-                      onChangeText={(val) => {
-                        handleNoOfGifts(val, i);
-                      }}
-                    />
-                  )}
-                  <View style={style.extra}></View>
-                </View>
+                    <View style={style.extra}></View>
+                  </View>
+                  <View style={style.txtView}>
+                    <Text style={style.keyText}>Lead ID:</Text>
+                    <Text style={style.valueText}>{item.id}</Text>
+                    <View style={style.extra}></View>
+                  </View>
+                  <View style={style.txtView}>
+                    <Text style={style.keyText}>Customer:</Text>
+                    <Text style={style.valueText}>{item.companyName}</Text>
+                    <View style={style.extra}></View>
+                  </View>
 
-                <View style={style.txtView}>
-                  <Text style={style.keyText}>Gift Details:</Text>
-                  {leadDetails.message[i].giftDetails ? (
-                    <Text style={style.valueText}>{item.giftDetails}</Text>
-                  ) : (
-                    <TextInput
-                      style={style.txtInput}
-                      placeholder="Enter Gift Details"
-                      editable={
-                        leadDetails.message[i].giftDetails ? false : true
-                      }
-                      placeholderTextColor={"grey"}
-                      value={item.giftDetails as any}
-                      onChangeText={(val) => {
-                        handleGiftDetails(val, i);
-                      }}
-                    />
-                  )}
-                  <View style={style.extra}></View>
+                  <View style={style.txtView}>
+                    <Text style={style.keyText}>No. of Gifts:</Text>
+                    {item.noOfGifts == null ? (
+                      <TextInput
+                        style={style.txtInput}
+                        placeholder="Enter No. of Gifts"
+                        placeholderTextColor={"grey"}
+                        keyboardType="numeric"
+                        maxLength={2}
+                        value={item.noOfGifts as any}
+                        onChangeText={(val) => {
+                          handleNoOfGifts(val, i);
+                        }}
+                      />
+                    ) : (
+                      <Text style={style.valueText}>{item.noOfGifts}</Text>
+                    )}
+                    <View style={style.extra}></View>
+                  </View>
+
+                  <View style={style.txtView}>
+                    <Text style={style.keyText}>Gift Details:</Text>
+                    {item.giftDetails != null ? (
+                      <Text style={style.valueText}>{item.giftDetails}</Text>
+                    ) : (
+                      <TextInput
+                        style={style.txtInput}
+                        placeholder="Enter Gift Details"
+                        placeholderTextColor={"grey"}
+                        value={item.giftDetails as any}
+                        onChangeText={(val) => {
+                          handleGiftDetails(val, i);
+                        }}
+                      />
+                    )}
+                    <View style={style.extra}></View>
+                  </View>
+                  {item.giftDetails && item.noOfGifts ? null : renderButton(i)}
                 </View>
-                {leadDetails.message[i].giftDetails &&
-                leadDetails.message[i].noOfGifts
-                  ? null
-                  : renderButton(i)}
-              </View>
-            ))}
+              ))}
           </>
-        ) : leadDetails &&
-          leadDetails.statusCode == 200 &&
-          !leadDetails.message ? (
+        ) : !submitGifts.values.formData.length ? (
           <View>
-            <Text>No data found</Text>
-          </View>
-        ) : leadDetails && leadDetails.statusCode != 200 ? (
-          <View>
-            <Text
-              style={{
-                textAlign: "center",
-                margin: "6%",
-                fontSize: 20,
-                fontWeight: "500",
-              }}
-            >{`${leadDetails.message}`}</Text>
+            <Text style={{ textAlign: "center", margin: "10%", fontSize: 20 }}>
+              No data found
+            </Text>
           </View>
         ) : (
           <CDSLoader />

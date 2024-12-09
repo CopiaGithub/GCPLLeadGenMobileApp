@@ -1,5 +1,6 @@
 export interface ApprovalsReq {
   status: boolean;
+  sbuId: number;
 }
 export interface ApprovalsMessage {
   id: number;

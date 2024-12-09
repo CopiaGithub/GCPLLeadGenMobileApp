@@ -35,11 +35,11 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
   const [financing, setFinancing] = useState("");
   const [noOfMachines, setNoOfMachines] = useState("0");
   const [noOfPeople, setNoOfPeople] = useState(0);
-  const [noOfGifts, setNoOfGifts] = useState(0);
+  const [noOfGifts, setNoOfGifts] = useState("");
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      setNoOfGifts(props.noOfGifts);
+      setNoOfGifts(props.noOfGifts.toString());
       setNoOfPeople(props.noOfPeople);
       setFinancing(props.financingRequired == true ? "Yes" : "No");
       setNoOfMachines(
@@ -59,14 +59,16 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
     } else if (!financing && props.companyType && props.companyType == 2) {
       DisplayToast("Please select financing required");
       return false;
-    } else if (
-      noOfMachines == "0" &&
-      props.companyType &&
-      props.companyType == 2
-    ) {
-      DisplayToast("Please enter no Of machines");
-      return false;
-    } else if (noOfPeople == 0 && props.companyType && props.companyType == 2) {
+    }
+    //  else if (
+    //   noOfMachines == "0" &&
+    //   props.companyType &&
+    //   props.companyType == 2
+    // ) {
+    //   DisplayToast("Please enter no Of machines");
+    //   return false;
+    // }
+    else if (noOfPeople == 0 && props.companyType && props.companyType == 2) {
       DisplayToast("Please enter no Of people");
       return false;
     } else {
@@ -103,7 +105,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           />
         </View>
         {/* No. of machines */}
-        <Text style={style.labelText}>
+        {/* <Text style={style.labelText}>
           No. of machines:<Text style={{ color: "red" }}>*</Text>
         </Text>
         <TextInput
@@ -116,7 +118,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           onChangeText={(val) => {
             setNoOfMachines(val);
           }}
-        />
+        /> */}
         {/* No. of people accompanied */}
         <Text style={style.labelText}>
           No. of people accompanied:<Text style={{ color: "red" }}>*</Text>
@@ -134,17 +136,15 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
         />
         {/* No. of gifts needed */}
         <Text style={style.labelText}>
-          No. of gifts needed:<Text style={{ color: "red" }}>*</Text>
+          No. of gifts needed/Remarks:<Text style={{ color: "red" }}>*</Text>
         </Text>
         <TextInput
           style={style.inputTxt}
-          placeholder="Enter No. of gifts needed"
+          placeholder="Enter No. of gifts needed/Remarks"
           placeholderTextColor={"grey"}
-          keyboardType="numeric"
           value={noOfGifts.toString()}
-          maxLength={2}
           onChangeText={(val) => {
-            setNoOfGifts(Number(val));
+            setNoOfGifts(val);
           }}
         />
       </View>
@@ -155,7 +155,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
             if (isValid()) {
               props.setOtherDetails({
                 financingRequired: financing == "Yes" ? true : false,
-                noOfGifts: noOfGifts,
+                noOfGifts: +noOfGifts,
                 noOfMachines: +noOfMachines,
                 noOfPeople: noOfPeople,
                 purchaseTimeline: purchase,

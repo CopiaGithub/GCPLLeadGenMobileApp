@@ -1,11 +1,15 @@
 import axios from "axios";
 import API from "../../API";
 import {
+  RegisterUser,
+  RegisterUserRep,
+} from "../../types/registerType/RegisterType";
+import {
   ReportTypesReq,
   ReportTypesResp,
 } from "../../types/reportTypes/ReportTypes";
 
-export async function SendReportRequest(
+export async function ReportRequest(
   reqData: ReportTypesReq,
   sbuID: number
 ): Promise<ReportTypesResp> {
