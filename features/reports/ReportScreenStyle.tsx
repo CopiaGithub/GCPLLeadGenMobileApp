@@ -15,7 +15,7 @@ export const style = StyleSheet.create({
   labelText: {
     fontSize: 15,
     fontWeight: "500",
-    marginTop: "2%",
+    marginVertical: "2%",
   },
   inputTxt: {
     borderWidth: 1,

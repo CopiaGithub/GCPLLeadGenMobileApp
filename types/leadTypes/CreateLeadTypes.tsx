@@ -26,6 +26,7 @@ export interface ProductsInterested {
   productId: number;
   modelId: number;
   sbuId: number;
+  noOfMachines: number;
 }
 export interface VisitorDetails {
   visitorName: string;

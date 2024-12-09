@@ -11,7 +11,7 @@ import {
 import { RootStackParamList } from "../../../types";
 import { style } from "./CreateLeadStyle";
 import { DisplayToast } from "../../../utility/ToastMessage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LeadDetails from "../stepperScreens/leadDetails/LeadDetails";
 import MachineDetails from "../stepperScreens/machineDetails/MachineDetails";
 import OtherDetails from "../stepperScreens/otherDetails/OtherDetails";
@@ -25,6 +25,8 @@ import CDSLoader from "../../../component/CDSLoader";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { GetLeadDataRequest } from "../../../services/leadsServices/GetLeadDataRequest";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 
 type CreateLeadScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -46,6 +48,7 @@ export interface FormState {
 }
 const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
+  const isFocused = useIsFocused();
   const [addCustomerData, setAddCustomerData] = useState<AddCustomerData>({
     campaignID: 0,
     companyName: "",
@@ -73,6 +76,15 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     formThree: false,
     formFour: false,
   });
+  const [sbuID, setSBUId] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setSBUId(user.message.user.sbuId);
+      }
+    });
+  }, [isFocused, sbuID]);
   const renderBtn = () => {
     return (
       <TouchableOpacity
@@ -281,7 +293,8 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         modelId: Number(item.productModelID),
         productFamilyId: Number(item.productFamilyID),
         productId: Number(item.productID),
-        sbuId: 0,
+        sbuId: Number(item.sbuId),
+        noOfMachines: Number(item.noOfMachines),
       })),
       attachmentId: 0,
       giftVoucher: "",
@@ -291,7 +304,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
-        sbuId: 0,
+        sbuId: sbuID,
       })),
       status: true,
       noOfMachines: otherDetails.noOfMachines,
@@ -300,6 +313,8 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       noOfPeopleAccompanied: otherDetails.noOfPeople,
       noOfGiftsNeeded: otherDetails.noOfGifts,
     };
+    console.warn("Create Lead Submit Request", payload);
+
     const resp = await SaveLeadRequest(payload);
     setLoaderState(resp ? false : true);
     if (resp && resp.statusCode == 201) {

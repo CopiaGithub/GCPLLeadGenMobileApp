@@ -62,7 +62,9 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
 
   //User - Edit User - Status Active/InActive
 
-  //Name, Email Mobile, SBU[Blank]
+  //Name, Email Mobile, SBU[Blank] Role 2
+
+  //SBU and Status True id PATCH
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

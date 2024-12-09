@@ -11,17 +11,44 @@ import { RootStackParamList } from "../../types";
 import { style } from "./ReportScreenStyle";
 import CDSDropDown from "../login/CDSDropDown";
 import { SendReportRequest } from "../../services/sendReportRequest/SendReportRequest";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DisplayToast } from "../../utility/ToastMessage";
 import CDSAlertBox from "../../component/CDSAlertBox";
 import CDSLoader from "../../component/CDSLoader";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { SBUMasterRequest } from "../../services/sbuMasterRequest.tsx/SBUMasterRequest";
+import { GetSBUMaster } from "../dashboard/DashboardUtility";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ReportScreenProps = NativeStackScreenProps<RootStackParamList, "Reports">;
 
 const ReportScreen: React.FC<ReportScreenProps> = (props) => {
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
+
   const [alertState, setAlertState] = useState(false);
   const [loaderState, setLoaderState] = useState(false);
+  const [roleID, setRoleID] = useState(0);
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(SBUMasterRequest(null));
+    }
+  }, [isFocused]);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+
+        setRoleID(user.message.user.roleId);
+      }
+    });
+  }, [isFocused]);
   const renderBtn = () => {
     return (
       <TouchableOpacity
@@ -55,12 +82,23 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
     return (
       <View style={style.viewBox}>
         {/* Organization */}
-        {/* <Text style={style.labelText}>Campaign Name:</Text> */}
-        {/* <CDSDropDown
-          data={[{ label: "", value: "" }]}
+        <Text style={style.labelText}>SBU/Brand:</Text>
+        <CDSDropDown
+          data={GetSBUMaster(sbuMaster, roleID)}
           onSelect={() => {}}
-          placeholder="Select campaign"
-        /> */}
+          placeholder="Select SBU/Brand"
+        />
+        {/* Organization */}
+        <Text style={style.labelText}>Report:</Text>
+        <CDSDropDown
+          data={[
+            { label: "User Report", value: "1" },
+            { label: "Lead Details Report", value: "2" },
+            { label: "Lead Report", value: "3" },
+          ]}
+          onSelect={() => {}}
+          placeholder="Select report"
+        />
         {/* State */}
         <Text style={style.labelText}>Enter Email</Text>
         <TextInput
@@ -71,17 +109,11 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
           }}
           style={{
             borderWidth: 1,
-            borderColor: "black",
+            borderColor: "#ccc",
             borderRadius: 8,
-            padding: "2%",
+            padding: "3%",
           }}
         />
-        {/* <Text style={style.labelText}>Select Data:</Text>
-        <CDSDropDown
-          data={[{ label: "", value: "" }]}
-          onSelect={() => {}}
-          placeholder="Select data"
-        /> */}
       </View>
     );
   };

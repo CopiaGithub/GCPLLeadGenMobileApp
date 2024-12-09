@@ -46,6 +46,8 @@ type MachineDetailsProps = {
 };
 
 const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
+  console.warn("Product Interested", props.productsInterested);
+
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
 

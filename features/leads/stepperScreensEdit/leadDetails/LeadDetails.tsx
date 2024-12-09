@@ -145,7 +145,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
   console.warn("Async Data --cscs?", formData);
 
   const isValid = (values: IAddCustomerData) => {
-    DisplayToast(`${values.campaignID}`);
     if (values.campaignID == 0) {
       DisplayToast("Please select campaign type");
       return false;
