@@ -53,26 +53,43 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
 
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
   const [sbuID, setSBUID] = useState(0);
+  const [userId, setUserId] = useState(0);
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-
         setSBUID(user.message.user.sbuId);
+        setUserId(user.message.user.id);
       }
     });
   }, [isFocused, sbuID]);
 
   useEffect(() => {
-    if (isFocused) {
-      dispatch(GetLeadDataRequest(sbuID));
+    if (isFocused && sbuID != 0 && userId != 0) {
+      dispatch(GetLeadDataRequest({ subId: sbuID, userId: userId }));
     }
-  }, [isFocused]);
+  }, [isFocused, sbuID, userId]);
 
   useEffect(() => {
     if (isFocused && leadDetails?.statusCode == 200) {
-      dispatch(ProductFamilyRequest(+leadDetails.message[0].sbuId));
-      dispatch(ProductModelRequest(+leadDetails.message[0].sbuId));
+      dispatch(
+        ProductFamilyRequest(
+          leadDetails &&
+            leadDetails.statusCode == 200 &&
+            leadDetails.message.length
+            ? +leadDetails.message[0].sbuId
+            : 0
+        )
+      );
+      dispatch(
+        ProductModelRequest(
+          leadDetails &&
+            leadDetails.statusCode == 200 &&
+            leadDetails.message.length
+            ? +leadDetails.message[0].sbuId
+            : 0
+        )
+      );
       dispatch(GetCampaignDataRequest({}));
     }
   }, [isFocused, leadDetails?.message.length]);
@@ -108,7 +125,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
             size={24}
             style={style.headerIcon}
             onPress={() => {
-              dispatch(GetLeadDataRequest(sbuID));
+              dispatch(GetLeadDataRequest({ subId: sbuID, userId: userId }));
               setSearchTxt("");
             }}
           />

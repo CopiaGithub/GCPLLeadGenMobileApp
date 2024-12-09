@@ -1,5 +1,6 @@
 export interface SaveLeadReq {
   orgId: number;
+  userId: number;
   sbuId: number;
   campaignId: number;
   industryTypeId: number;
@@ -14,7 +15,7 @@ export interface SaveLeadReq {
   planningTimeline: string;
   financingReuired: boolean;
   noOfPeopleAccompanied: number;
-  noOfGiftsNeeded: number;
+  noOfGiftsNeeded: string;
   attachmentId: number;
   giftVoucher: string;
   gvDisbursement: string;
@@ -27,12 +28,14 @@ export interface ProductsInterested {
   modelId: number;
   sbuId: number;
   noOfMachines: number;
+  userId: number;
 }
 export interface VisitorDetails {
   visitorName: string;
   email: string;
   mobileNo: string;
   sbuId: number;
+  userId: number;
 }
 export interface SaveLeadMessage {
   id: number;

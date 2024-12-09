@@ -7,6 +7,10 @@ export interface GetProductsIntersted {
   modelId: string;
   noOfMachines: number;
 }
+export interface GetVisitorReq {
+  subId: number;
+  userId: number;
+}
 export interface GetVisitorDetails {
   id: number;
   visitorName: string;
@@ -42,7 +46,7 @@ export interface GetLeadRespMessage {
   planningTimeline: string;
   financingReuired: boolean;
   noOfPeopleAccompanied: number;
-  noOfGiftsNeeded: number;
+  noOfGiftsNeeded: string;
 }
 
 export interface GetLeadResp {

@@ -54,6 +54,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
   );
   const [menus, setMenus] = useState<Array<string>>(new Array<string>());
   const [roleID, setRoleID] = useState(0);
+  const [userId, setUserId] = useState(0);
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
@@ -79,17 +80,19 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
         setCampaignName(user.message.user.campaignName);
         setMenus(user.message.menus);
         setRoleID(user.message.user.roleId);
+        setUserId(user.message.user.id);
       }
     });
   }, [isFocused]);
 
   useEffect(() => {
-    if (isFocused && userSbuId) {
-      GetVisitorMasterCount(userSbuId);
-      GetFootfallCount(userSbuId);
-      dispatch(ProductTotalRequest(userSbuId));
+    if (isFocused && userSbuId && userId != 0) {
+      GetVisitorMasterCount(userSbuId, userId);
+      GetFootfallCount(userSbuId, userId);
+      dispatch(ProductTotalRequest({ sbuID: userSbuId, userId: userId }));
     }
   }, [isFocused, userSbuId]);
+  console.warn("dddddddaaa", userId);
 
   useEffect(() => {
     if (isFocused) {
@@ -97,12 +100,12 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     }
   }, [isFocused]);
 
-  const GetVisitorMasterCount = async (sbuID: number) => {
-    const count = await VisitorMasterCountRequest(sbuID);
+  const GetVisitorMasterCount = async (sbuID: number, Id: number) => {
+    const count = await VisitorMasterCountRequest(sbuID, Id);
     setVisitorCoint(count ? count.totalVisitorDetails : 0);
   };
-  const GetFootfallCount = async (sbuID: number) => {
-    const count = await FootfallCountRequest(sbuID);
+  const GetFootfallCount = async (sbuID: number, Id: number) => {
+    const count = await FootfallCountRequest(sbuID, Id);
     setFootfallCount(count ? count.totalVisitorDetails : 0);
   };
 
@@ -298,9 +301,11 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
           data={GetSBUMaster(sbuMaster, roleID)}
           onSelect={(val) => {
             if (val && val.value) {
-              GetVisitorMasterCount(+val.value);
-              GetFootfallCount(+val.value);
-              dispatch(ProductTotalRequest(+val.value));
+              GetVisitorMasterCount(+val.value, userId);
+              GetFootfallCount(+val.value, userId);
+              dispatch(
+                ProductTotalRequest({ sbuID: +val.value, userId: userId })
+              );
             }
           }}
           placeholder="Select Brand"

@@ -258,6 +258,8 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
           onPress={() => {
             if (isValid()) {
               props.setFormData(machineCartData);
+              console.warn("Machine Details", machineCartData);
+
               props.setAllFormState((val) => ({
                 ...val,
                 formTwo: true,

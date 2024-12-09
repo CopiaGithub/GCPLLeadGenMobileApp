@@ -3,13 +3,14 @@ import API from "../../API";
 import { FootfallCountResp } from "../../types/footfallCountType/FootfallCountType";
 
 export async function FootfallCountRequest(
-  sbuId: number
+  sbuId: number,
+  userId: number
 ): Promise<FootfallCountResp> {
   let data = {} as FootfallCountResp;
 
   return await axios({
     method: "get",
-    url: `${API.FOOTFALL_COUNT}/${sbuId == 4 ? 0 : sbuId}`,
+    url: `${API.FOOTFALL_COUNT}/${sbuId == 4 ? 0 : sbuId}/${userId}`,
   })
     .then((resp) => {
       return resp.data;

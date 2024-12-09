@@ -1,17 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import API from "../../API";
-
+export interface ProductIntReq {
+  sbuID: number;
+  userId: number;
+}
 export const ProductTotalRequest = createAsyncThunk(
   "productTotalData/fetchProductTotal",
-  async (sbuID: number, { rejectWithValue }) => {
+  async (reqData: ProductIntReq, { rejectWithValue }) => {
     try {
-      const payload = {
-        sbuId: sbuID,
-      };
-
       const response = await axios.get(
-        `${API.PRODUCT_INTERESTED}/${sbuID == 4 ? 0 : sbuID}`
+        `${API.PRODUCT_INTERESTED}/${reqData.sbuID == 4 ? 0 : reqData.sbuID}/${
+          reqData.userId
+        }`
       );
       return response.data;
     } catch (error: any) {

@@ -92,6 +92,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
 
   const [sbuID, setSBUID] = useState(0);
   const [orgId, setOrgId] = useState(0);
+  const [userId, setUserId] = useState(0);
 
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
@@ -99,10 +100,11 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
         const user = JSON.parse(res);
         setOrgId(user.message.user.orgId);
         setSBUID(user.message.user.sbuId);
+        setUserId(user.message.user.id);
       }
     });
   }, [isFocused, sbuID]);
-  console.warn("Async Data --cscs?", sbuID);
+  console.warn("Async Data --cscs?", custCartData);
 
   useEffect(() => {
     createCustomerDetailsTable();
@@ -183,6 +185,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
     setLoaderState(true);
     const val = submitLeadDetails.values;
     const payload: SaveLeadReq = {
+      userId: userId,
       orgId: orgId,
       sbuId: sbuID,
       campaignId: +val.campaignID,
@@ -202,15 +205,15 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
         mobileNo: item.mobileNumber,
         sbuId: sbuID,
         visitorName: item.customerName,
+        userId: userId,
       })),
       status: true,
       noOfMachines: 0,
       planningTimeline: "",
       financingReuired: false,
       noOfPeopleAccompanied: 0,
-      noOfGiftsNeeded: 0,
+      noOfGiftsNeeded: "",
     };
-    console.warn("Visitor Master Payload--->", payload);
 
     const resp = await SaveLeadRequest(payload);
     setLoaderState(resp ? false : true);

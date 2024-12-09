@@ -29,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { GetLeadDataRequest } from "../../../services/leadsServices/GetLeadDataRequest";
 import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type EditLeadScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,7 +41,7 @@ export interface OtherDetailsData {
   financingRequired: boolean;
   noOfMachines: number;
   noOfPeople: number;
-  noOfGifts: number;
+  noOfGifts: string;
 }
 export interface FormState {
   formOne: boolean;
@@ -92,7 +93,7 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
   const [loaderState, setLoaderState] = useState(false);
   const [otherDetails, setOtherDetails] = useState<OtherDetailsData>({
     financingRequired: false,
-    noOfGifts: 0,
+    noOfGifts: "",
     noOfMachines: 0,
     noOfPeople: 0,
     purchaseTimeline: "",
@@ -103,6 +104,20 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
     formThree: false,
     formFour: false,
   });
+  const [sbuID, setSBUId] = useState(0);
+  const [userId, setUserId] = useState(0);
+  const [orgId, setOrgId] = useState(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setSBUId(user.message.user.sbuId);
+        setUserId(user.message.user.id);
+        setOrgId(user.message.user.orgId);
+      }
+    });
+  }, [isFocused, sbuID]);
   const renderBtn = () => {
     return (
       <TouchableOpacity
@@ -297,8 +312,9 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
   const SaveLeadData = async () => {
     setLoaderState(true);
     const payload: SaveLeadReq = {
-      orgId: 1,
-      sbuId: 1,
+      orgId: orgId,
+      sbuId: sbuID,
+      userId: userId,
       campaignId: Number(addCustomerData.campaignID),
       industryTypeId: Number(addCustomerData.industryTypeId),
       companyType: Number(addCustomerData.companyTypeID),
@@ -313,6 +329,7 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
         productId: Number(item.productID),
         sbuId: Number(item.sbuId),
         noOfMachines: Number(item.noOfMachines),
+        userId: userId,
       })),
       attachmentId: 0,
       giftVoucher: "",
@@ -321,15 +338,17 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
-        sbuId: 0,
+        sbuId: Number(item.sbuId),
+        userId: userId,
       })),
       status: true,
       noOfMachines: otherDetails.noOfMachines,
       planningTimeline: otherDetails.purchaseTimeline,
       financingReuired: otherDetails.financingRequired,
       noOfPeopleAccompanied: otherDetails.noOfPeople,
-      noOfGiftsNeeded: otherDetails.noOfGifts,
+      noOfGiftsNeeded: otherDetails.noOfGifts.toString(),
     };
+    console.warn("Edit Lead", payload);
 
     const resp = await EditLeaveRequest(payload, +id);
     setLoaderState(resp ? false : true);
@@ -383,7 +402,7 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
               allFormState={allFormState}
               productsInterested={productsInterested}
               financingRequired={financingReuired}
-              noOfGifts={+noOfGiftsNeeded}
+              noOfGifts={noOfGiftsNeeded}
               noOfPeople={noOfPeopleAccompanied}
               timeline={planningTimeline}
               companyType={+companyType}

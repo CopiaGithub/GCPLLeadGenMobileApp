@@ -26,7 +26,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
   const [financing, setFinancing] = useState("");
   const [noOfMachines, setNoOfMachines] = useState(0);
   const [noOfPeople, setNoOfPeople] = useState(0);
-  const [noOfGifts, setNoOfGifts] = useState(0);
+  const [noOfGifts, setNoOfGifts] = useState("");
 
   const isValid = () => {
     if (!purchase && props.companyType && props.companyType == 2) {
@@ -118,9 +118,9 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
           style={style.inputTxt}
           placeholder="Enter No. of gifts needed/Remark"
           placeholderTextColor={"grey"}
-          value={noOfGifts as any}
+          value={noOfGifts}
           onChangeText={(val) => {
-            setNoOfGifts(Number(val));
+            setNoOfGifts(val);
           }}
         />
       </View>

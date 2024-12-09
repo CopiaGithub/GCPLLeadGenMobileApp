@@ -38,7 +38,7 @@ export interface OtherDetailsData {
   financingRequired: boolean;
   noOfMachines: number;
   noOfPeople: number;
-  noOfGifts: number;
+  noOfGifts: string;
 }
 export interface FormState {
   formOne: boolean;
@@ -65,7 +65,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
   const [loaderState, setLoaderState] = useState(false);
   const [otherDetails, setOtherDetails] = useState<OtherDetailsData>({
     financingRequired: false,
-    noOfGifts: 0,
+    noOfGifts: "",
     noOfMachines: 0,
     noOfPeople: 0,
     purchaseTimeline: "",
@@ -77,11 +77,15 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     formFour: false,
   });
   const [sbuID, setSBUId] = useState(0);
+  const [userId, setUserId] = useState(0);
+  const [orgId, setOrgId] = useState(0);
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
         setSBUId(user.message.user.sbuId);
+        setUserId(user.message.user.id);
+        setOrgId(user.message.user.orgId);
       }
     });
   }, [isFocused, sbuID]);
@@ -279,8 +283,9 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
   const SaveLeadData = async () => {
     setLoaderState(true);
     const payload: SaveLeadReq = {
-      orgId: 1,
-      sbuId: 1,
+      orgId: orgId,
+      sbuId: sbuID,
+      userId: userId,
       campaignId: Number(addCustomerData.campaignID),
       industryTypeId: Number(addCustomerData.industryTypeId),
       companyType: Number(addCustomerData.companyTypeID),
@@ -295,6 +300,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         productId: Number(item.productID),
         sbuId: Number(item.sbuId),
         noOfMachines: Number(item.noOfMachines),
+        userId: userId,
       })),
       attachmentId: 0,
       giftVoucher: "",
@@ -304,7 +310,8 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
-        sbuId: sbuID,
+        sbuId: Number(item.sbuId),
+        userId: userId,
       })),
       status: true,
       noOfMachines: otherDetails.noOfMachines,
@@ -313,7 +320,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       noOfPeopleAccompanied: otherDetails.noOfPeople,
       noOfGiftsNeeded: otherDetails.noOfGifts,
     };
-    console.warn("Create Lead Submit Request", payload);
+    console.warn(payload);
 
     const resp = await SaveLeadRequest(payload);
     setLoaderState(resp ? false : true);

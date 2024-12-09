@@ -24,7 +24,7 @@ type OtherDetailsProps = {
   timeline: string;
   financingRequired: boolean;
   noOfPeople: number;
-  noOfGifts: number;
+  noOfGifts: string;
   companyType: number;
 };
 
@@ -39,7 +39,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      setNoOfGifts(props.noOfGifts.toString());
+      setNoOfGifts(props.noOfGifts);
       setNoOfPeople(props.noOfPeople);
       setFinancing(props.financingRequired == true ? "Yes" : "No");
       setNoOfMachines(
@@ -155,7 +155,7 @@ const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
             if (isValid()) {
               props.setOtherDetails({
                 financingRequired: financing == "Yes" ? true : false,
-                noOfGifts: +noOfGifts,
+                noOfGifts: noOfGifts,
                 noOfMachines: +noOfMachines,
                 noOfPeople: noOfPeople,
                 purchaseTimeline: purchase,

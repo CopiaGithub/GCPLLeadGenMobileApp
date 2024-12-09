@@ -80,7 +80,7 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
           email: data.email,
           mobileNumber: data.mobileNumber,
           ID: 0,
-          sbuId: sbuID,
+          sbuId: data.sbuId,
         };
 
         addCustomerDetails(cartData, setCustCardData);
@@ -132,17 +132,19 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
 
   const [sbuID, setSBUID] = useState(0);
   const [orgId, setOrgId] = useState(0);
+  const [userId, setUserId] = useState(0);
 
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
-        setOrgId(user.message.orgId);
-        setSBUID(user.message.sbuId);
+        setOrgId(user.message.user.orgId);
+        setSBUID(user.message.user.sbuId);
+        setUserId(user.message.user.id);
       }
     });
   }, [isFocused, sbuID]);
-  console.warn("Async Data --cscs?", formData);
+  console.warn("Async Data --cscs?", sbuID);
 
   const isValid = (values: IAddCustomerData) => {
     if (values.campaignID == 0) {
@@ -228,19 +230,20 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       attachmentId: 0,
       giftVoucher: "",
       gvDisbursement: "",
-
+      userId: userId,
       visitorDetails: custCartData.map((item) => ({
         email: item.email,
         mobileNo: item.mobileNumber,
         sbuId: sbuID,
         visitorName: item.customerName,
+        userId: userId,
       })),
       status: true,
       noOfMachines: 0,
       planningTimeline: "",
       financingReuired: false,
       noOfPeopleAccompanied: 0,
-      noOfGiftsNeeded: 0,
+      noOfGiftsNeeded: "",
     };
 
     const resp = await SaveLeadRequest(payload);
@@ -251,6 +254,8 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       DisplayToast(`${resp.message}`);
     }
   };
+  console.warn("Visitor cart data", custCartData);
+
   const addToCart = () => {
     const data = submitLeadDetails.values;
     const cartData: CustomerDetails = {

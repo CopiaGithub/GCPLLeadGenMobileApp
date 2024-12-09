@@ -4,7 +4,7 @@ import { CustomerDetails } from "../LeadDetailsHelper";
 
 export const createCustomerDetailsTable = async () => {
   const result = await db.execAsync(
-    "create table if not exists customerDetails (ID integer primary key not null, customerName text, mobileNumber text, alternativeMobileNumber text, email text);"
+    "create table if not exists customerDetails (ID integer primary key not null, customerName text, mobileNumber text, alternativeMobileNumber text, email text, sbuId text);"
   );
 };
 
@@ -27,12 +27,13 @@ export const addCustomerDetails = async (
   setCustomerDetails: React.Dispatch<React.SetStateAction<CustomerDetails[]>>
 ) => {
   const result = db.runAsync(
-    "insert into customerDetails(customerName, mobileNumber, alternativeMobileNumber, email)values(?,?,?,?)",
+    "insert into customerDetails(customerName, mobileNumber, alternativeMobileNumber, email, sbuId)values(?,?,?,?,?)",
     [
       data.customerName,
       data.mobileNumber,
       data.alternativeMobileNumber,
       data.email,
+      data.sbuId,
     ]
   );
   result
