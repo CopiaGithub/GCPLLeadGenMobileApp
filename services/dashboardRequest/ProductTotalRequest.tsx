@@ -8,6 +8,13 @@ export interface ProductIntReq {
 export const ProductTotalRequest = createAsyncThunk(
   "productTotalData/fetchProductTotal",
   async (reqData: ProductIntReq, { rejectWithValue }) => {
+    console.warn(
+      "Product Interseted",
+      `${API.PRODUCT_INTERESTED}/${reqData.sbuID == 4 ? 0 : reqData.sbuID}/${
+        reqData.userId
+      }`
+    );
+
     try {
       const response = await axios.get(
         `${API.PRODUCT_INTERESTED}/${reqData.sbuID == 4 ? 0 : reqData.sbuID}/${

@@ -36,6 +36,7 @@ import { FormState } from "../../createLead/CreateLeadScreen";
 import { GetSBUMaster } from "../../../dashboard/DashboardUtility";
 import { SBUMasterRequest } from "../../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
 import { GetProductsIntersted } from "../../../../types/leadTypes/GetLeadsTypes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type MachineDetailsProps = {
   setFormData: React.Dispatch<React.SetStateAction<MachineDetailsData[]>>;
@@ -59,7 +60,17 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
   const { ProductModel } = useSelector(
     (state: RootState) => state.productModel
   );
-
+  const [roleId, setRoleId] = useState(0);
+  const [userSBUId, setUserSBUId] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setUserSBUId(user.message.user.sbuId);
+        setRoleId(user.message.user.roleId);
+      }
+    });
+  }, [isFocused]);
   const [productFamilyID, setProductFamilyID] = useState<{
     id: string;
     name: string;
@@ -76,9 +87,15 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
   const [machineCartData, setMachineCartData] = useState<
     Array<MachineDetailsData>
   >(new Array<MachineDetailsData>());
-
+  useEffect(() => {
+    if (roleId && userSBUId && roleId != 1) {
+      dispatch(ProductFamilyRequest(userSBUId));
+      dispatch(ProductModelRequest(userSBUId));
+    }
+  }, [roleId, sbuId]);
   const isValid = () => {
     if (
+      roleId == 1 &&
       machineCartData.length == 0 &&
       sbuId == "0" &&
       props.companyType &&
@@ -229,34 +246,49 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <Text style={style.labelText}>
           SBU:<Text style={{ color: "red" }}>*</Text>
         </Text>
+
         <View style={{ marginVertical: "2%" }}>
-          <CDSDropDown
-            placeholder={
-              GetSBUNameById(
-                sbuMaster,
-                props.productsInterested.length &&
-                  props.productsInterested[0].sbuId
-                  ? +props.productsInterested[0].sbuId
-                  : 0
-              )
-                ? GetSBUNameById(
-                    sbuMaster,
-                    props.productsInterested.length &&
-                      props.productsInterested[0].sbuId
-                      ? +props.productsInterested[0].sbuId
-                      : 0
-                  )
-                : "Select SBU"
-            }
-            data={GetSBUMaster(sbuMaster, sbuId ? +sbuId : 0)}
-            onSelect={(val) => {
-              if (val) {
-                setSBUId(val.value);
-                dispatch(ProductFamilyRequest(+val.value));
-                dispatch(ProductModelRequest(Number(val.value)));
+          {roleId && roleId == 1 ? (
+            <Text
+              style={{
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 5,
+                padding: 10,
+                backgroundColor: "#fff",
+              }}
+            >
+              {GetSBUNameById(sbuMaster, userSBUId)}
+            </Text>
+          ) : (
+            <CDSDropDown
+              placeholder={
+                GetSBUNameById(
+                  sbuMaster,
+                  props.productsInterested.length &&
+                    props.productsInterested[0].sbuId
+                    ? +props.productsInterested[0].sbuId
+                    : 0
+                )
+                  ? GetSBUNameById(
+                      sbuMaster,
+                      props.productsInterested.length &&
+                        props.productsInterested[0].sbuId
+                        ? +props.productsInterested[0].sbuId
+                        : 0
+                    )
+                  : "Select SBU"
               }
-            }}
-          />
+              data={GetSBUMaster(sbuMaster, sbuId ? +sbuId : 0)}
+              onSelect={(val) => {
+                if (val) {
+                  setSBUId(val.value);
+                  dispatch(ProductFamilyRequest(+val.value));
+                  dispatch(ProductModelRequest(Number(val.value)));
+                }
+              }}
+            />
+          )}
         </View>
         {/* Product Family */}
         <Text style={style.labelText}>
@@ -319,7 +351,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
                 productModelID: productModelID?.id,
                 productModelName: productModelID?.name,
                 productID: productModelID.product,
-                sbuId: Number(sbuId),
+                sbuId: roleId && roleId == 1 ? userSBUId : Number(sbuId),
               };
 
               addMachineDetails(cartData, setMachineCartData);

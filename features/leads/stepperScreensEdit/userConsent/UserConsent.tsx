@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import { SBUMasterRequest } from "../../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
 import { GetSBUNameById } from "../machineDetails/MachineDetailsUtility";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type UserConsentProps = {
   setAllFormState: React.Dispatch<React.SetStateAction<FormState>>;
@@ -21,23 +22,47 @@ const UserConsent: React.FC<UserConsentProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [selectedValue, setSelectedValue] = useState("1");
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
-  console.warn("SBU name", props.sbuID);
-
+  const [roleId, setRoleId] = useState(0);
+  const [userSBUId, setUserSBUId] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setUserSBUId(user.message.user.sbuId);
+        setRoleId(user.message.user.roleId);
+      }
+    });
+  }, [isFocused, roleId]);
   useEffect(() => {
     if (isFocused) {
       dispatch(SBUMasterRequest(null));
     }
   }, [isFocused]);
-
   const [sbuName, setSBUName] = useState(
-    GetSBUNameById(sbuMaster, props.sbuID)
-      ? GetSBUNameById(sbuMaster, props.sbuID)
-      : ""
+    roleId && roleId == 1
+      ? GetSBUNameById(sbuMaster, userSBUId)
+      : GetSBUNameById(sbuMaster, props.sbuID)
   );
   const radioButtonsData: RadioButtonProps[] = [
     {
       id: "1",
-      label: `Yes, I'd like to receive future marketing (e.g. new product information,promotions) email communications from ${sbuName} (${sbuName} Inc. and its affiliates & subsidiaries). You can withdraw your consent at any time. Regardless of whether you decide to receive these marketing communications, ${sbuName} will continue to send service/ transactional messages, including those that have to do with any accounts you may have with us. Please refer to our Global Data Privacy Statement for more information about ${sbuName}'s data privacy practices and rights that you may have.`,
+      label: `Yes, I'd like to receive future marketing (e.g. new product information,promotions) email communications from ${
+        roleId == 1
+          ? GetSBUNameById(sbuMaster, props.sbuID)
+          : GetSBUNameById(sbuMaster, userSBUId)
+      } (${
+        roleId == 1
+          ? GetSBUNameById(sbuMaster, props.sbuID)
+          : GetSBUNameById(sbuMaster, userSBUId)
+      } Inc. and its affiliates & subsidiaries). You can withdraw your consent at any time. Regardless of whether you decide to receive these marketing communications, ${
+        roleId == 1
+          ? GetSBUNameById(sbuMaster, props.sbuID)
+          : GetSBUNameById(sbuMaster, userSBUId)
+      } will continue to send service/ transactional messages, including those that have to do with any accounts you may have with us. Please refer to our Global Data Privacy Statement for more information about ${
+        roleId == 1
+          ? GetSBUNameById(sbuMaster, props.sbuID)
+          : GetSBUNameById(sbuMaster, userSBUId)
+      }'s data privacy practices and rights that you may have.`,
     },
     {
       id: "2",

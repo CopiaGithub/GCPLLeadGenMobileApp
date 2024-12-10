@@ -104,23 +104,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = (props) => {
     return (
       <View style={style.registerBoxView}>
         {/* Organization */}
-        <View style={style.txView}>
-          <SimpleLineIcons
-            name="organization"
-            size={20}
-            style={style.leftIcon}
-          />
-          <TextInput
-            placeholder="Organization*"
-            value={submitRegData.values.formData.orgName}
-            style={style.txtInput}
-            placeholderTextColor={"grey"}
-            onChangeText={(value) => {
-              submitRegData.setFieldValue("formData.orgId", 1);
-              submitRegData.setFieldValue("formData.orgName", value);
-            }}
-          />
-        </View>
+
         {/* Name */}
         <View style={style.txView}>
           <FontAwesome5 name="user-alt" size={18} style={style.leftIcon} />

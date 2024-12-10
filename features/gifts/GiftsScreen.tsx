@@ -47,6 +47,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   const [giftStatus, setGiftStatus] = useState(false);
   const [sbuID, setSBUID] = useState(0);
   const [userId, setUserId] = useState(0);
+  const [roleId, setRoleId] = useState(0);
   const { getCampaignData } = useSelector(
     (state: RootState) => state.getCampaignData
   );
@@ -56,6 +57,7 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
         const user = JSON.parse(res);
         setSBUID(user.message.user.sbuId);
         setUserId(user.message.user.id);
+        setRoleId(user.message.user.roleId);
       }
     });
   }, [isFocused, sbuID]);
@@ -65,7 +67,12 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
   });
   useEffect(() => {
     if (isFocused) {
-      dispatch(GetLeadDataRequest({ subId: sbuID, userId: userId }));
+      dispatch(
+        GetLeadDataRequest({
+          subId: roleId && roleId == 1 ? 0 : sbuID,
+          userId: (roleId && roleId == 1) || roleId == 4 ? 0 : userId,
+        })
+      );
       dispatch(GetCampaignDataRequest({}));
     }
   }, [isFocused]);
@@ -256,7 +263,12 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
             negativeBtnTxt="Ok"
             onNegativeClick={() => {
               setAlertState(false);
-              dispatch(GetLeadDataRequest({ subId: sbuID, userId: userId }));
+              dispatch(
+                GetLeadDataRequest({
+                  subId: roleId && roleId == 1 ? 0 : sbuID,
+                  userId: (roleId && roleId == 1) || roleId == 4 ? 0 : userId,
+                })
+              );
             }}
             onPositiveClick={() => {
               setAlertState(false);

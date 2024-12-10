@@ -54,19 +54,26 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   const { leadDetails } = useSelector((state: RootState) => state.leadData);
   const [sbuID, setSBUID] = useState(0);
   const [userId, setUserId] = useState(0);
+  const [roleId, setRoleId] = useState(0);
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
       if (res) {
         const user = JSON.parse(res);
         setSBUID(user.message.user.sbuId);
         setUserId(user.message.user.id);
+        setRoleId(user.message.user.roleId);
       }
     });
   }, [isFocused, sbuID]);
 
   useEffect(() => {
-    if (isFocused && sbuID != 0 && userId != 0) {
-      dispatch(GetLeadDataRequest({ subId: sbuID, userId: userId }));
+    if (isFocused && sbuID && userId) {
+      dispatch(
+        GetLeadDataRequest({
+          subId: roleId && roleId == 1 ? 0 : sbuID,
+          userId: (roleId && roleId == 1) || roleId == 4 ? 0 : userId,
+        })
+      );
     }
   }, [isFocused, sbuID, userId]);
 
@@ -125,7 +132,12 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
             size={24}
             style={style.headerIcon}
             onPress={() => {
-              dispatch(GetLeadDataRequest({ subId: sbuID, userId: userId }));
+              dispatch(
+                GetLeadDataRequest({
+                  subId: roleId && roleId == 1 ? 0 : sbuID,
+                  userId: (roleId && roleId == 1) || roleId == 4 ? 0 : userId,
+                })
+              );
               setSearchTxt("");
             }}
           />

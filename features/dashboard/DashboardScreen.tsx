@@ -18,7 +18,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GetLeadDataRequest } from "../../services/leadsServices/GetLeadDataRequest";
+
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import React from "react";
@@ -84,15 +84,28 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
       }
     });
   }, [isFocused]);
+  //Super Admin(1) 0 0
+  //Business Admin(4) -Logged in SBU , 0
+  //Business User(2) - Logged In Sbu Logged In userId
 
   useEffect(() => {
-    if (isFocused && userSbuId && userId != 0) {
-      GetVisitorMasterCount(userSbuId, userId);
-      GetFootfallCount(userSbuId, userId);
-      dispatch(ProductTotalRequest({ sbuID: userSbuId, userId: userId }));
+    if (isFocused && userSbuId && userId != 0 && roleID) {
+      GetVisitorMasterCount(
+        roleID && roleID == 1 ? 0 : userSbuId,
+        (roleID && roleID == 1) || roleID == 4 ? 0 : userId
+      );
+      GetFootfallCount(
+        roleID && roleID == 1 ? 0 : userSbuId,
+        (roleID && roleID == 1) || roleID == 4 ? 0 : userId
+      );
+      dispatch(
+        ProductTotalRequest({
+          sbuID: roleID && roleID == 1 ? 0 : userSbuId,
+          userId: (roleID && roleID == 1) || roleID == 4 ? 0 : userId,
+        })
+      );
     }
-  }, [isFocused, userSbuId]);
-  console.warn("dddddddaaa", userId);
+  }, [isFocused, userSbuId, roleID]);
 
   useEffect(() => {
     if (isFocused) {
@@ -291,26 +304,38 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     >
       {renderHorizontalMenus()}
       {renderCampaignName()}
-      <View
-        style={{
-          marginTop: "4%",
-          marginHorizontal: "2%",
-        }}
-      >
-        <CDSDropDown
-          data={GetSBUMaster(sbuMaster, roleID)}
-          onSelect={(val) => {
-            if (val && val.value) {
-              GetVisitorMasterCount(+val.value, userId);
-              GetFootfallCount(+val.value, userId);
-              dispatch(
-                ProductTotalRequest({ sbuID: +val.value, userId: userId })
-              );
-            }
+      {roleID && roleID == 1 ? (
+        <View
+          style={{
+            marginTop: "4%",
+            marginHorizontal: "2%",
           }}
-          placeholder="Select Brand"
-        />
-      </View>
+        >
+          <CDSDropDown
+            data={GetSBUMaster(sbuMaster, roleID)}
+            onSelect={(val) => {
+              if (val && val.value) {
+                GetVisitorMasterCount(
+                  +val.value,
+                  roleID && roleID == 1 ? 0 : userId
+                );
+                GetFootfallCount(
+                  +val.value,
+                  roleID && roleID == 1 ? 0 : userId
+                );
+                dispatch(
+                  ProductTotalRequest({
+                    sbuID: +val.value,
+                    userId: roleID && roleID == 1 ? 0 : userId,
+                  })
+                );
+              }
+            }}
+            placeholder="Select Brand"
+          />
+        </View>
+      ) : null}
+
       {renderCountBox()}
       {renderModelDetails()}
     </ImageBackground>

@@ -280,12 +280,24 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       return true;
     }
   };
+
+  const [roleId, setRoleId] = useState(0);
+  const [userSBUId, setUserSBUId] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setUserSBUId(user.message.user.sbuId);
+        setRoleId(user.message.user.roleId);
+      }
+    });
+  }, [isFocused]);
   const SaveLeadData = async () => {
     setLoaderState(true);
     const payload: SaveLeadReq = {
       orgId: orgId,
-      sbuId: sbuID,
-      userId: userId,
+      sbuId: roleId != 1 ? userSBUId : sbuID,
+      userId: roleId == 1 || roleId == 4 ? 0 : userId,
       campaignId: Number(addCustomerData.campaignID),
       industryTypeId: Number(addCustomerData.industryTypeId),
       companyType: Number(addCustomerData.companyTypeID),
@@ -298,9 +310,9 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         modelId: Number(item.productModelID),
         productFamilyId: Number(item.productFamilyID),
         productId: Number(item.productID),
-        sbuId: Number(item.sbuId),
+        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId),
         noOfMachines: Number(item.noOfMachines),
-        userId: userId,
+        userId: roleId == 1 || roleId == 4 ? 0 : userId,
       })),
       attachmentId: 0,
       giftVoucher: "",
@@ -310,8 +322,8 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
-        sbuId: Number(item.sbuId),
-        userId: userId,
+        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId),
+        userId: roleId == 1 || roleId == 4 ? 0 : userId,
       })),
       status: true,
       noOfMachines: otherDetails.noOfMachines,

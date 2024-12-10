@@ -32,6 +32,8 @@ import { DisplayToast } from "../../../../utility/ToastMessage";
 import { FormState } from "../../createLead/CreateLeadScreen";
 import { GetSBUMaster } from "../../../dashboard/DashboardUtility";
 import { SBUMasterRequest } from "../../../../services/sbuMasterRequest.tsx/SBUMasterRequest";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GetSBUNameById } from "../../stepperScreensEdit/machineDetails/MachineDetailsUtility";
 
 type MachineDetailsProps = {
   setFormData: React.Dispatch<React.SetStateAction<MachineDetailsData[]>>;
@@ -68,8 +70,25 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
     Array<MachineDetailsData>
   >(new Array<MachineDetailsData>());
 
+  const [roleId, setRoleId] = useState(0);
+  const [userSBUId, setUserSBUId] = useState(0);
+  useEffect(() => {
+    AsyncStorage.getItem("@userData").then((res) => {
+      if (res) {
+        const user = JSON.parse(res);
+        setUserSBUId(user.message.user.sbuId);
+        setRoleId(user.message.user.roleId);
+      }
+    });
+  }, [isFocused]);
+
   const isValid = () => {
-    if (sbuId == "0" && props.companyType && props.companyType == 2) {
+    if (
+      roleId == 1 &&
+      sbuId == "0" &&
+      props.companyType &&
+      props.companyType == 2
+    ) {
       DisplayToast("Please select brand");
       return false;
     } else if (
@@ -105,6 +124,13 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
       getMachineDetails(setMachineCartData);
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (roleId && userSBUId && roleId != 1) {
+      dispatch(ProductFamilyRequest(userSBUId));
+      dispatch(ProductModelRequest(userSBUId));
+    }
+  }, [roleId, sbuId]);
 
   const handleProductFamily = (val: DropDownType) => {
     if (val) {
@@ -166,18 +192,33 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
         <Text style={style.labelText}>
           SBU:<Text style={{ color: "red" }}>*</Text>
         </Text>
+
         <View style={{ marginVertical: "2%" }}>
-          <CDSDropDown
-            placeholder="Select Brand"
-            data={GetSBUMaster(sbuMaster, +sbuId)}
-            onSelect={(val) => {
-              if (val) {
-                setSBUId(val.value);
-                dispatch(ProductFamilyRequest(+val.value));
-                dispatch(ProductModelRequest(Number(val.value)));
-              }
-            }}
-          />
+          {roleId && roleId != 1 ? (
+            <Text
+              style={{
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 5,
+                padding: 10,
+                backgroundColor: "#fff",
+              }}
+            >
+              {GetSBUNameById(sbuMaster, userSBUId)}
+            </Text>
+          ) : (
+            <CDSDropDown
+              placeholder="Select Brand"
+              data={GetSBUMaster(sbuMaster, +sbuId)}
+              onSelect={(val) => {
+                if (val) {
+                  setSBUId(val.value);
+                  dispatch(ProductFamilyRequest(+val.value));
+                  dispatch(ProductModelRequest(Number(val.value)));
+                }
+              }}
+            />
+          )}
         </View>
         {/* Product Family */}
         <Text style={style.labelText}>
@@ -240,7 +281,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
                 productModelID: productModelID?.id,
                 productModelName: productModelID?.name,
                 productID: productModelID.product,
-                sbuId: Number(sbuId),
+                sbuId: roleId && roleId == 1 ? userSBUId : Number(sbuId),
               };
 
               addMachineDetails(cartData, setMachineCartData);
@@ -258,7 +299,6 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
           onPress={() => {
             if (isValid()) {
               props.setFormData(machineCartData);
-              console.warn("Machine Details", machineCartData);
 
               props.setAllFormState((val) => ({
                 ...val,

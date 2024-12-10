@@ -66,6 +66,13 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
 
   //SBU and Status True id PATCH
 
+  //Lead Creation
+  //Hide SBU DD if roleID=1 else
+
+  //Admin All Access
+  //Business Admin - SBU Admin
+  //Business User -
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOTP] = useState("");

@@ -18,11 +18,8 @@ export async function RegisterUserRequest(
     password: reqData.password,
     pincode: +reqData.pincode,
     roleId: +reqData.roleId,
-    sbuId: +reqData.sbuId,
-    status: reqData.status,
     username: reqData.username,
   };
-  console.warn(payload);
 
   return await axios({
     method: "post",
