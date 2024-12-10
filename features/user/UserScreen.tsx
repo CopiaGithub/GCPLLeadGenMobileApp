@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { RootStackParamList } from "../../types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Feather from "@expo/vector-icons/Feather";
 import { style } from "./UserScreenStyle";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -29,9 +29,10 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
   const isFocused = useIsFocused();
   const { getUsers } = useSelector((state: RootState) => state.userArray);
   const { roleMaster } = useSelector((state: RootState) => state.roleMaster);
+  const [status, setStaus] = useState(true);
   useEffect(() => {
     if (isFocused) {
-      dispatch(GetUsersRequest(""));
+      dispatch(GetUsersRequest(status));
       dispatch(RoleMasterRequest(""));
     }
   }, [isFocused]);
@@ -45,7 +46,7 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
             size={24}
             style={style.headerIcon}
             onPress={() => {
-              dispatch(GetUsersRequest(""));
+              dispatch(GetUsersRequest(status));
             }}
           />
           <Feather
@@ -149,7 +150,19 @@ const UserScreen: React.FC<UserScreenProps> = (props) => {
       style={{ flex: 1 }}
     >
       {renderSearchBar()}
-
+      <View style={{ marginHorizontal: "4%" }}>
+        <CDSDropDown
+          data={[
+            { label: "Active Users", value: "1" },
+            { label: "InActive Users", value: "0" },
+          ]}
+          placeholder={status ? "Active Users" : "InActive Users"}
+          onSelect={(val) => {
+            setStaus(val.value == "1" ? true : false);
+            dispatch(GetUsersRequest(val.value == "1" ? true : false));
+          }}
+        />
+      </View>
       <ScrollView contentContainerStyle={{ paddingBottom: "50%" }}>
         {renderItems()}
       </ScrollView>

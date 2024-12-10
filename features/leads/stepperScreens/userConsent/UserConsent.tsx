@@ -38,7 +38,6 @@ const UserConsent: React.FC<UserConsentProps> = (props) => {
       dispatch(SBUMasterRequest(null));
     }
   }, [isFocused]);
-  console.warn(userSBUId);
 
   const [sbuName, setSBUName] = useState(
     roleId === 1

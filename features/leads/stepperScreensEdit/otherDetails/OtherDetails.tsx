@@ -29,8 +29,6 @@ type OtherDetailsProps = {
 };
 
 const OtherDetails: React.FC<OtherDetailsProps> = (props) => {
-  console.warn("Product Interested", props.noOfGifts);
-
   const [purchase, setPurchase] = useState("");
   const [financing, setFinancing] = useState("");
   const [noOfMachines, setNoOfMachines] = useState("0");

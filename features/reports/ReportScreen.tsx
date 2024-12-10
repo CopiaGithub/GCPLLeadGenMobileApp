@@ -88,7 +88,6 @@ const ReportScreen: React.FC<ReportScreenProps> = (props) => {
       email: email,
       sbuId: sbuId == 4 ? 0 : sbuId,
     };
-    console.warn("Payload----", payload);
 
     const resp = await SendReportRequest(payload, reportId);
     setLoaderState(resp ? false : true);

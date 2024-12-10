@@ -54,6 +54,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
   );
   const { sbuMaster } = useSelector((state: RootState) => state.sbuMaster);
   const [userStatus, setUserStatus] = useState(true);
+  const [status, setStaus] = useState(true);
   const [roleID, setRoleID] = useState(0);
   useEffect(() => {
     AsyncStorage.getItem("@userData").then((res) => {
@@ -65,7 +66,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
   }, [isFocused]);
   useEffect(() => {
     if (isFocused) {
-      dispatch(GetUsersRequest(""));
+      dispatch(GetUsersRequest(status));
       dispatch(RoleMasterRequest(""));
     }
   }, [isFocused]);
@@ -77,9 +78,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
 
   const submitData = useFormik({
     initialValues: formHelper.formikInitialValue,
-    onSubmit: async (values) => {
-      console.warn(values.items);
-    },
+    onSubmit: async (values) => {},
   });
   useEffect(() => {
     if (
@@ -124,7 +123,6 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       status: flag,
       sbuId: +submitData.values.items[i].sbuId,
     };
-    console.warn(payload);
 
     const resp = await ApprovalRequest(payload, id);
     setLoaderState(resp ? false : true);
@@ -226,6 +224,7 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
       </>
     );
   };
+
   return (
     <ImageBackground
       source={require("../../assets/background_image.png")}
@@ -240,13 +239,26 @@ const ApprovalScreen: React.FC<ApprovalScreenProps> = (props) => {
         negativeBtnTxt="Ok"
         onNegativeClick={() => {
           setAlertState(false);
-          dispatch(GetUsersRequest(""));
+          dispatch(GetUsersRequest(status));
         }}
         onPositiveClick={() => {
           setAlertState(false);
         }}
       />
       {renderSearchBar()}
+      <View style={{ marginHorizontal: "4%" }}>
+        <CDSDropDown
+          data={[
+            { label: "Approved Users", value: "1" },
+            { label: "Pending Users", value: "0" },
+          ]}
+          placeholder={status ? "Approved Users" : "Pending Users"}
+          onSelect={(val) => {
+            setStaus(val.value == "1" ? true : false);
+            dispatch(GetUsersRequest(val.value == "1" ? true : false));
+          }}
+        />
+      </View>
       {/* <View style={{ marginHorizontal: "4%" }}>
         <CDSDropDown
           data={[

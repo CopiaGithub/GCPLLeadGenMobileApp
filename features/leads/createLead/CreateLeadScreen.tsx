@@ -332,7 +332,6 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       noOfPeopleAccompanied: otherDetails.noOfPeople,
       noOfGiftsNeeded: otherDetails.noOfGifts,
     };
-    console.warn(payload);
 
     const resp = await SaveLeadRequest(payload);
     setLoaderState(resp ? false : true);

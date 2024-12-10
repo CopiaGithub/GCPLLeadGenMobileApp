@@ -358,7 +358,6 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
       noOfPeopleAccompanied: otherDetails.noOfPeople,
       noOfGiftsNeeded: otherDetails.noOfGifts.toString(),
     };
-    console.warn("Edit Lead", payload);
 
     const resp = await EditLeaveRequest(payload, +id);
     setLoaderState(resp ? false : true);

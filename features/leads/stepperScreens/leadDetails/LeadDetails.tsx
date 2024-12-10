@@ -104,7 +104,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       }
     });
   }, [isFocused, sbuID]);
-  console.warn("Async Data --cscs?", custCartData);
 
   useEffect(() => {
     createCustomerDetailsTable();

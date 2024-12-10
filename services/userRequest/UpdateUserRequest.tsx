@@ -23,7 +23,6 @@ export async function UpdateUserRequest(
     status: reqData.status,
     username: reqData.username,
   };
-  console.warn("Update User Request", payload);
 
   return await axios({
     method: "patch",

@@ -139,7 +139,6 @@ const GiftScreen: React.FC<GiftScreenProps> = (props) => {
               noOfGifts: data.noOfGifts,
             };
             const resp = await EnterGiftDetails(payload, +data.id);
-            console.warn(resp);
 
             setLoaderState(resp ? false : true);
             if (resp && resp.statusCode == 201) {

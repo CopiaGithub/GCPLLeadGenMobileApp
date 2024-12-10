@@ -26,11 +26,6 @@ const EditLeadCustomerScreen: React.FC<EditLeadCustomerProps> = (props) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch<AppDispatch>();
   const { address } = props.route.params;
-  useEffect(() => {
-    if (isFocused) {
-      console.warn(address);
-    }
-  }, [isFocused, address]);
 
   const { getCampaignData } = useSelector(
     (state: RootState) => state.getCampaignData

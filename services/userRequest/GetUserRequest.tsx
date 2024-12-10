@@ -4,9 +4,9 @@ import API from "../../API";
 
 export const GetUsersRequest = createAsyncThunk(
   "getUserData/fetchGetUserData",
-  async (data: string, { rejectWithValue }) => {
+  async (status: boolean, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API.USER_MASTER}`);
+      const response = await axios.get(`${API.USER_MASTER}/status/${status}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

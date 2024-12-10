@@ -144,7 +144,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       }
     });
   }, [isFocused, sbuID]);
-  console.warn("Async Data --cscs?", sbuID);
 
   const isValid = (values: IAddCustomerData) => {
     if (values.campaignID == 0) {
@@ -254,7 +253,6 @@ const LeadDetails: React.FC<LeadDetailsProps> = (props) => {
       DisplayToast(`${resp.message}`);
     }
   };
-  console.warn("Visitor cart data", custCartData);
 
   const addToCart = () => {
     const data = submitLeadDetails.values;

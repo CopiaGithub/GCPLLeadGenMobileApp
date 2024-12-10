@@ -184,7 +184,6 @@ const CreateUserScreen: React.FC<CreateUserScreenProps> = (props) => {
     }
     return true;
   };
-  console.warn("Campaign Name Data", getCampaignData);
 
   const renderCreateUserView = () => {
     return (
