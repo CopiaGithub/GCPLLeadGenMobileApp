@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Platform,
+  Linking,
 } from "react-native";
 import Foundation from "@expo/vector-icons/Foundation";
 import { APP_THEME_COLOR } from "../../constants/Colors";
@@ -105,13 +107,24 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
       const resp = await LoginWPassRequest({
         email: email,
         password: password,
+        androidVersion: "1.1",
+        iosVersion: "1.1",
+        platform: Platform.OS == "android" ? "ANDROID" : "IOS",
       });
+
       setLoaderState(resp ? false : true);
       if (resp && resp.statusCode == 200) {
         const userDataJSON = JSON.stringify(resp);
         await AsyncStorage.setItem("@userData", userDataJSON);
         props.navigation.navigate("DashboardDrawer");
         DisplayToast(`Welcome ${resp.message.user.username}`);
+      } else if (resp && resp.statusCode == 409) {
+        DisplayToast(`${resp.message}`);
+        Linking.openURL(
+          Platform.OS == "ios"
+            ? "https://apps.apple.com/us/app/gcpl-lead-gen/id6738776752"
+            : "https://play.google.com/store/apps/details?id=com.gcpl.catLeadGen"
+        );
       } else {
         DisplayToast(`${resp.message}`);
       }
@@ -123,13 +136,23 @@ const LoginScreen: React.FC<LoginScreenProps> = (props) => {
       const resp = await LoginValidateOTPRequest({
         email: email,
         otp: otp,
+        androidVersion: "1.1",
+        iosVersion: "1.1",
+        platform: Platform.OS == "android" ? "ANDROID" : "IOS",
       });
       setLoaderState(resp ? false : true);
       if (resp && resp.statusCode == 200 && resp.message) {
         const userDataJSON = JSON.stringify(resp);
         await AsyncStorage.setItem("@userData", userDataJSON);
         props.navigation.navigate("DashboardDrawer");
+        DisplayToast(`Welcome ${resp.message.user.username}`);
+      } else if (resp && resp.statusCode == 409) {
         DisplayToast(`${resp.message}`);
+        Linking.openURL(
+          Platform.OS == "ios"
+            ? "https://apps.apple.com/us/app/gcpl-lead-gen/id6738776752"
+            : "https://play.google.com/store/apps/details?id=com.gcpl.catLeadGen"
+        );
       } else {
         DisplayToast(`${resp.message}`);
       }

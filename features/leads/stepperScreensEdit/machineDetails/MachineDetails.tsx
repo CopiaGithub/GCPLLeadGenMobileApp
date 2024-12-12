@@ -317,7 +317,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
               setProductModelID({
                 id: val.value,
                 name: val.label,
-                product: id ? id.productFamilyId.toString() : "",
+                product: id ? id.id.toString() : "",
               });
             }}
           />
@@ -349,7 +349,7 @@ const MachineDetails: React.FC<MachineDetailsProps> = (props) => {
                 productModelID: productModelID?.id,
                 productModelName: productModelID?.name,
                 productID: productModelID.product,
-                sbuId: roleId && roleId == 1 ? userSBUId : Number(sbuId),
+                sbuId: roleId && roleId != 1 ? userSBUId : Number(sbuId),
               };
 
               addMachineDetails(cartData, setMachineCartData);

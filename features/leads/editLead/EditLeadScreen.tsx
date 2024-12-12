@@ -323,7 +323,7 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
     setLoaderState(true);
     const payload: SaveLeadReq = {
       orgId: orgId,
-      sbuId: roleId != 1 ? userSBUId : sbuID,
+      sbuId: userSBUId, //Logged in user
       userId: roleId == 1 || roleId == 4 ? 0 : userId,
       campaignId: Number(addCustomerData.campaignID),
       industryTypeId: Number(addCustomerData.industryTypeId),
@@ -337,7 +337,7 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
         modelId: Number(item.productModelID),
         productFamilyId: Number(item.productFamilyID),
         productId: Number(item.productID),
-        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId),
+        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId), //Mannual selection for admin and user logged in
         noOfMachines: Number(item.noOfMachines),
         userId: roleId == 1 || roleId == 4 ? 0 : userId,
       })),
@@ -348,7 +348,7 @@ const EditLeadScreen: React.FC<EditLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
-        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId),
+        sbuId: userSBUId, //Logged In user
         userId: roleId == 1 || roleId == 4 ? 0 : userId,
       })),
       status: true,

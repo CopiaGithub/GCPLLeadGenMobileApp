@@ -304,40 +304,42 @@ const DashboardScreen: React.FC<DashboardScreenProps> = (props) => {
     >
       {renderHorizontalMenus()}
       {renderCampaignName()}
-      {roleID && roleID == 1 ? (
-        <View
-          style={{
-            marginTop: "4%",
-            marginHorizontal: "2%",
-          }}
-        >
-          <CDSDropDown
-            data={GetSBUMaster(sbuMaster, roleID)}
-            onSelect={(val) => {
-              if (val && val.value) {
-                GetVisitorMasterCount(
-                  +val.value,
-                  roleID && roleID == 1 ? 0 : userId
-                );
-                GetFootfallCount(
-                  +val.value,
-                  roleID && roleID == 1 ? 0 : userId
-                );
-                dispatch(
-                  ProductTotalRequest({
-                    sbuID: +val.value,
-                    userId: roleID && roleID == 1 ? 0 : userId,
-                  })
-                );
-              }
+      <ScrollView>
+        {roleID && roleID == 1 ? (
+          <View
+            style={{
+              marginTop: "4%",
+              marginHorizontal: "2%",
             }}
-            placeholder="Select Brand"
-          />
-        </View>
-      ) : null}
+          >
+            <CDSDropDown
+              data={GetSBUMaster(sbuMaster, roleID)}
+              onSelect={(val) => {
+                if (val && val.value) {
+                  GetVisitorMasterCount(
+                    +val.value,
+                    roleID && roleID == 1 ? 0 : userId
+                  );
+                  GetFootfallCount(
+                    +val.value,
+                    roleID && roleID == 1 ? 0 : userId
+                  );
+                  dispatch(
+                    ProductTotalRequest({
+                      sbuID: +val.value,
+                      userId: roleID && roleID == 1 ? 0 : userId,
+                    })
+                  );
+                }
+              }}
+              placeholder="Select Brand"
+            />
+          </View>
+        ) : null}
 
-      {renderCountBox()}
-      {renderModelDetails()}
+        {renderCountBox()}
+        {renderModelDetails()}
+      </ScrollView>
     </ImageBackground>
   );
 };

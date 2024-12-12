@@ -1,6 +1,9 @@
 export interface LoginWPasswordReq {
   email: string;
   password: string;
+  androidVersion: string;
+  iosVersion: string;
+  platform: string;
 }
 export interface LoginWPassUser {
   id: number;

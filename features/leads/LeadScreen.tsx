@@ -67,7 +67,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
   }, [isFocused, sbuID]);
 
   useEffect(() => {
-    if (isFocused && sbuID && userId) {
+    if (isFocused && sbuID && userId && roleId) {
       dispatch(
         GetLeadDataRequest({
           subId: roleId && roleId == 1 ? 0 : sbuID,
@@ -75,7 +75,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
         })
       );
     }
-  }, [isFocused, sbuID, userId]);
+  }, [isFocused, sbuID, userId, roleId]);
 
   useEffect(() => {
     if (isFocused && leadDetails?.statusCode == 200) {
@@ -138,6 +138,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
                   userId: (roleId && roleId == 1) || roleId == 4 ? 0 : userId,
                 })
               );
+
               setSearchTxt("");
             }}
           />
@@ -152,7 +153,7 @@ const LeadScreen: React.FC<LeadScreenProps> = (props) => {
         </View>
       ),
     });
-  }, []);
+  }, [roleId, userId, sbuID]);
   const renderSearchBar = () => {
     return (
       <View style={style.searchView}>

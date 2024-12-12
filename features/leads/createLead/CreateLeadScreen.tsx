@@ -296,7 +296,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
     setLoaderState(true);
     const payload: SaveLeadReq = {
       orgId: orgId,
-      sbuId: roleId != 1 ? userSBUId : sbuID,
+      sbuId: userSBUId, //Logged in user
       userId: roleId == 1 || roleId == 4 ? 0 : userId,
       campaignId: Number(addCustomerData.campaignID),
       industryTypeId: Number(addCustomerData.industryTypeId),
@@ -310,7 +310,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         modelId: Number(item.productModelID),
         productFamilyId: Number(item.productFamilyID),
         productId: Number(item.productID),
-        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId),
+        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId), //Mannual selection for admin and user logged in
         noOfMachines: Number(item.noOfMachines),
         userId: roleId == 1 || roleId == 4 ? 0 : userId,
       })),
@@ -322,7 +322,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
         email: item.email,
         mobileNo: item.mobileNumber,
         visitorName: item.customerName,
-        sbuId: roleId != 1 ? userSBUId : Number(item.sbuId),
+        sbuId: userSBUId, //Logged In user
         userId: roleId == 1 || roleId == 4 ? 0 : userId,
       })),
       status: true,
@@ -332,6 +332,7 @@ const CreateLeadScreen: React.FC<CreateLeadScreenProps> = (props) => {
       noOfPeopleAccompanied: otherDetails.noOfPeople,
       noOfGiftsNeeded: otherDetails.noOfGifts,
     };
+    console.warn("Lead Creation Machine Details", payload);
 
     const resp = await SaveLeadRequest(payload);
     setLoaderState(resp ? false : true);

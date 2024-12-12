@@ -1,6 +1,9 @@
 export interface LoginValidOTPReq {
   email: string;
   otp: string;
+  androidVersion: string;
+  iosVersion: string;
+  platform: string;
 }
 
 export interface LoginValidOTPResp {
